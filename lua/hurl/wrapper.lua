@@ -48,8 +48,9 @@ local on_output = function(code, data, event)
   end
   response.raw = data
 
-  util.log(response)
-  vim.notify('hurl: response status ' .. response.status)
+  util.log('hurl: response status ' .. response.status)
+  util.log('hurl: response headers ' .. vim.inspect(response.headers))
+  util.log('hurl: response body ' .. response.body)
 end
 
 --- Call hurl command
