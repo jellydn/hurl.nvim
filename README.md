@@ -9,6 +9,9 @@
 - [Table of Contents](#table-of-contents)
 - [Features](#features)
 - [Usage](#usage)
+- [Demo](#demo)
+  - [Run a File](#run-a-file)
+  - [Run a Selection](#run-a-selection)
 - [Default Key Mappings](#default-key-mappings)
 - [Credits](#credits)
 - [Author](#author)
@@ -47,6 +50,22 @@ Add the following configuration to your Neovim setup:
   }
 }
 ```
+
+## Demo
+
+Check out the following demos to see `hurl.nvim` in action:
+
+### Run a File
+
+Click on the GIF below to view the full demo:
+
+[![Run a file](https://i.gyazo.com/e554e81788aad910848ff991c9369d7b.gif)](https://gyazo.com/e554e81788aad910848ff991c9369d7b)
+
+### Run a Selection
+
+Click on the GIF below to view the full demo:
+
+[![Selection](https://i.gyazo.com/1a44dbbf165006fb5744c8f10883bb69.gif)](https://gyazo.com/1a44dbbf165006fb5744c8f10883bb69)
 
 ## Default Key Mappings
 
