@@ -23,6 +23,7 @@ local on_output = function(code, data, event)
     response.headers = {}
     return
   end
+
   local status = tonumber(string.match(data[1], '([%w+]%d+)'))
   head_state = 'start'
   if status then
@@ -30,6 +31,7 @@ local on_output = function(code, data, event)
     response.headers = { status = data[1] }
     response.headers_str = data[1] .. '\r\n'
   end
+
   for i = 2, #data do
     local line = data[i]
     if line == '' or line == nil then
@@ -91,9 +93,9 @@ local function request(opts, callback)
           local popup = require('hurl.popup')
           --show body if it is json
           if response.headers['content-type'] == 'application/json' then
-            popup.show(response.body, 'json')
+            popup.show(response, 'json')
           else
-            popup.show(response.body, 'html')
+            popup.show(response, 'html')
           end
         elseif _HURL_CFG.mode == 'quickfix' then
           vim.fn.setqflist({}, ' ', {
@@ -113,7 +115,6 @@ end
 local function run_current_file(opts)
   opts = opts or {}
   table.insert(opts, vim.fn.expand('%:p'))
-  util.log('Run current file ' .. vim.fn.expand('%:p'))
   request(opts)
 end
 

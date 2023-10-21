@@ -28,3 +28,7 @@ bufnr
 Tanjim
 quickfix
 Munif
+autocmd
+keymap
+noremap
+winid
