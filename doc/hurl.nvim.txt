@@ -6,12 +6,15 @@ Table of Contents                                *hurl.nvim-table-of-contents*
   - Table of Contents                            |hurl.nvim-table-of-contents|
   - Features                                              |hurl.nvim-features|
   - Usage                                                    |hurl.nvim-usage|
+  - Default Key Mappings                      |hurl.nvim-default-key-mappings|
   - Credits                                                |hurl.nvim-credits|
 Welcome to hurl.nvim 👋Hurl.nvim is a Neovim plugin that brings the power of the Hurl command line tool into your editor. Designed to run HTTP requests from `.hurl` files, this plugin simplifies the API development process, making it both efficient and versatile.
 TABLE OF CONTENTS                                *hurl.nvim-table-of-contents*
 
-- |hurl.nvim-usage|
+- |hurl.nvim-table-of-contents|
 - |hurl.nvim-features|
+- |hurl.nvim-usage|
+- |hurl.nvim-default-key-mappings|
 - |hurl.nvim-credits|
 - |hurl.nvim-show-your-support|
 
@@ -49,6 +52,18 @@ Add the following configuration to your Neovim setup:
       }
     }
 <
+
+
+DEFAULT KEY MAPPINGS                          *hurl.nvim-default-key-mappings*
+
+`hurl.nvim` comes with some default key mappings to streamline your workflow:
+
+- `q`: Close the current popup window.
+- `<C-n>`: Switch to the next popup window.
+- `<C-p>`: Switch to the previous popup window.
+
+These key mappings are active within the popup windows that `hurl.nvim`
+displays.
 
 
 CREDITS                                                    *hurl.nvim-credits*
