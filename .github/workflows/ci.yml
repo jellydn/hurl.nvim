@@ -10,7 +10,7 @@ jobs:
       - name: Stylua
         uses: JohnnyMorganz/stylua-action@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_VIMDOC_TOKEN }}
           version: latest
           args: --check .
 
