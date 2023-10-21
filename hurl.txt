@@ -1,0 +1,5 @@
+nvim
+docstrings
+sweepai
+pygithub
+sandboxed
