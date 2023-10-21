@@ -9,9 +9,14 @@
   {
     "jellydn/hurl.nvim",
     ft = "hurl",
+    dependencies = { "MunifTanjim/nui.nvim" },
     cmd = { "HurlRun" },
     opts = {
-      debug = true, -- default is false
+      -- Show debugging info
+      debug = true,
+      -- Show response in popup or in quick list
+      -- popup | quickfix
+      mode = "popup", --
     },
     keys = {
       -- Run API request

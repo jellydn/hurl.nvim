@@ -82,14 +82,25 @@ local function request(opts, callback)
         -- show messages
         local lines = response.raw or response.body
         if #lines == 0 then
+          vim.notify('hurl: no response')
           return
         end
-        -- Send to quick fix and open it
-        vim.fn.setqflist({}, ' ', {
-          title = 'hurl finished',
-          lines = lines,
-        })
-        vim.cmd('copen')
+
+        if _HURL_CFG.mode == 'popup' then
+          local popup = require('hurl.popup')
+          --show body if it is json
+          if response.headers['content-type'] == 'application/json' then
+            popup.show(response.body, 'json')
+          else
+            popup.show(response.body, 'html')
+          end
+        elseif _HURL_CFG.mode == 'quickfix' then
+          vim.fn.setqflist({}, ' ', {
+            title = 'hurl finished',
+            lines = lines,
+          })
+          vim.cmd('copen')
+        end
       end
     end,
   })
