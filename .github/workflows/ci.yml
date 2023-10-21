@@ -14,7 +14,6 @@ jobs:
           version: latest
           args: --check .
 
-
   docs:
     runs-on: ubuntu-latest
     name: pandoc to vimdoc
@@ -28,17 +27,16 @@ jobs:
           treesitter: true
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: 'chore(doc): auto generate docs'
+          commit_message: "chore(doc): auto generate docs"
           commit_user_name: "github-actions[bot]"
           commit_user_email: "github-actions[bot]@users.noreply.github.com"
           commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
 
   test:
     name: Run Test
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v3
       - uses: rhysd/action-setup-vim@v1
@@ -58,7 +56,9 @@ jobs:
       - name: run test
         shell: bash
         run: |
+          wget "https://github.com/JohnnyMorganz/StyLua/releases/download/v0.18.0/stylua-linux.zip" -P /home/runner/.local/bin
+          unzip /home/runner/.local/bin/stylua-linux.zip -d /home/runner/.local/bin
+          chmod +x /home/runner/.local/bin/stylua
           luarocks install luacheck
           luarocks install vusted
           vusted ./test
-ted ./test
