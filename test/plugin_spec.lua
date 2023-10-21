@@ -1,5 +1,7 @@
+local hurl = require('hurl')
+
 describe('Hurl.nvim plugin', function()
-  it('work as expect', function()
-    assert.is_true(true)
+  it('should be able to load', function()
+    assert.truthy(hurl)
   end)
 end)
