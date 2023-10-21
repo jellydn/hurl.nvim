@@ -3,9 +3,6 @@ _HURL_CFG = {
   -- Debug mode
   -- Default: false
   debug = false,
-  --- Show headers in the response buffer
-  --- Default: false
-  show_headers = false,
 }
 local M = {}
 

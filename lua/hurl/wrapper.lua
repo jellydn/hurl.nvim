@@ -54,7 +54,7 @@ end
 
 --- Call hurl command
 ---@param opts table The options
----@param callback function The callback function
+---@param callback? function The callback function
 local function request(opts, callback)
   local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
   response = {}
@@ -95,12 +95,19 @@ local function request(opts, callback)
   })
 end
 
+--- Run current file
+--- It will throw an error if that is not valid hurl file
+---@param opts table The options
 local function run_current_file(opts)
   opts = opts or {}
   table.insert(opts, vim.fn.expand('%:p'))
+  util.log('Run current file ' .. vim.fn.expand('%:p'))
   request(opts)
 end
 
+--- Run selection
+---@param opts table The options
+---@param range number The range
 local function run_selection(opts, range)
   opts = opts or {}
   local lines = util.get_visual_selection()

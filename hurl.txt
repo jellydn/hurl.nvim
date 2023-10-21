@@ -21,3 +21,4 @@ docstrings
 sweepai
 pygithub
 sandboxed
+jellydn
