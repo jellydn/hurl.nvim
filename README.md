@@ -11,6 +11,7 @@
 - [Usage](#usage)
 - [Default Key Mappings](#default-key-mappings)
 - [Credits](#credits)
+- [Author](#author)
 - [Show your support](#show-your-support)
 <!--toc:end-->
 
@@ -59,8 +60,22 @@ These key mappings are active within the popup windows that `hurl.nvim` displays
 
 ## Credits
 
+- [Hurl - Run and Test HTTP Requests](https://hurl.dev/)
 - Inspired by [ray-x/web-tools.nvim: Neovim plugin for web developers](https://github.com/ray-x/web-tools.nvim)
 - Utilize [MunifTanjim/nui.nvim: UI components for Neovim plugins and configurations](https://github.com/MunifTanjim/nui.nvim)
+
+## Author
+
+👤 **Huynh Duc Dung**
+
+- Website: https://productsway.com/
+- Twitter: [@jellydn](https://twitter.com/jellydn)
+- Github: [@jellydn](https://github.com/jellydn)
+
 ## Show your support
 
-Give a ⭐️ if this project helped you!
+If this guide has been helpful, please give it a ⭐️.
+
+[![kofi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/dunghd)
+[![paypal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/dunghd)
+[![buymeacoffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/dunghd)
