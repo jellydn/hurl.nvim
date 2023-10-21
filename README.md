@@ -4,9 +4,12 @@
 </p>
 
 ## Table of Contents
+
 <!--toc:start-->
-- [Usage](#usage)
+- [Table of Contents](#table-of-contents)
 - [Features](#features)
+- [Usage](#usage)
+- [Default Key Mappings](#default-key-mappings)
 - [Credits](#credits)
 - [Show your support](#show-your-support)
 <!--toc:end-->
@@ -43,6 +46,16 @@ Add the following configuration to your Neovim setup:
   }
 }
 ```
+
+## Default Key Mappings
+
+`hurl.nvim` comes with some default key mappings to streamline your workflow:
+
+- `q`: Close the current popup window.
+- `<C-n>`: Switch to the next popup window.
+- `<C-p>`: Switch to the previous popup window.
+
+These key mappings are active within the popup windows that `hurl.nvim` displays.
 
 ## Credits
 
