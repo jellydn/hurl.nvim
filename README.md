@@ -1,9 +1,25 @@
 <h1 align="center">Welcome to hurl.nvim 👋</h1>
 <p>
-  TBD
+  <strong>Hurl.nvim</strong> is a Neovim plugin that brings the power of the Hurl command line tool into your editor. Designed to run HTTP requests from `.hurl` files, this plugin simplifies the API development process, making it both efficient and versatile.
 </p>
 
+## Table of Contents
+<!--toc:start-->
+- [Usage](#usage)
+- [Features](#features)
+- [Credits](#credits)
+- [Show your support](#show-your-support)
+<!--toc:end-->
+
+## Features
+
+- 🚀 Execute HTTP requests directly from `.hurl` files.
+- 👁‍🗨 Multiple display modes for API response: popup or quickfix.
+- 🌈 Highly customizable through Neovim settings.
+
 ## Usage
+
+Add the following configuration to your Neovim setup:
 
 ```lua
   {
@@ -30,7 +46,8 @@
 
 ## Credits
 
-Inspired by [ray-x/web-tools.nvim: Neovim plugin for web developers](https://github.com/ray-x/web-tools.nvim)
+- Inspired by [ray-x/web-tools.nvim: Neovim plugin for web developers](https://github.com/ray-x/web-tools.nvim)
+- Utilize [MunifTanjim/nui.nvim: UI components for Neovim plugins and configurations](https://github.com/MunifTanjim/nui.nvim)
 ## Show your support
 
 Give a ⭐️ if this project helped you!
