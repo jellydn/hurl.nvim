@@ -28,20 +28,6 @@ local layout = Layout(
   }, { dir = 'col' })
 )
 
---- Format the body of the request
----@param body string
----@param type 'json' | 'html'
----@return string[] | nil
-local function format(body, type)
-  local formatters = { json = 'jq', html = { 'prettier', '--parser', 'html' } }
-  local stdout = vim.fn.systemlist(formatters[type], body)
-  if vim.v.shell_error ~= 0 then
-    utils.log('formatter failed' .. tostring(vim.v.shell_error))
-    return nil
-  end
-  return stdout
-end
-
 -- Show content in a popup
 ---@param data table
 ---   - body string
@@ -85,23 +71,17 @@ M.show = function(data, type)
   end)
 
   -- Add headers to the top
-  local headers = {}
-  local line = 0
-  for k, v in pairs(data.headers) do
-    line = line + 1
-    table.insert(headers, k .. ': ' .. v)
-  end
-
+  local headers_table = utils.render_header_table(data.headers)
   -- Hide header block if empty headers
-  if line == 0 then
+  if headers_table.line == 0 then
     vim.api.nvim_win_close(popups.top.winid, true)
   else
-    if line > 0 then
-      vim.api.nvim_buf_set_lines(popups.top.bufnr, 0, 1, false, headers)
+    if headers_table.line > 0 then
+      vim.api.nvim_buf_set_lines(popups.top.bufnr, 0, 1, false, headers_table.headers)
     end
   end
 
-  local content = format(data.body, type)
+  local content = utils.format(data.body, type)
   if not content then
     return
   end

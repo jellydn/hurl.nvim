@@ -97,12 +97,14 @@ local function request(opts, callback)
           else
             popup.show(response, 'html')
           end
-        elseif _HURL_CFG.mode == 'quickfix' then
-          vim.fn.setqflist({}, ' ', {
-            title = 'hurl finished',
-            lines = lines,
-          })
-          vim.cmd('copen')
+        elseif _HURL_CFG.mode == 'split' then
+          local split = require('hurl.split')
+          --show body if it is json
+          if response.headers['content-type'] == 'application/json' then
+            split.show(response, 'json')
+          else
+            split.show(response, 'html')
+          end
         end
       end
     end,

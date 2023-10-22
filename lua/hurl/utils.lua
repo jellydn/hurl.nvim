@@ -62,4 +62,48 @@ util.create_cmd = function(cmd, func, opt)
   vim.api.nvim_create_user_command(cmd, func, opt)
 end
 
+--- Format the body of the request
+---@param body string
+---@param type 'json' | 'html'
+---@return string[] | nil
+util.format = function(body, type)
+  local formatters = { json = 'jq', html = { 'prettier', '--parser', 'html' } }
+  local stdout = vim.fn.systemlist(formatters[type], body)
+  if vim.v.shell_error ~= 0 then
+    util.log('formatter failed' .. tostring(vim.v.shell_error))
+    return nil
+  end
+  return stdout
+end
+
+--- Render header table
+---@param headers table
+util.render_header_table = function(headers)
+  local result = {}
+  local maxKeyLength = 0
+  for k, _ in pairs(headers) do
+    maxKeyLength = math.max(maxKeyLength, #k)
+  end
+
+  local line = 0
+  for k, v in pairs(headers) do
+    line = line + 1
+    if line == 1 then
+      -- Add header for the table view
+      table.insert(
+        result,
+        string.format('%-' .. maxKeyLength .. 's | %s', 'Header Key', 'Header Value')
+      )
+
+      line = line + 1
+    end
+    table.insert(result, string.format('%-' .. maxKeyLength .. 's | %s', k, v))
+  end
+
+  return {
+    line = line,
+    headers = result,
+  }
+end
+
 return util

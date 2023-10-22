@@ -21,7 +21,7 @@
 ## Features
 
 - 🚀 Execute HTTP requests directly from `.hurl` files.
-- 👁‍🗨 Multiple display modes for API response: popup or quickfix.
+- 👁‍🗨 Multiple display modes for API response: popup or split.
 - 🌈 Highly customizable through Neovim settings.
 
 ## Usage
@@ -38,7 +38,7 @@ Add the following configuration to your Neovim setup:
       -- Show debugging info
       debug = true,
       -- Show response in popup or in quick list
-      -- popup | quickfix
+      -- popup | split
       mode = "popup", --
     },
     keys = {
