@@ -6,11 +6,11 @@ help:
 .PHONY: install-cli
 install-cli:
 	brew install luarocks
-	brew install lua@5.1
+	brew install lua
 
 .PHONY: install
 install:
-	luarocks --lua-version=5.1 install vusted
+	luarocks install vusted
 
 .PHONY: test
 test:
