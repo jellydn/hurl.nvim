@@ -3,7 +3,7 @@
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
 
-  - Table of Contents                            |hurl.nvim-table-of-contents|
+  - TOC                                                        |hurl.nvim-toc|
   - Features                                              |hurl.nvim-features|
   - Usage                                                    |hurl.nvim-usage|
   - Demo                                                      |hurl.nvim-demo|
@@ -12,9 +12,8 @@ Table of Contents                                *hurl.nvim-table-of-contents*
   - Author                                                  |hurl.nvim-author|
   - Show your support                            |hurl.nvim-show-your-support|
 Welcome to hurl.nvim 👋Hurl.nvim is a Neovim plugin that brings the power of the Hurl command line tool into your editor. Designed to run HTTP requests from `.hurl` files, this plugin simplifies the API development process, making it both efficient and versatile.
-TABLE OF CONTENTS                                *hurl.nvim-table-of-contents*
+TOC                                                            *hurl.nvim-toc*
 
-- |hurl.nvim-table-of-contents|
 - |hurl.nvim-features|
 - |hurl.nvim-usage|
 - |hurl.nvim-demo|

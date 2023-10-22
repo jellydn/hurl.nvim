@@ -3,21 +3,6 @@
   <strong>Hurl.nvim</strong> is a Neovim plugin that brings the power of the Hurl command line tool into your editor. Designed to run HTTP requests from `.hurl` files, this plugin simplifies the API development process, making it both efficient and versatile.
 </p>
 
-## Table of Contents
-
-<!--toc:start-->
-- [Table of Contents](#table-of-contents)
-- [Features](#features)
-- [Usage](#usage)
-- [Demo](#demo)
-  - [Run a File](#run-a-file)
-  - [Run a Selection](#run-a-selection)
-- [Default Key Mappings](#default-key-mappings)
-- [Credits](#credits)
-- [Author](#author)
-- [Show your support](#show-your-support)
-<!--toc:end-->
-
 ## Features
 
 - 🚀 Execute HTTP requests directly from `.hurl` files.
