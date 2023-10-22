@@ -45,10 +45,9 @@ Add the following configuration to your Neovim setup:
         cmd = { "HurlRun" },
         opts = {
           -- Show debugging info
-          debug = true,
-          -- Show response in popup or in quick list
-          -- popup | split
-          mode = "popup", --
+          debug = false,
+          -- Show response in popup or split
+          mode = "popup",
         },
         keys = {
           -- Run API request
