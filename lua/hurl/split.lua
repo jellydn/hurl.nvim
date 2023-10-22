@@ -41,6 +41,8 @@ M.show = function(data, type)
     return
   end
 
+  split:map('n', 'q', '<cmd>q<cr>')
+
   -- Set content to highlight
   vim.api.nvim_buf_set_option(split.bufnr, 'filetype', type)
 
