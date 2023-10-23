@@ -90,6 +90,9 @@ M.show = function(data, type)
   vim.api.nvim_buf_set_option(popups.top.bufnr, 'filetype', 'bash')
   vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'filetype', type)
 
+  -- Enable folding for bottom buffer
+  vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'foldmethod', 'expr')
+
   -- Add content to the bottom
   vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, content)
 end
