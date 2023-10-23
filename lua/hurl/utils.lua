@@ -2,16 +2,26 @@ local log = require('hurl.vlog')
 
 local util = {}
 
---- Log function
---- Print the variable to stdout
+--- Log info
 ---@vararg any
-util.log = function(...)
-  -- Only print when debug is on
+util.log_info = function(...)
+  -- Only save log when debug is on
   if not _HURL_CFG.debug then
     return
   end
 
   log.info(...)
+end
+
+--- Log error
+---@vararg any
+util.log_error = function(...)
+  -- Only save log when debug is on
+  if not _HURL_CFG.debug then
+    return
+  end
+
+  log.error(...)
 end
 
 --- Get visual selection
@@ -70,7 +80,7 @@ util.format = function(body, type)
   local formatters = { json = 'jq', html = { 'prettier', '--parser', 'html' } }
   local stdout = vim.fn.systemlist(formatters[type], body)
   if vim.v.shell_error ~= 0 then
-    util.log('formatter failed' .. tostring(vim.v.shell_error))
+    util.log_error('formatter failed' .. tostring(vim.v.shell_error))
     return nil
   end
   return stdout

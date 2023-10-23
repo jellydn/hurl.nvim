@@ -29,7 +29,7 @@ M.show = function(data, type)
   local headers_table = utils.render_header_table(data.headers)
   -- Hide header block if empty headers
   if headers_table.line == 0 then
-    utils.log('no headers')
+    utils.log_info('no headers')
   else
     if headers_table.line > 0 then
       vim.api.nvim_buf_set_lines(split.bufnr, 0, 1, false, headers_table.headers)

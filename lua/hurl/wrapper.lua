@@ -12,12 +12,11 @@ local on_output = function(code, data, event)
     table.remove(data, 1)
   end
   if not data[1] then
-    util.log('no data')
     return
   end
 
   if event == 'stderr' and #data > 1 then
-    util.log('stderr', data)
+    util.log_error('hurl: stderr', data)
     response.body = data
     response.raw = data
     response.headers = {}
@@ -35,7 +34,6 @@ local on_output = function(code, data, event)
   for i = 2, #data do
     local line = data[i]
     if line == '' or line == nil then
-      util.log(i, 'change to body')
       head_state = 'body'
     elseif head_state == 'start' then
       local key, value = string.match(line, '([%w-]+):%s*(.+)')
@@ -50,9 +48,9 @@ local on_output = function(code, data, event)
   end
   response.raw = data
 
-  util.log('hurl: response status ' .. response.status)
-  util.log('hurl: response headers ' .. vim.inspect(response.headers))
-  util.log('hurl: response body ' .. response.body)
+  util.log_info('hurl: response status ' .. response.status)
+  util.log_info('hurl: response headers ' .. vim.inspect(response.headers))
+  util.log_info('hurl: response body ' .. response.body)
 end
 
 --- Call hurl command
@@ -66,7 +64,7 @@ local function request(opts, callback)
     on_stdout = on_output,
     on_stderr = on_output,
     on_exit = function(i, code)
-      util.log('exit', i, code)
+      util.log_info('exit code ' .. code)
       if code ~= 0 then
         vim.notify(
           string.format(
@@ -78,14 +76,12 @@ local function request(opts, callback)
         )
       end
 
-      util.log(response)
       if callback then
         return callback(response)
       else
         -- show messages
         local lines = response.raw or response.body
         if #lines == 0 then
-          vim.notify('hurl: no response')
           return
         end
 
@@ -122,8 +118,7 @@ end
 
 --- Run selection
 ---@param opts table The options
----@param range number The range
-local function run_selection(opts, range)
+local function run_selection(opts)
   opts = opts or {}
   local lines = util.get_visual_selection()
   if not lines then
@@ -145,7 +140,7 @@ end
 function M.setup()
   util.create_cmd('HurlRun', function(opts)
     if opts.range ~= 0 then
-      run_selection(opts.fargs, opts.range)
+      run_selection(opts.fargs)
     else
       run_current_file(opts.fargs)
     end
