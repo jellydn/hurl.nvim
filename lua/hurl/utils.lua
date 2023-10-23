@@ -2,8 +2,9 @@ local log = require('hurl.vlog')
 
 local util = {}
 
---- Log info
----@vararg any
+--- Log information when debug mode is on
+--- @param ... any number of arguments to be logged
+--- @return nil
 util.log_info = function(...)
   -- Only save log when debug is on
   if not _HURL_CFG.debug then
