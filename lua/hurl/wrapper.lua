@@ -4,14 +4,16 @@ local M = {}
 
 local response = {}
 
---- Output handler
+--- Output handler. This function handles the output of the HTTP request. It logs the status code, parses the response headers and body, and logs the response status, headers, and body.
 ---@class Output
 local on_output = function(code, data, event)
   util.log_info('hurl: code ', code)
   local head_state
+  -- Remove the first element from the data array if it is an empty string
   if data[1] == '' then
     table.remove(data, 1)
   end
+  -- Return if the first element of the data array is nil
   if not data[1] then
     return
   end
@@ -54,7 +56,7 @@ local on_output = function(code, data, event)
   util.log_info('hurl: response body ' .. response.body)
 end
 
---- Call hurl command
+--- Call hurl command. This function runs the HTTP request, logs the request status, and handles the response output. It also handles any errors that occur during the request and calls the callback function if provided.
 ---@param opts table The options
 ---@param callback? function The callback function
 local function request(opts, callback)
@@ -112,8 +114,7 @@ local function request(opts, callback)
   })
 end
 
---- Run current file
---- It will throw an error if that is not valid hurl file
+--- Run current file. This function runs the HTTP request for the current file. It will throw an error if the file is not a valid hurl file.
 ---@param opts table The options
 local function run_current_file(opts)
   opts = opts or {}
@@ -121,7 +122,7 @@ local function run_current_file(opts)
   request(opts)
 end
 
---- Run selection
+--- Run selection. This function runs the HTTP request for the selected lines in the current file. It creates a temporary file with the selected lines and runs the request for this file.
 ---@param opts table The options
 local function run_selection(opts)
   opts = opts or {}
