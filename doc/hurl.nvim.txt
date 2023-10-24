@@ -13,14 +13,14 @@ Table of Contents                                *hurl.nvim-table-of-contents*
 Welcome to hurl.nvim 👋Hurl.nvim is a Neovim plugin that brings the power of the Hurl command line tool into your editor. Designed to run HTTP requests from `.hurl` files, this plugin simplifies the API development process, making it both efficient and versatile.
 FEATURES                                                  *hurl.nvim-features*
 
-- 🚀 Execute HTTP requests directly from `.hurl` files and handle the output of the HTTP request, including logging the status code, parsing the response headers and body, and logging the response status, headers, and body.
+- 🚀 Execute HTTP requests directly from `.hurl` files.
 - 👁‍🗨 Multiple display modes for API response: popup or split.
 - 🌈 Highly customizable through Neovim settings.
 
 
 USAGE                                                        *hurl.nvim-usage*
 
-Add the following configuration to your Neovim setup to run the HTTP request, log the request status, handle the response output, handle any errors that occur during the request, and call the callback function if provided:
+Add the following configuration to your Neovim setup:
 
 >lua
       {
