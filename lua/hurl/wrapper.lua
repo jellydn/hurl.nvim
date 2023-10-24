@@ -7,6 +7,7 @@ local response = {}
 --- Output handler
 ---@class Output
 local on_output = function(code, data, event)
+  util.log_info('hurl: code ', code)
   local head_state
   if data[1] == '' then
     table.remove(data, 1)
@@ -16,8 +17,8 @@ local on_output = function(code, data, event)
   end
 
   if event == 'stderr' and #data > 1 then
-    util.log_error('hurl: stderr', data)
     response.body = data
+    util.log_error(vim.inspect(data))
     response.raw = data
     response.headers = {}
     return
@@ -57,6 +58,7 @@ end
 ---@param opts table The options
 ---@param callback? function The callback function
 local function request(opts, callback)
+  vim.notify('hurl: running request', vim.log.levels.INFO)
   local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
   response = {}
 
@@ -64,16 +66,11 @@ local function request(opts, callback)
     on_stdout = on_output,
     on_stderr = on_output,
     on_exit = function(i, code)
-      util.log_info('exit code ' .. code)
+      util.log_info('exit at ' .. i .. ' , code ' .. code)
       if code ~= 0 then
-        vim.notify(
-          string.format(
-            'hurl: %s error exit_code=%s response=%s',
-            vim.inspect(cmd),
-            code,
-            vim.inspect(response)
-          )
-        )
+        -- Send error code and response to quickfix and open it
+        vim.fn.setqflist({ { filename = '', text = vim.inspect(response.body) } })
+        vim.cmd('copen')
       end
 
       if callback then
@@ -91,7 +88,11 @@ local function request(opts, callback)
           if util.is_json_response(response.headers['content-type']) then
             popup.show(response, 'json')
           else
-            popup.show(response, 'html')
+            if util.is_html_response(response.headers['content-type']) then
+              popup.show(response, 'html')
+            else
+              popup.show(response, 'text')
+            end
           end
         elseif _HURL_CFG.mode == 'split' then
           local split = require('hurl.split')
@@ -99,7 +100,11 @@ local function request(opts, callback)
           if util.is_json_response(response.headers['content-type']) then
             split.show(response, 'json')
           else
-            split.show(response, 'html')
+            if util.is_html_response(response.headers['content-type']) then
+              split.show(response, 'html')
+            else
+              split.show(response, 'text')
+            end
           end
         end
       end

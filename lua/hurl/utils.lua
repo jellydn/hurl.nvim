@@ -74,14 +74,20 @@ end
 
 --- Format the body of the request
 ---@param body string
----@param type 'json' | 'html'
+---@param type 'json' | 'html' | 'text'
 ---@return string[] | nil
 util.format = function(body, type)
   local formatters = { json = 'jq', html = { 'prettier', '--parser', 'html' } }
+
+  -- If no formatter is defined, return the body
+  if not formatters[type] then
+    return vim.split(body, '\n')
+  end
+
   local stdout = vim.fn.systemlist(formatters[type], body)
   if vim.v.shell_error ~= 0 then
-    util.log_error('formatter failed' .. tostring(vim.v.shell_error))
-    return nil
+    vim.notify('formatter failed' .. vim.v.shell_error, vim.log.levels.ERROR)
+    return vim.split(body, '\n')
   end
   return stdout
 end
@@ -121,6 +127,10 @@ end
 ---@return boolean
 util.is_json_response = function(content_type)
   return string.find(content_type, 'application/json') ~= nil
+end
+
+util.is_html_response = function(content_type)
+  return string.find(content_type, 'text/html') ~= nil
 end
 
 return util

@@ -33,3 +33,4 @@ docstrings
 sweepai
 pygithub
 sandboxed
+foldmethod
