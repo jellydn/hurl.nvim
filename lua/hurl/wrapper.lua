@@ -88,7 +88,7 @@ local function request(opts, callback)
         if _HURL_CFG.mode == 'popup' then
           local popup = require('hurl.popup')
           --show body if it is json
-          if response.headers['content-type'] == 'application/json' then
+          if util.is_json_response(response.headers['content-type']) then
             popup.show(response, 'json')
           else
             popup.show(response, 'html')
@@ -96,7 +96,7 @@ local function request(opts, callback)
         elseif _HURL_CFG.mode == 'split' then
           local split = require('hurl.split')
           --show body if it is json
-          if response.headers['content-type'] == 'application/json' then
+          if util.is_json_response(response.headers['content-type']) then
             split.show(response, 'json')
           else
             split.show(response, 'html')

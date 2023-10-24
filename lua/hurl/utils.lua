@@ -116,4 +116,11 @@ util.render_header_table = function(headers)
   }
 end
 
+--- Check if the response is json
+---@param content_type string
+---@return boolean
+util.is_json_response = function(content_type)
+  return string.find(content_type, 'application/json') ~= nil
+end
+
 return util
