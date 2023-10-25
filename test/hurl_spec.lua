@@ -22,6 +22,7 @@ describe('Hurl wrapper', function()
         end)
       else
         print("Warning: hurl.request function is nil, skipping test.")
+        return
       end
     end)
 
@@ -54,19 +55,6 @@ describe('Hurl wrapper', function()
       vim.fn.writefile({ 'GET http://example.com' }, mock_file)
       -- Call the run_current_file function with the mock file
       if hurl.run_current_file then
-        hurl.run_current_file({ mock_file })
-      else
-        print("Warning: hurl.run_current_file function is nil, skipping test.")
-      end
-      if hurl.run_selection then
-        hurl.run_selection({ mock_file })
-      else
-        print("Warning: hurl.run_selection function is nil, skipping test.")
-      end
-        return
-      end
-      -- Check that the response status is 200
-      if hurl.run_current_file then
         hurl.run_current_file({ mock_file }, function(response)
           -- Check that the response status is 200
           assert.equals(response.status, 200)
@@ -75,6 +63,18 @@ describe('Hurl wrapper', function()
         end)
       else
         print("Warning: hurl.run_current_file function is nil, skipping test.")
+        return
+      end
+      if hurl.run_selection then
+        hurl.run_selection({ mock_file }, function(response)
+          -- Check that the response status is 200
+          assert.equals(response.status, 200)
+          -- Delete the mock file
+          os.remove(mock_file)
+        end)
+      else
+        print("Warning: hurl.run_selection function is nil, skipping test.")
+        return
       end
   end)
 
