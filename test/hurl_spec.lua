@@ -20,7 +20,6 @@ describe('Hurl wrapper', function()
         end)
       else
         print("Warning: hurl.request function is nil, skipping test.")
-        return
       end
         -- Check that the response status is 200
         assert.equals(response.status, 200)
@@ -59,12 +58,12 @@ describe('Hurl wrapper', function()
         hurl.run_current_file({ mock_file })
       else
         print("Warning: hurl.run_current_file function is nil, skipping test.")
-        return
       end
       if hurl.run_selection then
         hurl.run_selection({ mock_file })
       else
         print("Warning: hurl.run_selection function is nil, skipping test.")
+      end
         return
       end
       -- Check that the response status is 200
@@ -90,7 +89,6 @@ describe('Hurl wrapper', function()
           hurl.run_selection({ mock_file })
         else
           print("Warning: hurl.run_selection function is nil, skipping test.")
-          return
         end
         -- Check that the response status is 200
         assert.equals(response.status, 200)
