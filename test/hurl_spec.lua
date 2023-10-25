@@ -17,6 +17,7 @@ describe('Hurl wrapper', function()
       -- Call the request function with the mock request
       if hurl.request then
         hurl.request(mock_request, function(response)
+        end)
       else
         print("Warning: hurl.request function is nil, skipping test.")
         return
@@ -58,6 +59,12 @@ describe('Hurl wrapper', function()
         hurl.run_current_file({ mock_file })
       else
         print("Warning: hurl.run_current_file function is nil, skipping test.")
+        return
+      end
+      if hurl.run_selection then
+        hurl.run_selection({ mock_file })
+      else
+        print("Warning: hurl.run_selection function is nil, skipping test.")
         return
       end
       -- Check that the response status is 200
