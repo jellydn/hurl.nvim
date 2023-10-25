@@ -18,7 +18,7 @@ Add the following configuration to your Neovim setup:
     "jellydn/hurl.nvim",
     ft = "hurl",
     dependencies = { "MunifTanjim/nui.nvim" },
-    cmd = { "HurlRun" },
+    cmd = { "HurlRunner" },
     opts = {
       -- Show debugging info
       debug = false,
@@ -27,9 +27,9 @@ Add the following configuration to your Neovim setup:
     },
     keys = {
       -- Run API request
-      { "<leader>ra", "<cmd>HurlRun<CR>", desc = "Run API requests" },
+      { "<leader>ra", "<cmd>HurlRunner<CR>", desc = "Run API requests" },
       -- Run API request in visual mode
-      { "<leader>cr", ":HurlRun<CR>", desc = "Run API request", mode = "v" },
+      { "<leader>cr", ":HurlRunner<CR>", desc = "Run API request", mode = "v" },
     },
   }
 }

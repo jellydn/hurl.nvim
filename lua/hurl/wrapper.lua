@@ -143,7 +143,7 @@ local function run_selection(opts)
 end
 
 function M.setup()
-  util.create_cmd('HurlRun', function(opts)
+  util.create_cmd('HurlRunner', function(opts)
     if opts.range ~= 0 then
       run_selection(opts.fargs)
     else
