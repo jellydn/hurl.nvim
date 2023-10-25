@@ -7,6 +7,7 @@ Table of Contents                                *hurl.nvim-table-of-contents*
   - Usage                                                    |hurl.nvim-usage|
   - Demo                                                      |hurl.nvim-demo|
   - Default Key Mappings                      |hurl.nvim-default-key-mappings|
+  - Tests                                                      |hurl.nvim-tests|
   - Credits                                                |hurl.nvim-credits|
   - Author                                                  |hurl.nvim-author|
   - Show your support                            |hurl.nvim-show-your-support|
@@ -74,6 +75,10 @@ DEFAULT KEY MAPPINGS                          *hurl.nvim-default-key-mappings*
 
 These key mappings are active within the popup windows that `hurl.nvim`
 displays.
+
+TESTS                                                          *hurl.nvim-tests*
+
+`hurl.nvim` includes a comprehensive test suite to ensure its reliability and maintainability. The tests cover the core functionalities of the plugin, including HTTP request execution, response handling, and utility functions. The tests are located in the `test` directory, with `hurl_spec.lua` testing the Hurl wrapper and `plugin_spec.lua` testing the plugin itself.
 
 
 CREDITS                                                    *hurl.nvim-credits*
