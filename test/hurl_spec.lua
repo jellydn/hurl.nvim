@@ -12,21 +12,48 @@ describe('Hurl wrapper', function()
 
   describe('request function', function()
     it('should handle GET requests', function()
-      -- TODO: add a test to check GET requests
+      -- Mock the GET request
+      local mock_request = { method = 'GET', url = 'http://example.com' }
+      -- Call the request function with the mock request
+      hurl.request(mock_request, function(response)
+        -- Check that the response status is 200
+        assert.equals(response.status, 200)
+      end)
     end)
 
     it('should handle POST requests', function()
-      -- TODO: add a test to check POST requests
+      -- Mock the POST request
+      local mock_request = { method = 'POST', url = 'http://example.com', body = 'test' }
+      -- Call the request function with the mock request
+      hurl.request(mock_request, function(response)
+        -- Check that the response status is 201
+        assert.equals(response.status, 201)
+      end)
     end)
 
     it('should handle different response statuses', function()
-      -- TODO: add a test to check different response statuses
+      -- Mock the 404 request
+      local mock_request = { method = 'GET', url = 'http://example.com/nonexistent' }
+      -- Call the request function with the mock request
+      hurl.request(mock_request, function(response)
+        -- Check that the response status is 404
+        assert.equals(response.status, 404)
+      end)
     end)
   end)
 
   describe('run_current_file function', function()
     it('should correctly read and execute HTTP requests from a .hurl file', function()
-      -- TODO: add a test to check run_current_file function
+      -- Mock the .hurl file
+      local mock_file = 'test.hurl'
+      -- Write a GET request to the mock file
+      vim.fn.writefile({ 'GET http://example.com' }, mock_file)
+      -- Call the run_current_file function with the mock file
+      hurl.run_current_file({ mock_file })
+      -- Check that the response status is 200
+      assert.equals(response.status, 200)
+      -- Delete the mock file
+      os.remove(mock_file)
     end)
   end)
 
@@ -34,7 +61,19 @@ describe('Hurl wrapper', function()
     it(
       'should correctly read and execute HTTP requests from a selected portion of a .hurl file',
       function()
-        -- TODO: add a test to check run_selection function
+        -- Mock the .hurl file
+        local mock_file = 'test.hurl'
+        -- Write a GET request to the mock file
+        vim.fn.writefile({ 'GET http://example.com' }, mock_file)
+        -- Select the GET request in the mock file
+        vim.fn.setpos("'<", { 0, 1, 1, 0 })
+        vim.fn.setpos("'>", { 0, 1, 1, 0 })
+        -- Call the run_selection function with the mock file
+        hurl.run_selection({ mock_file })
+        -- Check that the response status is 200
+        assert.equals(response.status, 200)
+        -- Delete the mock file
+        os.remove(mock_file)
       end
     )
   end)
