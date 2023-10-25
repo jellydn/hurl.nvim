@@ -45,7 +45,9 @@ describe('Hurl.nvim plugin', function()
     end)
 
     it('should correctly create custom command', function()
-      utils.create_cmd('TestCommand', function() print('Test command') end, { desc = 'Test description' })
+      utils.create_cmd('TestCommand', function()
+        print('Test command')
+      end, { desc = 'Test description' })
       assert.truthy(vim.fn.exists(':TestCommand'))
     end)
 
@@ -57,7 +59,10 @@ describe('Hurl.nvim plugin', function()
     it('should correctly render header table', function()
       local headers = { ['Content-Type'] = 'application/json', ['Accept'] = 'application/json' }
       local rendered_headers = utils.render_header_table(headers)
-      assert.are.same({ 'Content-Type | application/json', 'Accept | application/json' }, rendered_headers.headers)
+      assert.are.same(
+        { 'Content-Type | application/json', 'Accept | application/json' },
+        rendered_headers.headers
+      )
     end)
 
     it('should correctly check if the response is json', function()
