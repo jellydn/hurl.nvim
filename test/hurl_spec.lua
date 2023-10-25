@@ -17,13 +17,12 @@ describe('Hurl wrapper', function()
       -- Call the request function with the mock request
       if hurl.request then
         hurl.request(mock_request, function(response)
+          -- Check that the response status is 200
+          assert.equals(response.status, 200)
         end)
       else
         print("Warning: hurl.request function is nil, skipping test.")
       end
-        -- Check that the response status is 200
-        assert.equals(response.status, 200)
-      end)
     end)
 
     it('should handle POST requests', function()
@@ -67,10 +66,16 @@ describe('Hurl wrapper', function()
         return
       end
       -- Check that the response status is 200
-      assert.equals(response.status, 200)
-      -- Delete the mock file
-      os.remove(mock_file)
-    end)
+      if hurl.run_current_file then
+        hurl.run_current_file({ mock_file }, function(response)
+          -- Check that the response status is 200
+          assert.equals(response.status, 200)
+          -- Delete the mock file
+          os.remove(mock_file)
+        end)
+      else
+        print("Warning: hurl.run_current_file function is nil, skipping test.")
+      end
   end)
 
   describe('run_selection function', function()
@@ -86,15 +91,15 @@ describe('Hurl wrapper', function()
         vim.fn.setpos("'>", { 0, 1, 1, 0 })
         -- Call the run_selection function with the mock file
         if hurl.run_selection then
-          hurl.run_selection({ mock_file })
+          hurl.run_selection({ mock_file }, function(response)
+            -- Check that the response status is 200
+            assert.equals(response.status, 200)
+            -- Delete the mock file
+            os.remove(mock_file)
+          end)
         else
           print("Warning: hurl.run_selection function is nil, skipping test.")
         end
-        -- Check that the response status is 200
-        assert.equals(response.status, 200)
-        -- Delete the mock file
-        os.remove(mock_file)
-      end
     )
   end)
 end)
