@@ -34,3 +34,5 @@ sweepai
 pygithub
 sandboxed
 foldmethod
+writefile
+setpos
