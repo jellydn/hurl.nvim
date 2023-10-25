@@ -31,8 +31,11 @@ describe('Hurl wrapper', function()
   end)
 
   describe('run_selection function', function()
-    it('should correctly read and execute HTTP requests from a selected portion of a .hurl file', function()
-      -- TODO: add a test to check run_selection function
-    end)
+    it(
+      'should correctly read and execute HTTP requests from a selected portion of a .hurl file',
+      function()
+        -- TODO: add a test to check run_selection function
+      end
+    )
   end)
 end)
