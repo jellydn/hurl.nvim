@@ -8,6 +8,7 @@
 - 🚀 Execute HTTP requests directly from `.hurl` files.
 - 👁‍🗨 Multiple display modes for API response: popup or split.
 - 🌈 Highly customizable through Neovim settings.
+- 🧪 Comprehensive test suite for reliability and maintainability.
 
 ## Usage
 
@@ -60,6 +61,10 @@ Click on the GIF below to view the full demo:
 - `<C-p>`: Switch to the previous popup window.
 
 These key mappings are active within the popup windows that `hurl.nvim` displays.
+
+## Tests
+
+`hurl.nvim` includes a comprehensive test suite to ensure its reliability and maintainability. The tests cover the core functionalities of the plugin, including HTTP request execution, response handling, and utility functions. The tests are located in the `test` directory, with `hurl_spec.lua` testing the Hurl wrapper and `plugin_spec.lua` testing the plugin itself.
 
 ## Credits
 
