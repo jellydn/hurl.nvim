@@ -6,7 +6,6 @@ describe('Hurl wrapper', function()
   end)
 
   it('should define a custom command: HurlRunner', function()
-    -- TODO: add a test to check if the command is defined
-    assert.falsy(true)
+    assert.truthy(vim.fn.exists(':HurlRunner'))
   end)
 end)
