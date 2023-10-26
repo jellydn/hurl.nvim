@@ -1,4 +1,4 @@
-local hurl = require('hurl.wrapper')
+local hurl = require('hurl.main')
 
 describe('Hurl wrapper', function()
   it('should be able to load', function()
