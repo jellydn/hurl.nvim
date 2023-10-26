@@ -12,7 +12,7 @@ local M = {}
 function M.setup(options)
   _HURL_CFG = vim.tbl_extend('force', _HURL_CFG, options or {})
 
-  require('hurl.wrapper').setup()
+  require('hurl.main').setup()
 end
 
 return M
