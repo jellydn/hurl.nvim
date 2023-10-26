@@ -129,6 +129,9 @@ util.is_json_response = function(content_type)
   return string.find(content_type, 'application/json') ~= nil
 end
 
+--- Check if the response is html
+---@param content_type string
+---@return boolean
 util.is_html_response = function(content_type)
   return string.find(content_type, 'text/html') ~= nil
 end
