@@ -4,14 +4,157 @@ local M = {}
 
 local response = {}
 
+--- Call hurl command
+---@param opts table The options
+---@param callback? function The callback function
+local function request(opts, callback)
+  vim.notify('hurl: running request', vim.log.levels.INFO)
+  local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
+  response = {}
+
+  vim.fn.jobstart(cmd, {
+    on_stdout = on_output,
+    on_stderr = on_output,
+    on_exit = function(i, code)
+      util.log_info('exit at ' .. i .. ' , code ' .. code)
+      if code ~= 0 then
+        -- Send error code and response to quickfix and open it
+        vim.fn.setqflist({ { filename = '', text = vim.inspect(response.body) } })
+        vim.cmd('copen')
+      end
+
+      if callback then
+        return callback(response)
+      else
+        -- show messages
+        local lines = response.raw or response.body
+        if #lines == 0 then
+          return
+        end
+
+        local container = require('hurl.' .. _HURL_CFG.mode)
+        --show body if it is json
+        if util.is_json_response(response.headers['content-type']) then
+          container.show(response, 'json')
+        else
+          if util.is_html_response(response.headers['content-type']) then
+            container.show(response, 'html')
+          else
+            container.show(response, 'text')
+          end
+        end
+      end
+    end,
+  })
+end
+
+local function run_current_file(opts)
+  opts = opts or {}
+  table.insert(opts, vim.fn.expand('%:p'))
+  request(opts)
+end
+
+local function run_selection(opts)
+  opts = opts or {}
+  local lines = util.get_visual_selection()
+  if not lines then
+    return
+  end
+  local fname = util.create_tmp_file(lines)
+
+  if not fname then
+    return
+  end
+
+  table.insert(opts, fname)
+  request(opts)
+  vim.defer_fn(function()
+    os.remove(fname)
+  end, 1000)
+end
+
+function M.setup()
+  util.create_cmd('HurlRunner', function(opts)
+    if opts.range ~= 0 then
+      run_selection(opts.fargs)
+    else
+      run_current_file(opts.fargs)
+    end
+  end, { nargs = '*', range = true })
+end
+
+return M
+
 --- Output handler
 ---@class Output
+---@param code number The code
+---@param data string[] The data
+---@param event string The event
 local on_output = function(code, data, event)
+  -- Log the code
   util.log_info('hurl: code ', code)
-  local head_state
+
+  -- Remove empty first line if present
   if data[1] == '' then
     table.remove(data, 1)
   end
+
+  -- Return if no data is present
+  if not data[1] then
+    return
+  end
+
+  -- Handle stderr event with multiple lines of data
+  if event == 'stderr' and #data > 1 then
+    response.body = data
+    util.log_error(vim.inspect(data))
+    response.raw = data
+    response.headers = {}
+    return
+  end
+
+  -- Parse the status code from the first line
+  local status = tonumber(string.match(data[1], '([%w+]%d+)'))
+
+  -- Initialize the head state
+  local head_state = 'start'
+
+  -- Set the response status and headers if a valid status code is present
+  if status then
+    response.status = status
+    response.headers = { status = data[1] }
+    response.headers_str = data[1] .. '\r\n'
+  end
+
+  -- Process each line of data
+  for i = 2, #data do
+    local line = data[i]
+
+    -- Check if the line is empty or nil to determine the head state
+    if line == '' or line == nil then
+      head_state = 'body'
+    elseif head_state == 'start' then
+      -- Parse the key-value pair from the line and add it to the response headers
+      local key, value = string.match(line, '([%w-]+):%s*(.+)')
+      if key and value then
+        response.headers[key] = value
+        response.headers_str = response.headers_str .. line .. '\r\n'
+      end
+    elseif head_state == 'body' then
+      -- Append the line to the response body
+      response.body = response.body or ''
+      response.body = response.body .. line
+    end
+  end
+
+  -- Set the raw data of the response
+  response.raw = data
+
+  -- Log the response status, headers, and body
+  util.log_info('hurl: response status ' .. response.status)
+  util.log_info('hurl: response headers ' .. vim.inspect(response.headers))
+  util.log_info('hurl: response body ' .. response.body)
+end
   if not data[1] then
     return
   end
@@ -54,6 +197,290 @@ local on_output = function(code, data, event)
   util.log_info('hurl: response body ' .. response.body)
 end
 
+--- Call hurl command
+---@param opts table The options
+---@param callback? function The callback function
+local function request(opts, callback)
+  vim.notify('hurl: running request', vim.log.levels.INFO)
+  local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
+  response = {}
+
+  vim.fn.jobstart(cmd, {
+    on_stdout = on_output,
+    on_stderr = on_output,
+    on_exit = function(i, code)
+      util.log_info('exit at ' .. i .. ' , code ' .. code)
+      if code ~= 0 then
+        -- Send error code and response to quickfix and open it
+        vim.fn.setqflist({ { filename = '', text = vim.inspect(response.body) } })
+        vim.cmd('copen')
+      end
+
+      if callback then
+        return callback(response)
+      else
+        -- show messages
+        local lines = response.raw or response.body
+        if #lines == 0 then
+          return
+        end
+
+        local container = require('hurl.' .. _HURL_CFG.mode)
+        --show body if it is json
+        if util.is_json_response(response.headers['content-type']) then
+          container.show(response, 'json')
+        else
+          if util.is_html_response(response.headers['content-type']) then
+            container.show(response, 'html')
+          else
+            container.show(response, 'text')
+          end
+        end
+      end
+    end,
+  })
+endlocal util = require('hurl.utils')
+
+local M = {}
+
+local response = {}
+
+--- Call hurl command
+---@param opts table The options
+---@param callback? function The callback function
+local function request(opts, callback)
+  vim.notify('hurl: running request', vim.log.levels.INFO)
+  local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
+  response = {}
+
+  vim.fn.jobstart(cmd, {
+    on_stdout = on_output,
+    on_stderr = on_output,
+    on_exit = function(i, code)
+      util.log_info('exit at ' .. i .. ' , code ' .. code)
+      if code ~= 0 then
+        -- Send error code and response to quickfix and open it
+        vim.fn.setqflist({ { filename = '', text = vim.inspect(response.body) } })
+        vim.cmd('copen')
+      end
+
+      if callback then
+        return callback(response)
+      else
+        -- show messages
+        local lines = response.raw or response.body
+        if #lines == 0 then
+          return
+        end
+
+        local container = require('hurl.' .. _HURL_CFG.mode)
+        --show body if it is json
+        if util.is_json_response(response.headers['content-type']) then
+          container.show(response, 'json')
+        else
+          if util.is_html_response(response.headers['content-type']) then
+            container.show(response, 'html')
+          else
+            container.show(response, 'text')
+          end
+        end
+      end
+    end,
+  })
+end
+
+local function run_current_file(opts)
+  opts = opts or {}
+  table.insert(opts, vim.fn.expand('%:p'))
+  request(opts)
+end
+
+local function run_selection(opts)
+  opts = opts or {}
+  local lines = util.get_visual_selection()
+  if not lines then
+    return
+  end
+  local fname = util.create_tmp_file(lines)
+
+  if not fname then
+    return
+  end
+
+  table.insert(opts, fname)
+  request(opts)
+  vim.defer_fn(function()
+    os.remove(fname)
+  end, 1000)
+end
+
+function M.setup()
+  util.create_cmd('HurlRunner', function(opts)
+    if opts.range ~= 0 then
+      run_selection(opts.fargs)
+    else
+      run_current_file(opts.fargs)
+    end
+  end, { nargs = '*', range = true })
+end
+
+return M
+
+--- Output handler
+---@class Output
+---@param code number The code
+---@param data string[] The data
+---@param event string The event
+local on_output = function(code, data, event)
+  -- Log the code
+  util.log_info('hurl: code ', code)
+
+  -- Remove empty first line if present
+  if data[1] == '' then
+    table.remove(data, 1)
+  end
+
+  -- Return if no data is present
+  if not data[1] then
+    return
+  end
+
+  -- Handle stderr event with multiple lines of data
+  if event == 'stderr' and #data > 1 then
+    response.body = data
+    util.log_error(vim.inspect(data))
+    response.raw = data
+    response.headers = {}
+    return
+  end
+
+  -- Parse the status code from the first line
+  local status = tonumber(string.match(data[1], '([%w+]%d+)'))
+
+  -- Initialize the head state
+  local head_state = 'start'
+
+  -- Set the response status and headers if a valid status code is present
+  if status then
+    response.status = status
+    response.headers = { status = data[1] }
+    response.headers_str = data[1] .. '\r\n'
+  end
+
+  -- Process each line of data
+  for i = 2, #data do
+    local line = data[i]
+
+    -- Check if the line is empty or nil to determine the head state
+    if line == '' or line == nil then
+      head_state = 'body'
+    elseif head_state == 'start' then
+      -- Parse the key-value pair from the line and add it to the response headers
+      local key, value = string.match(line, '([%w-]+):%s*(.+)')
+      if key and value then
+        response.headers[key] = value
+        response.headers_str = response.headers_str .. line .. '\r\n'
+      end
+    elseif head_state == 'body' then
+      -- Append the line to the response body
+      response.body = response.body or ''
+      response.body = response.body .. line
+    end
+  end
+
+  -- Set the raw data of the response
+  response.raw = data
+
+  -- Log the response status, headers, and body
+  util.log_info('hurl: response status ' .. response.status)
+  util.log_info('hurl: response headers ' .. vim.inspect(response.headers))
+  util.log_info('hurl: response body ' .. response.body)
+end
+  if not data[1] then
+    return
+  end
+
+  if event == 'stderr' and #data > 1 then
+    response.body = data
+    util.log_error(vim.inspect(data))
+    response.raw = data
+    response.headers = {}
+    return
+  end
+
+  local status = tonumber(string.match(data[1], '([%w+]%d+)'))
+  head_state = 'start'
+  if status then
+    response.status = status
+    response.headers = { status = data[1] }
+    response.headers_str = data[1] .. '\r\n'
+  end
+
+  for i = 2, #data do
+    local line = data[i]
+    if line == '' or line == nil then
+      head_state = 'body'
+    elseif head_state == 'start' then
+      local key, value = string.match(line, '([%w-]+):%s*(.+)')
+      if key and value then
+        response.headers[key] = value
+        response.headers_str = response.headers_str .. line .. '\r\n'
+      end
+    elseif head_state == 'body' then
+      response.body = response.body or ''
+      response.body = response.body .. line
+    end
+  end
+  response.raw = data
+
+  util.log_info('hurl: response status ' .. response.status)
+  util.log_info('hurl: response headers ' .. vim.inspect(response.headers))
+  util.log_info('hurl: response body ' .. response.body)
+end
+
+--- Call hurl command
+---@param opts table The options
+---@param callback? function The callback function
+local function request(opts, callback)
+  vim.notify('hurl: running request', vim.log.levels.INFO)
+  local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
+  response = {}
+
+  vim.fn.jobstart(cmd, {
+    on_stdout = on_output,
+    on_stderr = on_output,
+    on_exit = function(i, code)
+      util.log_info('exit at ' .. i .. ' , code ' .. code)
+      if code ~= 0 then
+        -- Send error code and response to quickfix and open it
+        vim.fn.setqflist({ { filename = '', text = vim.inspect(response.body) } })
+        vim.cmd('copen')
+      end
+
+      if callback then
+        return callback(response)
+      else
+        -- show messages
+        local lines = response.raw or response.body
+        if #lines == 0 then
+          return
+        end
+
+        local container = require('hurl.' .. _HURL_CFG.mode)
+        --show body if it is json
+        if util.is_json_response(response.headers['content-type']) then
+          container.show(response, 'json')
+        else
+          if util.is_html_response(response.headers['content-type']) then
+            container.show(response, 'html')
+          else
+            container.show(response, 'text')
+          end
+        end
+      end
+    end,
+  })
+end
 --- Call hurl command
 ---@param opts table The options
 ---@param callback? function The callback function
