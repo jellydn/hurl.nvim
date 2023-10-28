@@ -138,4 +138,53 @@ function M.setup()
   end, { nargs = '*', range = true })
 end
 
+-- Add unit tests for the `request` function
+function M.test_request()
+  -- Test successful request
+  local opts = { 'http://example.com' }
+  request(opts, function(response)
+    assert(response.status == 200, 'Expected status code 200')
+    assert(response.headers['content-type'] == 'text/html', 'Expected content-type to be text/html')
+    assert(response.body:find('<html>') ~= nil, 'Expected response body to contain <html>')
+  end)
+
+  -- Test failed request
+  local opts = { 'http://nonexistent' }
+  request(opts, function(response)
+    assert(response.status == 404, 'Expected status code 404')
+    assert(response.headers['content-type'] == 'text/plain', 'Expected content-type to be text/plain')
+    assert(response.body == 'Not Found', 'Expected response body to be "Not Found"')
+  end)
+
+  -- Test JSON response
+  local opts = { 'http://api.example.com/data' }
+  request(opts, function(response)
+    assert(response.status == 200, 'Expected status code 200')
+    assert(response.headers['content-type'] == 'application/json', 'Expected content-type to be application/json')
+    local json = vim.fn.json_decode(response.body)
+    assert(json ~= nil, 'Failed to decode JSON response')
+    assert(json.name == 'John Doe', 'Expected name to be "John Doe"')
+  end)
+
+  -- Test HTML response
+  local opts = { 'http://example.com' }
+  request(opts, function(response)
+    assert(response.status == 200, 'Expected status code 200')
+    assert(response.headers['content-type'] == 'text/html', 'Expected content-type to be text/html')
+    assert(response.body:find('<html>') ~= nil, 'Expected response body to contain <html>')
+  end)
+end
+
+return M
+
+function M.setup()
+  util.create_cmd('HurlRunner', function(opts)
+    if opts.range ~= 0 then
+      run_selection(opts.fargs)
+    else
+      run_current_file(opts.fargs)
+    end
+  end, { nargs = '*', range = true })
+end
+
 return M
