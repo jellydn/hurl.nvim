@@ -77,7 +77,7 @@ end
 ---@param type 'json' | 'html' | 'text'
 ---@return string[] | nil
 util.format = function(body, type)
-  local formatters = { json = 'jq', html = { 'prettier', '--parser', 'html' } }
+  local formatters = { json = { 'jq' }, html = { 'prettier', '--parser', 'html' } }
 
   -- If no formatter is defined, return the body
   if not formatters[type] then

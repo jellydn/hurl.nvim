@@ -1,7 +1,7 @@
 --- Global configuration for hurl.nvim
 _HURL_CFG = {
   debug = false,
-  mode = 'popup',
+  mode = 'split',
 }
 local M = {}
 
