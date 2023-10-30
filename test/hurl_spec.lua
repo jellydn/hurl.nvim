@@ -8,4 +8,8 @@ describe('Hurl wrapper', function()
   it('should define a custom command: HurlRunner', function()
     assert.truthy(vim.fn.exists(':HurlRunner'))
   end)
+
+  it('should define a custom command: HurlRunnerAt', function()
+    assert.truthy(vim.fn.exists(':HurlRunnerAt'))
+  end)
 end)
