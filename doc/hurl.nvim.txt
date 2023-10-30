@@ -25,9 +25,8 @@ Add the following configuration to your Neovim setup:
 >lua
       {
         "jellydn/hurl.nvim",
-        ft = "hurl",
         dependencies = { "MunifTanjim/nui.nvim" },
-        cmd = { "HurlRunner" },
+        cmd = { "HurlRunner", "HurlRunnerAt" },
         opts = {
           -- Show debugging info
           debug = false,
@@ -36,9 +35,10 @@ Add the following configuration to your Neovim setup:
         },
         keys = {
           -- Run API request
-          { "<leader>ra", "<cmd>HurlRunner<CR>", desc = "Run API requests" },
-          -- Run API request in visual mode
-          { "<leader>cr", ":HurlRunner<CR>", desc = "Run API request", mode = "v" },
+          { "<leader>rA", "<cmd>HurlRunner<CR>", desc = "Run All requests" },
+          { "<leader>ra", "<cmd>HurlRunnerAt<CR>", desc = "Run Api request" },
+          -- Run Hurl request in visual mode
+          { "<leader>h", ":HurlRunner<CR>", desc = "Hurl Runner", mode = "v" },
         },
       }
     }
