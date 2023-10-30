@@ -44,7 +44,7 @@ end
 ---@param content any
 ---@return string|nil
 util.create_tmp_file = function(content)
-  -- create temp file base on pid and datetime
+  -- create temp file based on pid and datetime
   local tmp_file = string.format(
     '%s/%s.hurl',
     vim.fn.stdpath('cache'),
