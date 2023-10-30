@@ -46,6 +46,7 @@ M.show = function(data, type)
             return
           end
         end
+        -- TODO: clear buffer on unmount
         layout:unmount()
       end)
     end)

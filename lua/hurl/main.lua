@@ -69,9 +69,11 @@ local function request(opts, callback)
       util.log_info('exit at ' .. i .. ' , code ' .. code)
       if code ~= 0 then
         -- Send error code and response to quickfix and open it
-        vim.fn.setqflist({ { filename = '', text = vim.inspect(response.body) } })
+        vim.fn.setqflist({ { filename = vim.inspect(cmd), text = vim.inspect(response.body) } })
         vim.cmd('copen')
       end
+
+      vim.notify('hurl: request finished', vim.log.levels.INFO)
 
       if callback then
         return callback(response)
@@ -118,13 +120,19 @@ local function run_selection(opts)
   local fname = util.create_tmp_file(lines)
 
   if not fname then
+    vim.notify('hurl: create tmp file failed. Please try again!', vim.log.levels.WARN)
     return
   end
 
   table.insert(opts, fname)
   request(opts)
   vim.defer_fn(function()
-    os.remove(fname)
+    local success = os.remove(fname)
+    if not success then
+      vim.notify('hurl: remove file failed', vim.log.levels.WARN)
+    else
+      util.log_info('hurl: remove file success ' .. fname)
+    end
   end, 1000)
 end
 
