@@ -22,6 +22,7 @@ M.show = function(data, type)
 
   -- unmount component when cursor leaves buffer
   split:on(event.BufLeave, function()
+    -- TODO: clear buffer on unmount
     split:unmount()
   end)
 

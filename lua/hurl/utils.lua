@@ -44,8 +44,15 @@ end
 ---@param content any
 ---@return string|nil
 util.create_tmp_file = function(content)
-  local tmp_file = vim.fn.tempname()
+  -- create temp file base on pid and datetime
+  local tmp_file = string.format(
+    '%s/%s.hurl',
+    vim.fn.stdpath('cache'),
+    vim.fn.getpid() .. '-' .. vim.fn.localtime()
+  )
+
   if not tmp_file then
+    vim.notify('hurl: failed to create tmp file', vim.log.levels.ERROR)
     return
   end
 
@@ -60,6 +67,13 @@ util.create_tmp_file = function(content)
     f:write(content)
   end
   f:close()
+
+  -- Send to quicklist to open the temp file in debug mode
+  if _HURL_CFG.debug then
+    vim.fn.setqflist({ { filename = tmp_file, text = 'hurl.nvim' } })
+    vim.cmd('copen')
+  end
+
   return tmp_file
 end
 
