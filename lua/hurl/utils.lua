@@ -6,7 +6,7 @@ local util = {}
 ---@vararg any
 util.log_info = function(...)
   -- Only save log when debug is on
-  if not _HURL_CFG.debug then
+  if not _HURL_GLOBAL_CONFIG.debug then
     return
   end
 
@@ -17,7 +17,7 @@ end
 ---@vararg any
 util.log_error = function(...)
   -- Only save log when debug is on
-  if not _HURL_CFG.debug then
+  if not _HURL_GLOBAL_CONFIG.debug then
     return
   end
 
@@ -69,7 +69,7 @@ util.create_tmp_file = function(content)
   f:close()
 
   -- Send to quicklist to open the temp file in debug mode
-  if _HURL_CFG.debug then
+  if _HURL_GLOBAL_CONFIG.debug then
     vim.fn.setqflist({ { filename = tmp_file, text = 'hurl.nvim' } })
     vim.cmd('copen')
   end
@@ -91,7 +91,8 @@ end
 ---@param type 'json' | 'html' | 'text'
 ---@return string[] | nil
 util.format = function(body, type)
-  local formatters = { json = { 'jq' }, html = { 'prettier', '--parser', 'html' } }
+  local formatters = _HURL_GLOBAL_CONFIG.formatters
+    or { json = { 'jq' }, html = { 'prettier', '--parser', 'html' } }
 
   -- If no formatter is defined, return the body
   if not formatters[type] then
