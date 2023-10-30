@@ -3,8 +3,8 @@ describe('Hurl.nvim plugin', function()
     local hurl = require('hurl')
     assert.truthy(hurl)
 
-    assert.are.same('split', _HURL_CFG.mode)
-    assert.are.same(false, _HURL_CFG.debug)
+    assert.are.same('split', _HURL_GLOBAL_CONFIG.mode)
+    assert.are.same(false, _HURL_GLOBAL_CONFIG.debug)
   end)
 
   it('should be able parse the configuration file', function()
@@ -13,7 +13,7 @@ describe('Hurl.nvim plugin', function()
       mode = 'popup',
     })
 
-    assert.are.same('popup', _HURL_CFG.mode)
-    assert.are.same(true, _HURL_CFG.debug)
+    assert.are.same('popup', _HURL_GLOBAL_CONFIG.mode)
+    assert.are.same(true, _HURL_GLOBAL_CONFIG.debug)
   end)
 end)
