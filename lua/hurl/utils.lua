@@ -1,8 +1,191 @@
-local log = require('hurl.vlog')
+util.log_info = function(...)
+  -- Only save log when debug is on
+  if not _HURL_GLOBAL_CONFIG.debug then
+    return
+  end
 
-local util = {}
+  log.info(...)
+end
 
---- Log info
+util.log_error = function(...)
+  -- Only save log when debug is on
+  if not _HURL_GLOBAL_CONFIG.debug then
+    return
+  end
+
+  log.error(...)
+end
+
+--- Unit tests for log_info function
+function test_log_info()
+  -- Add your test cases here
+end
+
+--- Unit tests for log_error function
+function test_log_error()
+  -- Add your test cases here
+end
+
+--- Get visual selection
+---@return string[]
+util.get_visual_selection = function()
+  local s_start = vim.fn.getpos("'<")
+  local s_end = vim.fn.getpos("'>")
+  local n_lines = math.abs(s_end[2] - s_start[2]) + 1
+  local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
+  lines[1] = string.sub(lines[1], s_start[3], -1)
+  if n_lines == 1 then
+    lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
+  else
+    lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
+  end
+  return lines
+end
+
+--- Unit tests for get_visual_selection function
+function test_get_visual_selection()
+  -- Add your test cases here
+end
+
+--- Create tmp file
+---@param content any
+---@return string|nil
+util.create_tmp_file = function(content)
+  -- create temp file base on pid and datetime
+  local tmp_file = string.format(
+    '%s/%s.hurl',
+    vim.fn.stdpath('cache'),
+    vim.fn.getpid() .. '-' .. vim.fn.localtime()
+  )
+
+  if not tmp_file then
+    vim.notify('hurl: failed to create tmp file', vim.log.levels.ERROR)
+    return
+  end
+
+  local f = io.open(tmp_file, 'w')
+  if not f then
+    return
+  end
+  if type(content) == 'table' then
+    local c = vim.fn.join(content, '\n')
+    f:write(c)
+  else
+    f:write(content)
+  end
+  f:close()
+
+  -- Send to quicklist to open the temp file in debug mode
+  if _HURL_GLOBAL_CONFIG.debug then
+    vim.fn.setqflist({ { filename = tmp_file, text = 'hurl.nvim' } })
+    vim.cmd('copen')
+  end
+
+  return tmp_file
+end
+
+--- Unit tests for create_tmp_file function
+function test_create_tmp_file()
+  -- Add your test cases here
+end
+
+--- Create custom command
+---@param cmd string The command name
+---@param func function The function to execute
+---@param opt table The options
+util.create_cmd = function(cmd, func, opt)
+  opt = vim.tbl_extend('force', { desc = 'hurl.nvim ' .. cmd }, opt or {})
+  vim.api.nvim_create_user_command(cmd, func, opt)
+end
+
+--- Unit tests for create_cmd function
+function test_create_cmd()
+  -- Add your test cases here
+end
+
+--- Format the body of the request
+---@param body string
+---@param type 'json' | 'html' | 'text'
+---@return string[] | nil
+util.format = function(body, type)
+  local formatters = _HURL_GLOBAL_CONFIG.formatters
+    or { json = { 'jq' }, html = { 'prettier', '--parser', 'html' } }
+
+  -- If no formatter is defined, return the body
+  if not formatters[type] then
+    return vim.split(body, '\n')
+  end
+
+  local stdout = vim.fn.systemlist(formatters[type], body)
+  if vim.v.shell_error ~= 0 then
+    vim.notify('formatter failed' .. vim.v.shell_error, vim.log.levels.ERROR)
+    return vim.split(body, '\n')
+  end
+  return stdout
+end
+
+--- Unit tests for format function
+function test_format()
+  -- Add your test cases here
+end
+
+--- Render header table
+---@param headers table
+util.render_header_table = function(headers)
+  local result = {}
+  local maxKeyLength = 0
+  for k, _ in pairs(headers) do
+    maxKeyLength = math.max(maxKeyLength, #k)
+  end
+
+  local line = 0
+  for k, v in pairs(headers) do
+    line = line + 1
+    if line == 1 then
+      -- Add header for the table view
+      table.insert(
+        result,
+        string.format('%-' .. maxKeyLength .. 's | %s', 'Header Key', 'Header Value')
+      )
+
+      line = line + 1
+    end
+    table.insert(result, string.format('%-' .. maxKeyLength .. 's | %s', k, v))
+  end
+
+  return {
+    line = line,
+    headers = result,
+  }
+end
+
+--- Unit tests for render_header_table function
+function test_render_header_table()
+  -- Add your test cases here
+end
+
+--- Check if the response is json
+---@param content_type string
+---@return boolean
+util.is_json_response = function(content_type)
+  return string.find(content_type, 'application/json') ~= nil
+end
+
+--- Unit tests for is_json_response function
+function test_is_json_response()
+  -- Add your test cases here
+end
+
+util.is_html_response = function(content_type)
+  return string.find(content_type, 'text/html') ~= nil
+end
+
+--- Unit tests for is_html_response function
+function test_is_html_response()
+  -- Add your test cases here
+end
+
+return util
 ---@vararg any
 util.log_info = function(...)
   -- Only save log when debug is on
