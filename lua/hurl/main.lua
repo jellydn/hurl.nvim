@@ -1,4 +1,4 @@
-local util = require('hurl.utils')
+local utils = require('hurl.utils')
 
 local M = {}
 
@@ -7,7 +7,6 @@ local response = {}
 --- Output handler
 ---@class Output
 local on_output = function(code, data, event)
-  util.log_info('hurl: code ', code)
   local head_state
   if data[1] == '' then
     table.remove(data, 1)
@@ -18,7 +17,7 @@ local on_output = function(code, data, event)
 
   if event == 'stderr' and #data > 1 then
     response.body = data
-    util.log_error(vim.inspect(data))
+    utils.log_error(vim.inspect(data))
     response.raw = data
     response.headers = {}
     return
@@ -49,9 +48,9 @@ local on_output = function(code, data, event)
   end
   response.raw = data
 
-  util.log_info('hurl: response status ' .. response.status)
-  util.log_info('hurl: response headers ' .. vim.inspect(response.headers))
-  util.log_info('hurl: response body ' .. response.body)
+  utils.log_info('hurl: response status ' .. response.status)
+  utils.log_info('hurl: response headers ' .. vim.inspect(response.headers))
+  utils.log_info('hurl: response body ' .. response.body)
 end
 
 --- Call hurl command
@@ -62,11 +61,15 @@ local function request(opts, callback)
   local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
   response = {}
 
+  if _HURL_GLOBAL_CONFIG.debug then
+    vim.fn.setqflist({ { filename = vim.inspect(cmd), text = vim.inspect(opts) } })
+  end
+
   vim.fn.jobstart(cmd, {
     on_stdout = on_output,
     on_stderr = on_output,
     on_exit = function(i, code)
-      util.log_info('exit at ' .. i .. ' , code ' .. code)
+      utils.log_info('exit at ' .. i .. ' , code ' .. code)
       if code ~= 0 then
         -- Send error code and response to quickfix and open it
         vim.fn.setqflist({ { filename = vim.inspect(cmd), text = vim.inspect(response.body) } })
@@ -84,12 +87,17 @@ local function request(opts, callback)
           return
         end
 
-        local container = require('hurl.' .. _HURL_CFG.mode)
-        --show body if it is json
-        if util.is_json_response(response.headers['content-type']) then
+        local container = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
+        local content_type = response.headers['content-type']
+          or response.headers['Content-Type']
+          or ''
+
+        utils.log_info('Detected content type: ' .. content_type)
+
+        if utils.is_json_response(content_type) then
           container.show(response, 'json')
         else
-          if util.is_html_response(response.headers['content-type']) then
+          if utils.is_html_response(content_type) then
             container.show(response, 'html')
           else
             container.show(response, 'text')
@@ -113,11 +121,11 @@ end
 ---@param opts table The options
 local function run_selection(opts)
   opts = opts or {}
-  local lines = util.get_visual_selection()
+  local lines = utils.get_visual_selection()
   if not lines then
     return
   end
-  local fname = util.create_tmp_file(lines)
+  local fname = utils.create_tmp_file(lines)
 
   if not fname then
     vim.notify('hurl: create tmp file failed. Please try again!', vim.log.levels.WARN)
@@ -126,22 +134,80 @@ local function run_selection(opts)
 
   table.insert(opts, fname)
   request(opts)
+
+  -- Clean tmp file after 1s
+  local timeout = 1000
   vim.defer_fn(function()
     local success = os.remove(fname)
     if not success then
       vim.notify('hurl: remove file failed', vim.log.levels.WARN)
     else
-      util.log_info('hurl: remove file success ' .. fname)
+      utils.log_info('hurl: remove file success ' .. fname)
     end
-  end, 1000)
+  end, timeout)
+end
+
+local function find_http_verb(line, current_line_number)
+  if not line then
+    return nil
+  end
+
+  -- TODO: Support other HTTP verbs
+  local verb_start, verb_end = line:find('GET')
+  if not verb_start then
+    verb_start, verb_end = line:find('POST')
+  end
+
+  if verb_start then
+    return { line_number = current_line_number, start_pos = verb_start, end_pos = verb_end }
+  else
+    return nil
+  end
+end
+
+local function find_http_verb_positions_in_buffer()
+  local buf = vim.api.nvim_get_current_buf()
+  local total_lines = vim.api.nvim_buf_line_count(buf)
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local current_line_number = cursor[1]
+
+  local total = 0
+  local current = 0
+
+  for i = 1, total_lines do
+    local line = vim.api.nvim_buf_get_lines(buf, i - 1, i, false)[1]
+    local result = find_http_verb(line)
+    if result ~= nil then
+      total = total + 1
+      if i == current_line_number then
+        current = total
+      end
+    end
+  end
+
+  return {
+    total = total,
+    current = current,
+  }
 end
 
 function M.setup()
-  util.create_cmd('HurlRunner', function(opts)
+  utils.create_cmd('HurlRunner', function(opts)
     if opts.range ~= 0 then
       run_selection(opts.fargs)
     else
       run_current_file(opts.fargs)
+    end
+  end, { nargs = '*', range = true })
+
+  utils.create_cmd('HurlRunnerAt', function(opts)
+    local result = find_http_verb_positions_in_buffer()
+    if result.current > 0 then
+      opts.fargs = opts.fargs or {}
+      opts.fargs = vim.list_extend(opts.fargs, { '--to-entry', result.current })
+      run_current_file(opts.fargs)
+    else
+      vim.notify('No GET/POST found in the current line')
     end
   end, { nargs = '*', range = true })
 end
