@@ -58,6 +58,7 @@ end
 ---@param opts table The options
 ---@param callback? function The callback function
 local function request(opts, callback)
+  -- Check if a request is currently running
   if is_running then
     vim.notify('hurl: request is running. Please try again later.', vim.log.levels.INFO)
     return
