@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to hurl.nvim 👋</h1>
 <p>
-  <strong>Hurl.nvim</strong> is a Neovim plugin that brings the power of the Hurl command line tool into your editor. Designed to run HTTP requests from `.hurl` files, this plugin simplifies the API development process, making it both efficient and versatile.
+  <strong>Hurl.nvim</strong> is a Neovim plugin designed to run HTTP requests directly from `.hurl` files. Elevate your API development workflow by executing and viewing responses without leaving your editor.
 </p>
 
 ## Features
@@ -37,14 +37,13 @@ Add the following configuration to your Neovim setup:
 
 ## Env File Support: vars.env
 
-hurl.nvim offers first-class support for environment files named vars.env. These files can manage environment variables that your HTTP requests may rely on.
+`hurl.nvim` offers seamless integration with `vars.env` files to manage environment variables for your HTTP requests.
 
 ### File Location
 
-hurl.nvim looks for a `vars.env` file in the following directories by default:
+The plugin looks for a `vars.env` file in the following directories:
 
 - Current file's directory
-- Project root directory
 - src/
 - test/
 - tests/
@@ -52,25 +51,26 @@ hurl.nvim looks for a `vars.env` file in the following directories by default:
 - src/tests/
 - server/tests/
 
+This makes it convenient to specify environment-specific variables that your HTTP requests may use.
 ## Demo
 
 Check out the following demos to see `hurl.nvim` in action:
 
 ### Run a File
 
-Click on the GIF below to view the full demo:
+Run the entire file by pressing `<leader>A` or run 'HurlRunner' command.
 
 [![Run a file](https://i.gyazo.com/e554e81788aad910848ff991c9369d7b.gif)](https://gyazo.com/e554e81788aad910848ff991c9369d7b)
 
 ### Run a Selection
 
-Click on the GIF below to view the full demo:
+Select a range of lines and press `<leader>h` to execute the request or run 'HurlRunner' command.
 
 [![Selection](https://i.gyazo.com/1a44dbbf165006fb5744c8f10883bb69.gif)](https://gyazo.com/1a44dbbf165006fb5744c8f10883bb69)
 
 ### Run at current line
 
-Click on the GIF below to view the full demo:
+Place your cursor on the line you want to run and press `<leader>a` or run 'HurlRunnerAt' command to execute the request. It need be one of the HTTP methods listed: GET, POST, PUT, DELETE, PATCH.
 
 [![Run at current line](https://i.gyazo.com/20efd2cf3f73238bd57e79fc662208b1.gif)](https://gyazo.com/20efd2cf3f73238bd57e79fc662208b1)
 
@@ -86,7 +86,7 @@ These key mappings are active within the popup windows that `hurl.nvim` displays
 
 ## Tips
 
-You could enable debug mode with `debug = true` in your configuration to see more information. All the logs will be printed in the `hurl.nvim.log` in Neovim cache folder. For instance, in MacOS, the log file is located at `~/.cache/nvim/hurl.nvim.log`.
+Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.cache/nvim/hurl.nvim.log` on macOS.
 
 ## Credits
 
