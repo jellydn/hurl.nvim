@@ -74,6 +74,7 @@ local function request(opts, callback)
         -- Send error code and response to quickfix and open it
         vim.fn.setqflist({ { filename = vim.inspect(cmd), text = vim.inspect(response.body) } })
         vim.cmd('copen')
+        return
       end
 
       vim.notify('hurl: request finished', vim.log.levels.INFO)
