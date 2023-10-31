@@ -110,3 +110,4 @@ If this guide has been helpful, please give it a ⭐️.
 ## Tips
 
 Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.cache/nvim/hurl.nvim.log` on macOS.
+```
