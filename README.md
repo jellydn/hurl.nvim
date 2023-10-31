@@ -31,9 +31,7 @@ Add the following configuration to your Neovim setup:
       -- Run Hurl request in visual mode
       { "<leader>h", ":HurlRunner<CR>", desc = "Hurl Runner", mode = "v" },
     },
-  }
-}
-```
+  },
 
 ## Env File Support: vars.env
 
@@ -109,3 +107,6 @@ If this guide has been helpful, please give it a ⭐️.
 [![kofi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/dunghd)
 [![paypal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/dunghd)
 [![buymeacoffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/dunghd)
+## Tips
+
+Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.cache/nvim/hurl.nvim.log` on macOS.
