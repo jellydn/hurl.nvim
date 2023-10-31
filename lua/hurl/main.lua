@@ -137,7 +137,15 @@ local function executeHttpRequest(opts, callback)
       is_running = false
       if code ~= 0 then
         -- Send error code and response to quickfix and open it
-        vim.fn.setqflist({ { filename = vim.inspect(cmd), text = vim.inspect(response.body) } })
+        -- It should display the error message
+        vim.fn.setqflist({}, 'r', {
+          title = 'hurl',
+          lines = response.raw or response.body,
+        })
+        vim.fn.setqflist({}, 'a', {
+          title = 'hurl',
+          lines = { response.headers_str },
+        })
         vim.cmd('copen')
         return
       end
