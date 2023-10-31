@@ -5,6 +5,7 @@ Table of Contents                                *hurl.nvim-table-of-contents*
 
   - Features                                              |hurl.nvim-features|
   - Usage                                                    |hurl.nvim-usage|
+  - Env File Support: vars.env          |hurl.nvim-env-file-support:-vars.env|
   - Demo                                                      |hurl.nvim-demo|
   - Default Key Mappings                      |hurl.nvim-default-key-mappings|
   - Tips                                                      |hurl.nvim-tips|
@@ -44,6 +45,27 @@ Add the following configuration to your Neovim setup:
       }
     }
 <
+
+
+ENV FILE SUPPORT: VARS.ENV              *hurl.nvim-env-file-support:-vars.env*
+
+hurl.nvim offers first-class support for environment files named vars.env.
+These files can manage environment variables that your HTTP requests may rely
+on.
+
+
+FILE LOCATION ~
+
+hurl.nvim looks for a `vars.env` file in the following directories by default:
+
+- Current file’s directory
+- Project root directory
+- src/
+- test/
+- tests/
+- server/
+- src/tests/
+- server/tests/
 
 
 DEMO                                                          *hurl.nvim-demo*
