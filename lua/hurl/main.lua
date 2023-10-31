@@ -12,7 +12,10 @@ local function get_env_file_in_folders()
   local root_dir = vim.fn.expand('%:p:h')
   local cache_dir = vim.fn.stdpath('cache')
   local env_files = {
-    { path = root_dir .. '/vars.env', dest = cache_dir .. '/vars.env' },
+    {
+      path = root_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
+      dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
+    },
   }
   local scan_dir = {
     {
@@ -38,7 +41,10 @@ local function get_env_file_in_folders()
   for _, s in ipairs(scan_dir) do
     local dir = root_dir .. s.dir
     if vim.fn.isdirectory(dir) == 1 then
-      table.insert(env_files, { path = dir .. '/vars.env', dest = cache_dir .. '/vars.env' })
+      table.insert(env_files, {
+        path = dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
+        dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
+      })
     end
   end
 
@@ -111,7 +117,7 @@ local function request(opts, callback)
   local env_files = get_env_file_in_folders()
   for _, env in ipairs(env_files) do
     if vim.fn.filereadable(env.path) == 1 then
-      utils.log_info('hurl: found vars.env ' .. env.path)
+      utils.log_info('hurl: found ' .. _HURL_GLOBAL_CONFIG.env_file .. ' in ' .. env.path)
       table.insert(opts, '--variables-file')
       table.insert(opts, env.path)
       break
@@ -277,7 +283,7 @@ function M.setup()
       opts.fargs = vim.list_extend(opts.fargs, { '--to-entry', result.current })
       run_current_file(opts.fargs)
     else
-      vim.notify('hurl: no http method found in the current line', vim.log.levels.INFO)
+      vim.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
     end
   end, { nargs = '*', range = true })
 end
