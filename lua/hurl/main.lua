@@ -58,12 +58,20 @@ end
 ---@param callback? function The callback function
 local function request(opts, callback)
   vim.notify('hurl: running request', vim.log.levels.INFO)
+
+  -- Check vars.env exist on the current file buffer
+  -- Then inject the command with --variables-file vars.env
+  local env_file = vim.fn.expand('%:p:h') .. '/vars.env'
+  if vim.fn.filereadable(env_file) == 1 then
+    utils.log_info('hurl: found vars.env at ' .. env_file)
+    table.insert(opts, '--variables-file')
+    table.insert(opts, env_file)
+  end
+
   local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
   response = {}
 
-  if _HURL_GLOBAL_CONFIG.debug then
-    vim.fn.setqflist({ { filename = vim.inspect(cmd), text = vim.inspect(opts) } })
-  end
+  utils.log_info('hurl: running command' .. vim.inspect(cmd))
 
   vim.fn.jobstart(cmd, {
     on_stdout = on_output,
@@ -118,6 +126,46 @@ local function run_current_file(opts)
   request(opts)
 end
 
+-- NOTE: Refactor this later if there is a better way
+-- Copy vars.env from current directory or tests directory to nvim cache directory
+---@return table
+local function get_env_file_in_folders()
+  local root_dir = vim.fn.expand('%:p:h')
+  local cache_dir = vim.fn.stdpath('cache')
+  local env_files = {
+    { path = root_dir .. '/vars.env', dest = cache_dir .. '/vars.env' },
+  }
+  local scan_dir = {
+    {
+      dir = '/src',
+    },
+    {
+      dir = '/test',
+    },
+    {
+      dir = '/tests',
+    },
+    {
+      dir = '/server',
+    },
+    {
+      dir = '/src/tests',
+    },
+    {
+      dir = '/server/tests',
+    },
+  }
+
+  for _, s in ipairs(scan_dir) do
+    local dir = root_dir .. s.dir
+    if vim.fn.isdirectory(dir) == 1 then
+      table.insert(env_files, { path = dir .. '/vars.env', dest = cache_dir .. '/vars.env' })
+    end
+  end
+
+  return scan_dir
+end
+
 --- Run selection
 ---@param opts table The options
 local function run_selection(opts)
@@ -131,6 +179,21 @@ local function run_selection(opts)
   if not fname then
     vim.notify('hurl: create tmp file failed. Please try again!', vim.log.levels.WARN)
     return
+  end
+
+  local env_files = get_env_file_in_folders()
+  for _, env in ipairs(env_files) do
+    if vim.fn.filereadable(env.path) == 1 then
+      local success = utils.copy_file(env.path, env.dest)
+      if not success then
+        utils.log_error('hurl: copy vars.env failed', vim.log.levels.WARN)
+      else
+        utils.log_info('hurl: copy vars.env success ' .. env.dest)
+        table.insert(opts, '--variables-file')
+        table.insert(opts, env.dest)
+      end
+      break
+    end
   end
 
   table.insert(opts, fname)

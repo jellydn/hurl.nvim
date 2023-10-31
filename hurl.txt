@@ -36,3 +36,7 @@ docstrings
 sweepai
 pygithub
 sandboxed
+filereadable
+getcwd
+infile
+isdirectory
