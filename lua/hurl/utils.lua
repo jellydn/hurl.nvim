@@ -68,12 +68,6 @@ util.create_tmp_file = function(content)
   end
   f:close()
 
-  -- Send to quicklist to open the temp file in debug mode
-  if _HURL_GLOBAL_CONFIG.debug then
-    vim.fn.setqflist({ { filename = tmp_file, text = 'hurl.nvim' } })
-    vim.cmd('copen')
-  end
-
   return tmp_file
 end
 
@@ -146,31 +140,6 @@ end
 
 util.is_html_response = function(content_type)
   return string.find(content_type, 'text/html') ~= nil
-end
-
---- Copy file
----@param src string
----@param dest string
----@return boolean
-util.copy_file = function(src, dest)
-  local infile = io.open(src, 'rb')
-  if not infile then
-    return false
-  end
-
-  local outfile = io.open(dest, 'wb')
-  if not outfile then
-    infile:close()
-    return false
-  end
-
-  local data = infile:read('*a') -- Read the whole file
-  outfile:write(data)
-
-  infile:close()
-  outfile:close()
-
-  return true
 end
 
 return util
