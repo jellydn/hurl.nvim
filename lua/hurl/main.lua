@@ -8,7 +8,7 @@ local is_running = false
 -- Looking for vars.env file base on the current file buffer
 -- NOTE: Refactor this later if there is a better way, e.g: define scan folders in the configuration
 ---@return table
-local function get_env_file_in_folders()
+local function find_env_files_in_folders()
   local root_dir = vim.fn.expand('%:p:h')
   local cache_dir = vim.fn.stdpath('cache')
   local env_files = {
@@ -103,7 +103,7 @@ end
 --- Call hurl command
 ---@param opts table The options
 ---@param callback? function The callback function
-local function request(opts, callback)
+local function execute_hurl_cmd(opts, callback)
   -- Check if a request is currently running
   if is_running then
     vim.notify('hurl: request is running. Please try again later.', vim.log.levels.INFO)
@@ -115,7 +115,7 @@ local function request(opts, callback)
 
   -- Check vars.env exist on the current file buffer
   -- Then inject the command with --variables-file vars.env
-  local env_files = get_env_file_in_folders()
+  local env_files = find_env_files_in_folders()
   for _, env in ipairs(env_files) do
     if vim.fn.filereadable(env.path) == 1 then
       utils.log_info('hurl: found ' .. _HURL_GLOBAL_CONFIG.env_file .. ' in ' .. env.path)
@@ -189,7 +189,7 @@ end
 local function run_current_file(opts)
   opts = opts or {}
   table.insert(opts, vim.fn.expand('%:p'))
-  request(opts)
+  execute_hurl_cmd(opts)
 end
 
 --- Run selection
@@ -208,7 +208,7 @@ local function run_selection(opts)
   end
 
   table.insert(opts, fname)
-  request(opts)
+  execute_hurl_cmd(opts)
 
   -- Clean tmp file after 1s
   local timeout = 1000
