@@ -26,8 +26,8 @@ Add the following configuration to your Neovim setup:
     },
     keys = {
       -- Run API request
-      { "<leader>rA", "<cmd>HurlRunner<CR>", desc = "Run All requests" },
-      { "<leader>ra", "<cmd>HurlRunnerAt<CR>", desc = "Run Api request" },
+      { "<leader>A", "<cmd>HurlRunner<CR>", desc = "Run All requests" },
+      { "<leader>a", "<cmd>HurlRunnerAt<CR>", desc = "Run Api request" },
       -- Run Hurl request in visual mode
       { "<leader>h", ":HurlRunner<CR>", desc = "Hurl Runner", mode = "v" },
     },
@@ -51,6 +51,12 @@ Click on the GIF below to view the full demo:
 
 [![Selection](https://i.gyazo.com/1a44dbbf165006fb5744c8f10883bb69.gif)](https://gyazo.com/1a44dbbf165006fb5744c8f10883bb69)
 
+### Run at current line
+
+Click on the GIF below to view the full demo:
+
+[![Run at current line](https://i.gyazo.com/20efd2cf3f73238bd57e79fc662208b1.gif)](https://gyazo.com/20efd2cf3f73238bd57e79fc662208b1)
+
 ## Default Key Mappings
 
 `hurl.nvim` comes with some default key mappings to streamline your workflow:
@@ -60,6 +66,10 @@ Click on the GIF below to view the full demo:
 - `<C-p>`: Switch to the previous popup window.
 
 These key mappings are active within the popup windows that `hurl.nvim` displays.
+
+## Tips
+
+You could enable debug mode with `debug = true` in your configuration to see more information. All the logs will be printed in the `hurl.nvim.log` in Neovim cache folder. For instance, in MacOS, the log file is located at `~/.cache/nvim/hurl.nvim.log`.
 
 ## Credits
 
