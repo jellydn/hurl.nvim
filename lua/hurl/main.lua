@@ -99,6 +99,377 @@ local on_output = function(code, data, event)
   utils.log_info('hurl: response headers ' .. vim.inspect(response.headers))
   utils.log_info('hurl: response body ' .. response.body)
 end
+local function find_http_verb(line, current_line_number)
+  if not line then
+    return nil
+  end
+
+  local httpVerbs = { 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' }
+  local verb_start, verb_end, verb
+
+  for _, httpVerb in ipairs(httpVerbs) do
+    verb_start, verb_end = line:find(httpVerb)
+    if verb_start then
+      verb = httpVerb
+      break
+    end
+  end
+
+  if verb_start then
+    return {
+      line_number = current_line_number,
+      start_pos = verb_start,
+      end_pos = verb_end,
+      method = verb,
+    }
+  else
+    return nil
+  end
+end
+
+local function find_http_verb_positions_in_buffer()
+  local buf = vim.api.nvim_get_current_buf()
+  local total_lines = vim.api.nvim_buf_line_count(buf)
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local current_line_number = cursor[1]
+
+  local total = 0
+  local current = 0
+
+  for i = 1, total_lines do
+    local line = vim.api.nvim_buf_get_lines(buf, i - 1, i, false)[1]
+    local result = find_http_verb(line)
+    if result ~= nil then
+      total = total + 1
+      if i == current_line_number then
+        current = total
+      end
+    end
+  end
+
+  return {
+    total = total,
+    current = current,
+  }
+end
+local function find_http_verb(line, current_line_number)
+  if not line then
+    return nil
+  end
+
+  local httpVerbs = { 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' }
+  local verb_start, verb_end, verb
+
+  for _, httpVerb in ipairs(httpVerbs) do
+    verb_start, verb_end = line:find(httpVerb)
+    if verb_start then
+      verb = httpVerb
+      break
+    end
+  end
+
+  if verb_start then
+    return {
+      line_number = current_line_number,
+      start_pos = verb_start,
+      end_pos = verb_end,
+      method = verb,
+    }
+  else
+    return nil
+  end
+end
+
+local function find_http_verb_positions_in_buffer()
+  local buf = vim.api.nvim_get_current_buf()
+  local total_lines = vim.api.nvim_buf_line_count(buf)
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local current_line_number = cursor[1]
+
+  local total = 0
+  local current = 0
+
+  for i = 1, total_lines do
+    local line = vim.api.nvim_buf_get_lines(buf, i - 1, i, false)[1]
+    local result = find_http_verb(line)
+    if result ~= nil then
+      total = total + 1
+      if i == current_line_number then
+        current = total
+      end
+    end
+  end
+
+  return {
+    total = total,
+    current = current,
+  }
+end
+local function find_http_verb(line, current_line_number)
+  if not line then
+    return nil
+  end
+
+  local httpVerbs = { 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' }
+  local verb_start, verb_end, verb
+
+  for _, httpVerb in ipairs(httpVerbs) do
+    verb_start, verb_end = line:find(httpVerb)
+    if verb_start then
+      verb = httpVerb
+      break
+    end
+  end
+
+  if verb_start then
+    return {
+      line_number = current_line_number,
+      start_pos = verb_start,
+      end_pos = verb_end,
+      method = verb,
+    }
+  else
+    return nil
+  end
+end
+
+local function find_http_verb_positions_in_buffer()
+  local buf = vim.api.nvim_get_current_buf()
+  local total_lines = vim.api.nvim_buf_line_count(buf)
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local current_line_number = cursor[1]
+
+  local total = 0
+  local current = 0
+
+  for i = 1, total_lines do
+    local line = vim.api.nvim_buf_get_lines(buf, i - 1, i, false)[1]
+    local result = find_http_verb(line)
+    if result ~= nil then
+      total = total + 1
+      if i == current_line_number then
+        current = total
+      end
+    end
+  end
+
+  return {
+    total = total,
+    current = current,
+  }
+end
+local function find_http_verb(line, current_line_number)
+  if not line then
+    return nil
+  end
+
+  local httpVerbs = { 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' }
+  local verb_start, verb_end, verb
+
+  for _, httpVerb in ipairs(httpVerbs) do
+    verb_start, verb_end = line:find(httpVerb)
+    if verb_start then
+      verb = httpVerb
+      break
+    end
+  end
+
+  if verb_start then
+    return {
+      line_number = current_line_number,
+      start_pos = verb_start,
+      end_pos = verb_end,
+      method = verb,
+    }
+  else
+    return nil
+  end
+end
+
+local function find_http_verb_positions_in_buffer()
+  local buf = vim.api.nvim_get_current_buf()
+  local total_lines = vim.api.nvim_buf_line_count(buf)
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local current_line_number = cursor[1]
+
+  local total = 0
+  local current = 0
+
+  for i = 1, total_lines do
+    local line = vim.api.nvim_buf_get_lines(buf, i - 1, i, false)[1]
+    local result = find_http_verb(line)
+    if result ~= nil then
+      total = total + 1
+      if i == current_line_number then
+        current = total
+      end
+    end
+  end
+
+  return {
+    total = total,
+    current = current,
+  }
+end
+local function find_http_verb(line, current_line_number)
+  if not line then
+    return nil
+  end
+
+  local httpVerbs = { 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' }
+  local verb_start, verb_end, verb
+
+  for _, httpVerb in ipairs(httpVerbs) do
+    verb_start, verb_end = line:find(httpVerb)
+    if verb_start then
+      verb = httpVerb
+      break
+    end
+  end
+
+  if verb_start then
+    return {
+      line_number = current_line_number,
+      start_pos = verb_start,
+      end_pos = verb_end,
+      method = verb,
+    }
+  else
+    return nil
+  end
+end
+
+local function find_http_verb_positions_in_buffer()
+  local buf = vim.api.nvim_get_current_buf()
+  local total_lines = vim.api.nvim_buf_line_count(buf)
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local current_line_number = cursor[1]
+
+  local total = 0
+  local current = 0
+
+  for i = 1, total_lines do
+    local line = vim.api.nvim_buf_get_lines(buf, i - 1, i, false)[1]
+    local result = find_http_verb(line)
+    if result ~= nil then
+      total = total + 1
+      if i == current_line_number then
+        current = total
+      end
+    end
+  end
+
+  return {
+    total = total,
+    current = current,
+  }
+end
+local function find_http_verb(line, current_line_number)
+  if not line then
+    return nil
+  end
+
+  local httpVerbs = { 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' }
+  local verb_start, verb_end, verb
+
+  for _, httpVerb in ipairs(httpVerbs) do
+    verb_start, verb_end = line:find(httpVerb)
+    if verb_start then
+      verb = httpVerb
+      break
+    end
+  end
+
+  if verb_start then
+    return {
+      line_number = current_line_number,
+      start_pos = verb_start,
+      end_pos = verb_end,
+      method = verb,
+    }
+  else
+    return nil
+  end
+end
+
+local function find_http_verb_positions_in_buffer()
+  local buf = vim.api.nvim_get_current_buf()
+  local total_lines = vim.api.nvim_buf_line_count(buf)
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local current_line_number = cursor[1]
+
+  local total = 0
+  local current = 0
+
+  for i = 1, total_lines do
+    local line = vim.api.nvim_buf_get_lines(buf, i - 1, i, false)[1]
+    local result = find_http_verb(line)
+    if result ~= nil then
+      total = total + 1
+      if i == current_line_number then
+        current = total
+      end
+    end
+  end
+
+  return {
+    total = total,
+    current = current,
+  }
+end
+  end
+  
+  return env_files
+end
+
+--- Output handler
+---@class Output
+local on_output = function(code, data, event)
+  local head_state
+  if data[1] == '' then
+    table.remove(data, 1)
+  end
+  if not data[1] then
+    return
+  end
+
+  if event == 'stderr' and #data > 1 then
+    response.body = data
+    utils.log_error(vim.inspect(data))
+    response.raw = data
+    response.headers = {}
+    return
+  end
+
+  local status = tonumber(string.match(data[1], '([%w+]%d+)'))
+  head_state = 'start'
+  if status then
+    response.status = status
+    response.headers = { status = data[1] }
+    response.headers_str = data[1] .. '\r\n'
+  end
+
+  for i = 2, #data do
+    local line = data[i]
+    if line == '' or line == nil then
+      head_state = 'body'
+    elseif head_state == 'start' then
+      local key, value = string.match(line, '([%w-]+):%s*(.+)')
+      if key and value then
+        response.headers[key] = value
+        response.headers_str = response.headers_str .. line .. '\r\n'
+      end
+    elseif head_state == 'body' then
+      response.body = response.body or ''
+      response.body = response.body .. line
+    end
+  end
+  response.raw = data
+
+  utils.log_info('hurl: response status ' .. response.status)
+  utils.log_info('hurl: response headers ' .. vim.inspect(response.headers))
+  utils.log_info('hurl: response body ' .. response.body)
+end
 
 --- Call hurl command
 ---@param opts table The options
