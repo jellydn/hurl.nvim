@@ -153,14 +153,24 @@ local function find_http_verb(line, current_line_number)
     return nil
   end
 
-  -- TODO: Support other HTTP verbs
-  local verb_start, verb_end = line:find('GET')
-  if not verb_start then
-    verb_start, verb_end = line:find('POST')
+  local verbs = { 'GET', 'POST', 'PUT', 'DELETE' }
+  local verb_start, verb_end, verb
+
+  for _, v in ipairs(verbs) do
+    verb_start, verb_end = line:find(v)
+    if verb_start then
+      verb = v
+      break
+    end
   end
 
   if verb_start then
-    return { line_number = current_line_number, start_pos = verb_start, end_pos = verb_end }
+    return {
+      line_number = current_line_number,
+      start_pos = verb_start,
+      end_pos = verb_end,
+      method = verb,
+    }
   else
     return nil
   end
@@ -208,7 +218,7 @@ function M.setup()
       opts.fargs = vim.list_extend(opts.fargs, { '--to-entry', result.current })
       run_current_file(opts.fargs)
     else
-      vim.notify('No GET/POST found in the current line')
+      vim.notify('hurl: no GET/POST/PUT/DELETE found in the current line', vim.log.levels.INFO)
     end
   end, { nargs = '*', range = true })
 end
