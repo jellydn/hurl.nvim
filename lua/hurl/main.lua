@@ -8,7 +8,7 @@ local is_running = false
 -- Looking for vars.env file base on the current file buffer
 -- NOTE: Refactor this later if there is a better way, e.g: define scan folders in the configuration
 ---@return table
-local function get_env_file_in_folders()
+local function findEnvFilesInFolders()
   local root_dir = vim.fn.expand('%:p:h')
   local cache_dir = vim.fn.stdpath('cache')
   local env_files = {
@@ -103,7 +103,7 @@ end
 --- Call hurl command
 ---@param opts table The options
 ---@param callback? function The callback function
-local function request(opts, callback)
+local function executeHttpRequest(opts, callback)
   if is_running then
     vim.notify('hurl: request is running. Please try again later.', vim.log.levels.INFO)
     return
@@ -267,7 +267,7 @@ local function find_http_verb_positions_in_buffer()
   }
 end
 
-function M.setup()
+function initializeHurlPlugin()
   utils.create_cmd('HurlRunner', function(opts)
     if opts.range ~= 0 then
       run_selection(opts.fargs)
