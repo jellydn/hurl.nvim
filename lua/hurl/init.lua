@@ -2,6 +2,7 @@
 local default_config = {
   debug = false,
   mode = 'split',
+  env_file = 'vars.env',
   formatters = {
     json = { 'jq' },
     html = {
