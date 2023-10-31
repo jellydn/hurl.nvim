@@ -3,6 +3,7 @@ local utils = require('hurl.utils')
 local M = {}
 
 local response = {}
+local is_running = false
 
 --- Output handler
 ---@class Output
@@ -57,6 +58,12 @@ end
 ---@param opts table The options
 ---@param callback? function The callback function
 local function request(opts, callback)
+  if is_running then
+    vim.notify('hurl: request is running. Please try again later.', vim.log.levels.INFO)
+    return
+  end
+
+  is_running = true
   vim.notify('hurl: running request', vim.log.levels.INFO)
 
   -- Check vars.env exist on the current file buffer
@@ -78,6 +85,7 @@ local function request(opts, callback)
     on_stderr = on_output,
     on_exit = function(i, code)
       utils.log_info('exit at ' .. i .. ' , code ' .. code)
+      is_running = false
       if code ~= 0 then
         -- Send error code and response to quickfix and open it
         vim.fn.setqflist({ { filename = vim.inspect(cmd), text = vim.inspect(response.body) } })
