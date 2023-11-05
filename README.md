@@ -88,6 +88,11 @@ These key mappings are active within the popup windows that `hurl.nvim` displays
 
 Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.cache/nvim/hurl.nvim.log` on macOS.
 
+## Resources
+
+[![IT Man - Building and Testing a #Hapi Server with #Hurl: A Step-By-Step Demo [Vietnamese]](https://i.ytimg.com/vi/LP_RXe8cM_s/mqdefault.jpg)](https://www.youtube.com/watch?v=LP_RXe8cM_s)
+
+
 ## Credits
 
 - [Hurl - Run and Test HTTP Requests](https://hurl.dev/)
