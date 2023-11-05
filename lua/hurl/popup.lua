@@ -14,6 +14,7 @@ local popups = {
 
 local layout = Layout(
   {
+    relative = 'editor',
     position = '50%',
     size = {
       width = 80,
