@@ -147,7 +147,7 @@ If this guide has been helpful, please give it a ⭐️.
 1. *Run a file*: https://i.gyazo.com/e554e81788aad910848ff991c9369d7b.gif
 2. *Selection*: https://i.gyazo.com/1a44dbbf165006fb5744c8f10883bb69.gif
 3. *Run at current line*: https://i.gyazo.com/20efd2cf3f73238bd57e79fc662208b1.gif
-4. *IT Man - Building and Testing a #Hapi Server with #Hurl: A Step-By-Step Demo [Vietnamese]*: https://i.ytimg.com/vi/LP_RXe8cM_s/mqdefault.jpg
+4. *Tutorial on Using Hurl.nvim Plugin*: https://i.ytimg.com/vi/LP_RXe8cM_s/mqdefault.jpg
 5. *@jellydn*: 
 6. *@jellydn*: 
 7. *kofi*: https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white
