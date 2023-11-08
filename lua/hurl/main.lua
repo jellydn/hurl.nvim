@@ -192,25 +192,22 @@ local function run_current_file(opts)
   execute_hurl_cmd(opts)
 end
 
---- Run selection
+--- Create a temporary file with the lines to run
+---@param lines string[]
 ---@param opts table The options
-local function run_selection(opts)
-  opts = opts or {}
-  local lines = utils.get_visual_selection()
-  if not lines then
-    return
-  end
+local function run_lines(lines, opts)
+  -- Create a temporary file with the lines to run
   local fname = utils.create_tmp_file(lines)
-
   if not fname then
     vim.notify('hurl: create tmp file failed. Please try again!', vim.log.levels.WARN)
     return
   end
 
+  -- Add the temporary file to the arguments
   table.insert(opts, fname)
   execute_hurl_cmd(opts)
 
-  -- Clean tmp file after 1s
+  -- Clean up the temporary file after a delay
   local timeout = 1000
   vim.defer_fn(function()
     local success = os.remove(fname)
@@ -220,6 +217,35 @@ local function run_selection(opts)
       utils.log_info('hurl: remove file success ' .. fname)
     end
   end, timeout)
+end
+
+--- Run selection
+---@param opts table The options
+local function run_selection(opts)
+  opts = opts or {}
+  local lines = utils.get_visual_selection()
+  if not lines then
+    return
+  end
+
+  run_lines(lines, opts)
+end
+
+--- Run at current line
+---@param start_line number
+---@param end_line number
+---@param opts table
+local function run_at_lines(start_line, end_line, opts)
+  opts = opts or {}
+  -- Get the lines from the buffer
+  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+
+  if not lines or vim.tbl_isempty(lines) then
+    vim.notify('hurl: no lines to run', vim.log.levels.WARN)
+    return
+  end
+
+  run_lines(lines, opts)
 end
 
 local function find_http_verb(line, current_line_number)
@@ -250,29 +276,43 @@ local function find_http_verb(line, current_line_number)
   end
 end
 
+--- Find the HTTP verbs in the current buffer
+---@return table
 local function find_http_verb_positions_in_buffer()
   local buf = vim.api.nvim_get_current_buf()
   local total_lines = vim.api.nvim_buf_line_count(buf)
   local cursor = vim.api.nvim_win_get_cursor(0)
   local current_line_number = cursor[1]
 
-  local total = 0
-  local current = 0
+  local next_entry = 0
+  local current_index = 0
+  local current_verb = nil
+  local end_line = total_lines -- Default to the last line of the buffer
 
   for i = 1, total_lines do
     local line = vim.api.nvim_buf_get_lines(buf, i - 1, i, false)[1]
-    local result = find_http_verb(line)
-    if result ~= nil then
-      total = total + 1
+    local result = find_http_verb(line, i)
+    if result then
+      next_entry = next_entry + 1
       if i == current_line_number then
-        current = total
+        current_index = next_entry
+        current_verb = result
+      elseif current_verb and i > current_verb.line_number then
+        end_line = i - 1 -- The end line of the current verb is the line before the next verb starts
+        break -- No need to continue once the end line of the current verb is found
       end
     end
   end
 
+  if current_verb and current_index == next_entry then
+    -- If the current verb is the last one, the end line is the last line of the buffer
+    end_line = total_lines
+  end
+
   return {
-    total = total,
-    current = current,
+    current = current_index,
+    start_line = current_verb and current_verb.line_number or nil,
+    end_line = end_line,
   }
 end
 
@@ -281,15 +321,29 @@ function M.setup()
     if opts.range ~= 0 then
       run_selection(opts.fargs)
     else
+      utils.log_info('hurl: running current file')
       run_current_file(opts.fargs)
     end
   end, { nargs = '*', range = true })
 
   utils.create_cmd('HurlRunnerAt', function(opts)
     local result = find_http_verb_positions_in_buffer()
+    if result.current > 0 and result.start_line and result.end_line then
+      utils.log_info(
+        'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
+      )
+      run_at_lines(result.start_line, result.end_line, opts.fargs)
+    else
+      vim.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+    end
+  end, { nargs = '*', range = true })
+
+  utils.create_cmd('HurlRunnerToEntry', function(opts)
+    local result = find_http_verb_positions_in_buffer()
     if result.current > 0 then
       opts.fargs = opts.fargs or {}
       opts.fargs = vim.list_extend(opts.fargs, { '--to-entry', result.current })
+      utils.log_info('hurl: running request to entry #' .. vim.inspect(result))
       run_current_file(opts.fargs)
     else
       vim.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)

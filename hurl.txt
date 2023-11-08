@@ -40,3 +40,4 @@ filereadable
 getcwd
 infile
 isdirectory
+isempty
