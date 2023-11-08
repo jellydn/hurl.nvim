@@ -41,3 +41,6 @@ getcwd
 infile
 isdirectory
 isempty
+bunx
+luarocks
+vusted
