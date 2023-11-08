@@ -15,11 +15,8 @@ local popups = {
 local layout = Layout(
   {
     relative = 'editor',
-    position = '50%',
-    size = {
-      width = 80,
-      height = 40,
-    },
+    position = _HURL_GLOBAL_CONFIG.popup_position,
+    size = _HURL_GLOBAL_CONFIG.popup_size,
   },
   Layout.Box({
     Layout.Box(popups.top, { size = {
@@ -90,10 +87,12 @@ M.show = function(data, type)
 
   -- Set content to highlight
   vim.api.nvim_buf_set_option(popups.top.bufnr, 'filetype', 'bash')
-  vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'filetype', type)
+  -- Add word wrap
+  vim.api.nvim_buf_set_option(popups.top.bufnr, 'wrap', true)
 
   -- Enable folding for bottom buffer
   vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'foldmethod', 'expr')
+  vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'filetype', type)
 
   -- Add content to the bottom
   vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, content)

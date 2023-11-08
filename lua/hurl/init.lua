@@ -2,8 +2,15 @@
 local default_config = {
   debug = false,
   mode = 'split',
+  -- Default split options
   split_position = 'right',
   split_size = '50%',
+  -- Default popup options
+  popup_position = '50%',
+  popup_size = {
+    width = 80,
+    height = 40,
+  },
   env_file = 'vars.env',
   formatters = {
     json = { 'jq' },
