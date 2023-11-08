@@ -83,7 +83,11 @@ Place your cursor on the line you want to run and press `<leader>a` or run `Hurl
 
 ### Run to entry
 
-- [ ] Add document and record demo usage (GIF file) with `HurlRunnerToEntry` command.
+Place your cursor on the line you want to run to that entry and press `<leader>te` or run `HurlRunnerToEntry` command to execute the request. It need be one of the HTTP methods listed: GET, POST, PUT, DELETE, PATCH.
+
+[![Run to entry in split mode](https://i.gyazo.com/14d47adbfcab9e945f89e020b83328a9.gif)](https://gyazo.com/14d47adbfcab9e945f89e020b83328a9)
+
+Note: it's running to that entry and ignore the remaining of the file. It is useful for debugging purposes.
 
 ## Default Key Mappings
 
