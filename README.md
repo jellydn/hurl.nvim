@@ -24,7 +24,7 @@ Add the following configuration to your Neovim setup:
       -- Show debugging info
       debug = false,
       -- Show response in popup or split
-      mode = "popup",
+      mode = "split",
     },
     keys = {
       -- Run API request
@@ -37,6 +37,10 @@ Add the following configuration to your Neovim setup:
   }
 }
 ```
+
+Simple demo in split mode:
+
+[![Show in split mode](https://i.gyazo.com/19492e8b5366cec3f22d5fd97a63f37a.gif)](https://gyazo.com/19492e8b5366cec3f22d5fd97a63f37a)
 
 ## Env File Support: vars.env
 
@@ -63,19 +67,23 @@ Check out the following demos to see `hurl.nvim` in action:
 
 Run the entire file by pressing `<leader>A` or run `HurlRunner` command.
 
-[![Run a file](https://i.gyazo.com/e554e81788aad910848ff991c9369d7b.gif)](https://gyazo.com/e554e81788aad910848ff991c9369d7b)
+[![Run a file in popup mode](https://i.gyazo.com/e554e81788aad910848ff991c9369d7b.gif)](https://gyazo.com/e554e81788aad910848ff991c9369d7b)
 
 ### Run a Selection
 
 Select a range of lines and press `<leader>h` to execute the request or run `HurlRunner` command.
 
-[![Selection](https://i.gyazo.com/1a44dbbf165006fb5744c8f10883bb69.gif)](https://gyazo.com/1a44dbbf165006fb5744c8f10883bb69)
+[![Run a selection in popup mode](https://i.gyazo.com/1a44dbbf165006fb5744c8f10883bb69.gif)](https://gyazo.com/1a44dbbf165006fb5744c8f10883bb69)
 
 ### Run at current line
 
 Place your cursor on the line you want to run and press `<leader>a` or run `HurlRunnerAt` command to execute the request. It need be one of the HTTP methods listed: GET, POST, PUT, DELETE, PATCH.
 
-[![Run at current line](https://i.gyazo.com/20efd2cf3f73238bd57e79fc662208b1.gif)](https://gyazo.com/20efd2cf3f73238bd57e79fc662208b1)
+[![Run at current line in popup mode](https://i.gyazo.com/20efd2cf3f73238bd57e79fc662208b1.gif)](https://gyazo.com/20efd2cf3f73238bd57e79fc662208b1)
+
+### Run to entry
+
+- [ ] Add document and record demo usage (GIF file) with `HurlRunnerToEntry` command.
 
 ## Default Key Mappings
 
