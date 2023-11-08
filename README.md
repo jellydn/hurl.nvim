@@ -87,9 +87,56 @@ Place your cursor on the line you want to run and press `<leader>a` or run `Hurl
 
 These key mappings are active within the popup windows that `hurl.nvim` displays.
 
-## Tips
+## Configuration
 
-Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.cache/nvim/hurl.nvim.log` on macOS.
+`hurl.nvim` can be customized with the following default configurations:
+
+```lua
+local default_config = {
+  -- Toggle debugging information
+  debug = false, -- If true, logs will be saved at ~/.cache/nvim/hurl.nvim.log
+
+  -- Set the display mode for the response: 'split' or 'popup'
+  mode = 'split',
+
+  -- Default environment file name
+  env_file = 'vars.env',
+
+  -- Specify formatters for different response types
+  formatters = {
+    json = { 'jq' },  -- Uses jq to format JSON responses
+    html = {
+      'prettier',     -- Uses prettier to format HTML responses
+      '--parser',
+      'html',
+    },
+  },
+}
+```
+
+To apply these configurations, include them in your Neovim setup like this:
+
+```lua
+require('hurl').setup({
+  debug = true,          -- Enable to show detailed logs
+  mode = 'popup',        -- Change to 'popup' to display responses in a popup window
+  env_file = 'vars.env', -- Change this to use a different environment file name
+  formatters = {
+    json = { 'jq' },    -- Customize the JSON formatter command
+    html = {
+      'prettier',       -- Customize the HTML formatter command
+      '--parser',
+      'html',
+    },
+  },
+})
+```
+
+Adjust the settings as per your needs to enhance your development experience with `hurl.nvim`.
+
+### Tips
+
+Logs are saved at `~/.cache/nvim/hurl.nvim.log` on macOS.
 
 ## Resources
 
