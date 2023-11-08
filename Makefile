@@ -15,3 +15,10 @@ install:
 .PHONY: test
 test:
 	vusted test
+
+.PHONY: report
+report:
+	@echo "Generating report"
+	rm -rf report
+	hurl --test --report-html report --variables-file test/vars.env test/*.hurl
+	bunx serve report
