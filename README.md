@@ -98,6 +98,8 @@ local default_config = {
 
   -- Set the display mode for the response: 'split' or 'popup'
   mode = 'split',
+  split_position = "right",
+  split_size = "50%",
 
   -- Default environment file name
   env_file = 'vars.env',

@@ -3,8 +3,8 @@ local event = require('nui.utils.autocmd').event
 
 local split = Split({
   relative = 'editor',
-  position = 'bottom',
-  size = '30%',
+  position = _HURL_GLOBAL_CONFIG.split_position,
+  size = _HURL_GLOBAL_CONFIG.split_size,
 })
 
 local utils = require('hurl.utils')
@@ -22,7 +22,6 @@ M.show = function(data, type)
 
   -- unmount component when cursor leaves buffer
   split:on(event.BufLeave, function()
-    -- TODO: clear buffer on unmount
     split:unmount()
   end)
 
@@ -46,6 +45,9 @@ M.show = function(data, type)
 
   -- Set content to highlight
   vim.api.nvim_buf_set_option(split.bufnr, 'filetype', type)
+
+  -- Set word to wrap
+  vim.api.nvim_buf_set_option(split.bufnr, 'wrap', true)
 
   -- Add content to the bottom
   vim.api.nvim_buf_set_lines(split.bufnr, headers_table.line, -1, false, content)
