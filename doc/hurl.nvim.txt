@@ -29,8 +29,8 @@ Add the following configuration to your Neovim setup with lazy.nvim
 <https://github.com/folke/lazy.nvim>:
 
 >lua
-    {
-      "jellydn/hurl.nvim",
+{
+  "jellydn/hurl.nvim",
       dependencies = { "MunifTanjim/nui.nvim" },
       ft = "hurl",
       opts = {
@@ -191,9 +191,9 @@ CONFIGURATION                                        *hurl.nvim-configuration*
 To apply these configurations, include them in your Neovim setup like this:
 
 >lua
-    require('hurl').setup({
-      debug = true,          -- Enable to show detailed logs
-      mode = 'popup',        -- Change to 'popup' to display responses in a popup window
+require('hurl').setup({
+  debug = true,          -- Enable to show detailed logs
+  mode = 'popup',        -- Change to 'popup' to display responses in a popup window
       env_file = 'vars.env', -- Change this to use a different environment file name
       formatters = {
         json = { 'jq' },    -- Customize the JSON formatter command
