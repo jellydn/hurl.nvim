@@ -13,28 +13,27 @@
 
 ## Usage
 
-Add the following configuration to your Neovim setup:
+Add the following configuration to your Neovim setup with [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
-  {
-    "jellydn/hurl.nvim",
-    dependencies = { "MunifTanjim/nui.nvim" },
-    cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunnerToEntry" },
-    opts = {
-      -- Show debugging info
-      debug = false,
-      -- Show response in popup or split
-      mode = "split",
-    },
-    keys = {
-      -- Run API request
-      { "<leader>A", "<cmd>HurlRunner<CR>", desc = "Run All requests" },
-      { "<leader>a", "<cmd>HurlRunnerAt<CR>", desc = "Run Api request" },
-      { "<leader>te", "<cmd>HurlRunnerToEntry<CR>", desc = "Run Api request to entry" },
-      -- Run Hurl request in visual mode
-      { "<leader>h", ":HurlRunner<CR>", desc = "Hurl Runner", mode = "v" },
-    },
-  }
+{
+  "jellydn/hurl.nvim",
+  dependencies = { "MunifTanjim/nui.nvim" },
+  cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunnerToEntry" },
+  opts = {
+    -- Show debugging info
+    debug = false,
+    -- Show response in popup or split
+    mode = "split",
+  },
+  keys = {
+    -- Run API request
+    { "<leader>A", "<cmd>HurlRunner<CR>", desc = "Run All requests" },
+    { "<leader>a", "<cmd>HurlRunnerAt<CR>", desc = "Run Api request" },
+    { "<leader>te", "<cmd>HurlRunnerToEntry<CR>", desc = "Run Api request to entry" },
+    -- Run Hurl request in visual mode
+    { "<leader>h", ":HurlRunner<CR>", desc = "Hurl Runner", mode = "v" },
+  },
 }
 ```
 
@@ -44,7 +43,22 @@ Simple demo in split mode:
 
 ## Env File Support: vars.env
 
-`hurl.nvim` offers seamless integration with `vars.env` files to manage environment variables for your HTTP requests.
+`hurl.nvim` seamlessly integrates with environment files named `vars.env` to manage environment variables for your HTTP requests. These environment variables are essential for customizing your requests with dynamic data such as API keys, base URLs, and other configuration values.
+
+
+### Customization
+
+You can specify the name of the environment file in your `hurl.nvim` configuration. By default, `hurl.nvim` looks for a file named `vars.env`, but you can customize this to any file name that fits your project's structure.
+
+Here's how to set a custom environment file name in your `hurl.nvim` setup:
+
+```lua
+require('hurl').setup({
+  -- Specify your custom environment file name here
+  env_file = 'hurl.env',
+  -- Other configuration options...
+})
+```
 
 ### File Location
 
