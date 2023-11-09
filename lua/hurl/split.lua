@@ -5,6 +5,9 @@ local split = Split({
   relative = 'editor',
   position = _HURL_GLOBAL_CONFIG.split_position,
   size = _HURL_GLOBAL_CONFIG.split_size,
+  -- Create a custom filetype so that we can use https://github.com/folke/edgy.nvim to manage the window
+  -- E.g: { title = "Hurl Nvim", ft = "hurl-nvim" },
+  buf_options = { filetype = 'hurl-nvim' },
 })
 
 local utils = require('hurl.utils')
