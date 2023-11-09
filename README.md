@@ -9,7 +9,7 @@
 
 - 🚀 Execute HTTP requests directly from `.hurl` files.
 - 👁‍🗨 Multiple display modes for API response: popup or split.
-- 🌈 Highly customizable through Neovim settings.
+- 🌈 Highly customizable through settings.
 
 ## Usage
 
@@ -158,8 +158,14 @@ require('hurl').setup({
 Adjust the settings as per your needs to enhance your development experience with `hurl.nvim`.
 
 ### Tips
+- Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.cache/nvim/hurl.nvim.log` on macOS.
+- **Split Mode with Edgy:** `hurl.nvim` can be used with [edgy.nvim](https://github.com/folke/edgy.nvim) to manage layout when using the split mode. 
 
-Logs are saved at `~/.cache/nvim/hurl.nvim.log` on macOS.
+```lua
+right = {
+  { title = "Hurl Nvim", ft = "hurl-nvim" }
+}
+```
 
 ## Resources
 
