@@ -317,6 +317,7 @@ local function find_http_verb_positions_in_buffer()
 end
 
 function M.setup()
+  -- Run request for a range of lines or the entire file
   utils.create_cmd('HurlRunner', function(opts)
     if opts.range ~= 0 then
       run_selection(opts.fargs)
@@ -326,6 +327,18 @@ function M.setup()
     end
   end, { nargs = '*', range = true })
 
+  -- Toggle mode between split and popup
+  utils.create_cmd('HurlToggleMode', function()
+    local mode = _HURL_GLOBAL_CONFIG.mode
+    if mode == 'split' then
+      _HURL_GLOBAL_CONFIG.mode = 'popup'
+    else
+      _HURL_GLOBAL_CONFIG.mode = 'split'
+    end
+    vim.notify('hurl: mode changed to ' .. _HURL_GLOBAL_CONFIG.mode, vim.log.levels.INFO)
+  end, { nargs = '*', range = true })
+
+  -- Run request at current line if there is a HTTP method
   utils.create_cmd('HurlRunnerAt', function(opts)
     local result = find_http_verb_positions_in_buffer()
     if result.current > 0 and result.start_line and result.end_line then
@@ -338,6 +351,7 @@ function M.setup()
     end
   end, { nargs = '*', range = true })
 
+  -- Run request to current entry if there is a HTTP method
   utils.create_cmd('HurlRunnerToEntry', function(opts)
     local result = find_http_verb_positions_in_buffer()
     if result.current > 0 then

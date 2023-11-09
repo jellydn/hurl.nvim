@@ -3,7 +3,7 @@
   <strong>Hurl.nvim</strong> is a Neovim plugin designed to run HTTP requests directly from `.hurl` files. Elevate your API development workflow by executing and viewing responses without leaving your editor.
 </p>
 
-[![IT Man - Effortless APIs with Hurl.nvim: A Developer&#39;s Guide to Neovim Tooling [Vietnamese]](https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg)](https://www.youtube.com/watch?v=nr_RbHvnnwk)
+[![IT Man - Effortless APIs with Hurl.nvim: A Developer's Guide to Neovim Tooling [Vietnamese]](https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg)](https://www.youtube.com/watch?v=nr_RbHvnnwk)
 
 ## Features
 
@@ -19,7 +19,7 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
 {
   "jellydn/hurl.nvim",
   dependencies = { "MunifTanjim/nui.nvim" },
-  cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunnerToEntry" },
+  ft = "hurl",
   opts = {
     -- Show debugging info
     debug = false,
@@ -31,6 +31,7 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
     { "<leader>A", "<cmd>HurlRunner<CR>", desc = "Run All requests" },
     { "<leader>a", "<cmd>HurlRunnerAt<CR>", desc = "Run Api request" },
     { "<leader>te", "<cmd>HurlRunnerToEntry<CR>", desc = "Run Api request to entry" },
+    { "<leader>tm", "<cmd>HurlToggleMode<CR>", desc = "Hurl Toggle Mode" },
     -- Run Hurl request in visual mode
     { "<leader>h", ":HurlRunner<CR>", desc = "Hurl Runner", mode = "v" },
   },
@@ -44,7 +45,6 @@ Simple demo in split mode:
 ## Env File Support: vars.env
 
 `hurl.nvim` seamlessly integrates with environment files named `vars.env` to manage environment variables for your HTTP requests. These environment variables are essential for customizing your requests with dynamic data such as API keys, base URLs, and other configuration values.
-
 
 ### Customization
 
@@ -73,6 +73,7 @@ The plugin looks for a `vars.env` file in the following directories:
 - server/tests/
 
 This makes it convenient to specify environment-specific variables that your HTTP requests may use.
+
 ## Demo
 
 Check out the following demos to see `hurl.nvim` in action:
@@ -172,8 +173,9 @@ require('hurl').setup({
 Adjust the settings as per your needs to enhance your development experience with `hurl.nvim`.
 
 ### Tips
+
 - Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.cache/nvim/hurl.nvim.log` on macOS.
-- **Split Mode with Edgy:** `hurl.nvim` can be used with [edgy.nvim](https://github.com/folke/edgy.nvim) to manage layout when using the split mode. 
+- **Split Mode with Edgy:** `hurl.nvim` can be used with [edgy.nvim](https://github.com/folke/edgy.nvim) to manage layout when using the split mode.
 
 ```lua
 right = {
@@ -184,7 +186,6 @@ right = {
 ## Resources
 
 [![IT Man - Building and Testing a #Hapi Server with #Hurl: A Step-By-Step Demo [Vietnamese]](https://i.ytimg.com/vi/LP_RXe8cM_s/mqdefault.jpg)](https://www.youtube.com/watch?v=LP_RXe8cM_s)
-
 
 ## Credits
 
