@@ -253,7 +253,7 @@ If this guide has been helpful, please give it a ⭐️.
 ==============================================================================
 1. Links                                                     *hurl.nvim-links*
 
-1. *IT Man - Effortless APIs with Hurl.nvim: A Developer’s Guide to Neovim Tooling [Vietnamese]*: https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg
+1. *IT Man*: https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg
 2. *Show in split mode*: https://i.gyazo.com/19492e8b5366cec3f22d5fd97a63f37a.gif
 3. *Run a file in popup mode*: https://i.gyazo.com/e554e81788aad910848ff991c9369d7b.gif
 4. *Run a selection in popup mode*: https://i.gyazo.com/1a44dbbf165006fb5744c8f10883bb69.gif
