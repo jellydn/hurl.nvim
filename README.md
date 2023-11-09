@@ -17,8 +17,8 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
 
 ```lua
 {
-  "jellydn/hurl.nvim",
-  dependencies = { "MunifTanjim/nui.nvim" },
+  "jellydn/hurl.nvim"
+  dependencies = {"MunifTanjim/nui.nvim"},
   cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunnerToEntry" },
   opts = {
     -- Show debugging info
@@ -124,16 +124,15 @@ local default_config = {
 
   -- Set the display mode for the response: 'split' or 'popup'
   mode = 'split',
-
   -- Split settings
-  split_position = "right",
+  split_position = "right"
   split_size = "50%",
 
   -- Popup settings
   popup_position = '50%',
   popup_size = {
     width = 80,
-    height = 40,
+    height = 40
   },
 
   -- Default environment file name
