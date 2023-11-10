@@ -104,6 +104,12 @@ Place your cursor on the line you want to run to that entry and press `<leader>t
 
 Note: it's running to that entry and ignore the remaining of the file. It is useful for debugging purposes.
 
+### Toggle Mode
+
+Run `HurlToggleMode` command to toggle between split and popup mode.
+
+[![Toggle mode](https://i.gyazo.com/b36b19ab76524b95015eafe4c6e1c81f.gif)](https://gyazo.com/b36b19ab76524b95015eafe4c6e1c81f)
+
 ## Default Key Mappings
 
 `hurl.nvim` comes with some default key mappings to streamline your workflow:
