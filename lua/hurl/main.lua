@@ -1,25 +1,19 @@
 local utils = require('hurl.utils')
-
 local M = {}
-
 local response = {}
 local is_running = false
-
 --- Check if the current directory is a git repo
 ---@return boolean
 local function is_git_repo()
   vim.fn.system('git rev-parse --is-inside-work-tree')
-
   return vim.v.shell_error == 0
 end
-
 --- Get the git root directory
 ---@return string|nil The git root directory
 local function get_git_root()
   local dot_git_path = vim.fn.finddir('.git', '.;')
   return vim.fn.fnamemodify(dot_git_path, ':h')
 end
-
 local function split_path(path)
   local parts = {}
   for part in string.gmatch(path, '[^/]+') do
@@ -27,7 +21,6 @@ local function split_path(path)
   end
   return parts
 end
-
 -- Looking for vars.env file base on the current file buffer
 ---@return table
 local function find_env_files_in_folders()
@@ -111,7 +104,6 @@ local on_output = function(code, data, event)
   if not data[1] then
     return
   end
-
   if event == 'stderr' and #data > 1 then
     response.body = data
     utils.log_error(vim.inspect(data))
@@ -180,7 +172,6 @@ local function execute_hurl_cmd(opts, callback)
   response = {}
 
   utils.log_info('hurl: running command' .. vim.inspect(cmd))
-
   vim.fn.jobstart(cmd, {
     on_stdout = on_output,
     on_stderr = on_output,
@@ -233,7 +224,6 @@ local function execute_hurl_cmd(opts, callback)
     end,
   })
 end
-
 --- Run current file
 --- It will throw an error if that is not valid hurl file
 ---@param opts table The options
