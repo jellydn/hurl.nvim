@@ -62,17 +62,27 @@ require('hurl').setup({
 
 ### File Location
 
-The plugin looks for a `vars.env` file in the following directories:
+The plugin searches for a `vars.env` (env_file config) in multiple locations to accommodate various project structures and ensure that environment-specific variables for your HTTP requests are easily accessible. The search occurs in the following order:
 
-- Current file's directory
-- src/
-- test/
-- tests/
-- server/
-- src/tests/
-- server/tests/
+1. **Current File's Directory:** The directory where the current file is located. This is particularly useful for projects where environment variables are specific to a particular module or component.
 
-This makes it convenient to specify environment-specific variables that your HTTP requests may use.
+2. **Specific Directories in Project:** The plugin scans predefined directories within the project, which are commonly used for organizing different aspects of a project:
+   - `src/`: The source code directory.
+   - `test/` and `tests/`: Directories typically used for test scripts.
+   - `server/`: If your project includes a server component, this directory is checked.
+   - `src/tests/` and `server/tests/`: These are checked for environment variables specific to tests within the respective `src` and `server` directories.
+
+3. **Intermediate Directories from Git Root to Current File:** If the project is a git repository, the plugin identifies the root of the repository and then searches for `vars.env` in every directory on the path from this root to the current file's directory. This feature is particularly useful in monorepo setups or large projects, where different modules or packages may have their own environment variables. 
+
+By checking these locations, the plugin ensures a comprehensive search for environment variables, catering to a wide range of project structures and setups.
+
+### Swappable environment
+
+To change the environment file name, use the `HurlSetEnvFile` command followed by the new file name. 
+#### Notes
+
+- Ensure that the new environment file exists in the directories where the plugin searches for it, as outlined in the [File Location](#file-location) section.
+- This change will apply globally for the current session of Neovim. If you restart Neovim, it will revert to the default `vars.env` unless you change it again.
 
 ## Demo
 
@@ -109,6 +119,8 @@ Note: it's running to that entry and ignore the remaining of the file. It is use
 Run `HurlToggleMode` command to toggle between split and popup mode.
 
 [![Toggle mode](https://i.gyazo.com/b36b19ab76524b95015eafe4c6e1c81f.gif)](https://gyazo.com/b36b19ab76524b95015eafe4c6e1c81f)
+
+
 
 ## Default Key Mappings
 
