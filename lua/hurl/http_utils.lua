@@ -25,7 +25,7 @@ local M = {
     else
       return nil
     end
-  end
+  end,
 }
 
 --- Find the HTTP verb in the given line
