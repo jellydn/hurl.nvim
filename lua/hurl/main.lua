@@ -14,36 +14,24 @@ local function find_env_files_in_folders()
   local cache_dir = vim.fn.stdpath('cache')
   local current_file_dir = vim.fn.expand('%:p:h:h')
   local env_files = {
-    {path = root_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file, dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file}
+    {path = root_dir..'/'.._HURL_GLOBAL_CONFIG.env_file, dest = cache_dir..'/'.._HURL_GLOBAL_CONFIG.env_file}
   }
   -- NOTE: it may be better to use a user config to define the scan directories
   local scan_dir = {
-    {
-      dir = '/src',
-    },
-    {
-      dir = '/test',
-    },
-    {
-      dir = '/tests',
-    },
-    {
-      dir = '/server',
-    },
-    {
-      dir = '/src/tests',
-    },
-    {
-      dir = '/server/tests',
-    },
+    {dir = '/src'},
+    {dir = '/test'},
+    {dir = '/tests'},
+    {dir = '/server'},
+    {dir = '/src/tests'},
+    {dir = '/server/tests'},
   }
 
   -- Scan git root directory and all sub directories with the current file buffer
   if git.is_git_repo() then
     local git_root = git.get_git_root()
     table.insert(env_files, {
-      path = git_root .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-      dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
+      path = git_root..'/'.._HURL_GLOBAL_CONFIG.env_file,
+      dest = cache_dir..'/'.._HURL_GLOBAL_CONFIG.env_file,
     })
 
     local git_root_parts = git.split_path(git_root)
@@ -51,20 +39,19 @@ local function find_env_files_in_folders()
     local sub_path = git_root
 
     for i = #git_root_parts + 1, #current_dir_parts do
-      sub_path = sub_path .. '/' .. current_dir_parts[i]
+      sub_path = sub_path..'/'..current_dir_parts[i]
       table.insert(env_files, {
-        path = sub_path .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-        dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
+        path = sub_path..'/'.._HURL_GLOBAL_CONFIG.env_file,
+        dest = cache_dir..'/'.._HURL_GLOBAL_CONFIG.env_file,
       })
     end
   end
-
   for _, s in ipairs(scan_dir) do
     local dir = root_dir..s.dir
     if vim.fn.isdirectory(dir) == 1 then
       table.insert(env_files, {
-        path = dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-        dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
+        path = dir..'/'.._HURL_GLOBAL_CONFIG.env_file,
+        dest = cache_dir..'/'.._HURL_GLOBAL_CONFIG.env_file,
       })
     end
   end
@@ -72,9 +59,9 @@ local function find_env_files_in_folders()
   -- sort by path length, the current buffer file path will be the first
   local env_files = find_env_files_in_folders()
   for _, env in ipairs(env_files) do
-    utils.log_info('hurl: looking for '.._HURL_GLOBAL_CONFIG.env_file..' in '..env.path)
+    utils.log_info('hurl: looking for'.._HURL_GLOBAL_CONFIG.env_file..' in '..env.path)
     if vim.fn.filereadable(env.path) == 1 then
-      utils.log_info('hurl: found '.._HURL_GLOBAL_CONFIG.env_file..' in '..env.path)
+      utils.log_info('hurl: found'.._HURL_GLOBAL_CONFIG.env_file..' in '..env.path)
       table.insert(opts, '--variables-file')
       table.insert(opts, env.path)
       break
@@ -93,17 +80,16 @@ local on_output = function(code, data, event)
   if event == 'stderr' and #data > 1 then
     response.body = data
     utils.log_error(vim.inspect(data))
-  utils.log_info('hurl: response status '..response.status)
-  utils.log_info('hurl: response headers '..vim.inspect(response.headers))
-  utils.log_info('hurl: response body '..response.body)
+  utils.log_info('hurl: response status'..response.status)
+  utils.log_info('hurl: response headers'..vim.inspect(response.headers))
+  utils.log_info('hurl: response body'..response.body)
   local status = tonumber(string.match(data[1], '([%w+]%d+)'))
   head_state = 'start'
   if status then
     response.status = status
     response.headers = { status = data[1] }
-    response.headers_str = data[1] .. '\r\n'
+    response.headers_str = data[1]..'\r\n'
   end
-
   for i = 2, #data do
     local line = data[i]
     if line == '' or line == nil then
@@ -112,18 +98,18 @@ local on_output = function(code, data, event)
       local key, value = string.match(line, '([%w-]+):%s*(.+)')
       if key and value then
         response.headers[key] = value
-        response.headers_str = response.headers_str .. line .. '\r\n'
+        response.headers_str = response.headers_str..line..'\r\n'
       end
     elseif head_state == 'body' then
       response.body = response.body or ''
-      response.body = response.body .. line
+      response.body = response.body..line
     end
   end
   response.raw = data
 
-  utils.log_info('hurl: response status ' .. response.status)
-  utils.log_info('hurl: response headers ' .. vim.inspect(response.headers))
-  utils.log_info('hurl: response body ' .. response.body)
+  utils.log_info('hurl: response status'..response.status)
+  utils.log_info('hurl: response headers'..vim.inspect(response.headers))
+  utils.log_info('hurl: response body'..response.body)
 end
 
 --- Call hurl command
@@ -143,9 +129,9 @@ local function execute_hurl_cmd(opts, callback)
   -- Then inject the command with --variables-file vars.env
   local env_files = find_env_files_in_folders()
   for _, env in ipairs(env_files) do
-    utils.log_info('hurl: looking for ' .. _HURL_GLOBAL_CONFIG.env_file .. ' in ' .. env.path)
+    utils.log_info('hurl: looking for'.._HURL_GLOBAL_CONFIG.env_file..' in '..env.path)
     if vim.fn.filereadable(env.path) == 1 then
-      utils.log_info('hurl: found ' .. _HURL_GLOBAL_CONFIG.env_file .. ' in ' .. env.path)
+      utils.log_info('hurl: found'.._HURL_GLOBAL_CONFIG.env_file..' in '..env.path)
       table.insert(opts, '--variables-file')
       table.insert(opts, env.path)
       break
