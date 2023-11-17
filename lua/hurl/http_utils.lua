@@ -1,4 +1,32 @@
-local M = {}
+local M = {
+  find_http_verb = function(line, current_line_number)
+    if not line then
+      return nil
+    end
+
+    local verbs = { 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' }
+    local verb_start, verb_end, verb
+
+    for _, v in ipairs(verbs) do
+      verb_start, verb_end = line:find(v)
+      if verb_start then
+        verb = v
+        break
+      end
+    end
+
+    if verb_start then
+      return {
+        line_number = current_line_number,
+        start_pos = verb_start,
+        end_pos = verb_end,
+        method = verb,
+      }
+    else
+      return nil
+    end
+  end
+}
 
 --- Find the HTTP verb in the given line
 ---@param line string
@@ -31,9 +59,7 @@ local function find_http_verb(line, current_line_number)
   end
 end
 
---- Find the HTTP verbs in the current buffer
----@return table
-local function find_http_verb_positions_in_buffer()
+M.find_http_verb_positions_in_buffer = function()
   local buf = vim.api.nvim_get_current_buf()
   local total_lines = vim.api.nvim_buf_line_count(buf)
   local cursor = vim.api.nvim_win_get_cursor(0)
@@ -43,7 +69,6 @@ local function find_http_verb_positions_in_buffer()
   local current_index = 0
   local current_verb = nil
   local end_line = total_lines -- Default to the last line of the buffer
-
   for i = 1, total_lines do
     local line = vim.api.nvim_buf_get_lines(buf, i - 1, i, false)[1]
     local result = find_http_verb(line, i)
@@ -70,7 +95,5 @@ local function find_http_verb_positions_in_buffer()
     end_line = end_line,
   }
 end
-
-M.find_http_verb_positions_in_buffer = find_http_verb_positions_in_buffer
 
 return M
