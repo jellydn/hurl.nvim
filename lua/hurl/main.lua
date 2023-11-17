@@ -14,10 +14,7 @@ local function find_env_files_in_folders()
   local cache_dir = vim.fn.stdpath('cache')
   local current_file_dir = vim.fn.expand('%:p:h:h')
   local env_files = {
-    {
-      path = root_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-      dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-    },
+    {path = root_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file, dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file}
   }
   -- NOTE: it may be better to use a user config to define the scan directories
   local scan_dir = {
@@ -63,7 +60,7 @@ local function find_env_files_in_folders()
   end
 
   for _, s in ipairs(scan_dir) do
-    local dir = root_dir .. s.dir
+    local dir = root_dir..s.dir
     if vim.fn.isdirectory(dir) == 1 then
       table.insert(env_files, {
         path = dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
@@ -73,14 +70,16 @@ local function find_env_files_in_folders()
   end
 
   -- sort by path length, the current buffer file path will be the first
-  table.sort(env_files, function(a, b)
-    return #a.path > #b.path
-  end)
-
-  return env_files
-end
-
---- Output handler
+  local env_files = find_env_files_in_folders()
+  for _, env in ipairs(env_files) do
+    utils.log_info('hurl: looking for '.._HURL_GLOBAL_CONFIG.env_file..' in '..env.path)
+    if vim.fn.filereadable(env.path) == 1 then
+      utils.log_info('hurl: found '.._HURL_GLOBAL_CONFIG.env_file..' in '..env.path)
+      table.insert(opts, '--variables-file')
+      table.insert(opts, env.path)
+      break
+    end
+  end
 ---@class Output
 local on_output = function(code, data, event)
   local head_state
@@ -94,12 +93,9 @@ local on_output = function(code, data, event)
   if event == 'stderr' and #data > 1 then
     response.body = data
     utils.log_error(vim.inspect(data))
-    response.raw = data
-    response.headers = {}
-    return
-  end
-
-  -- TODO: The header parser sometime not working properly, e.g: https://google.com
+  utils.log_info('hurl: response status '..response.status)
+  utils.log_info('hurl: response headers '..vim.inspect(response.headers))
+  utils.log_info('hurl: response body '..response.body)
   local status = tonumber(string.match(data[1], '([%w+]%d+)'))
   head_state = 'start'
   if status then
@@ -198,7 +194,7 @@ local function execute_hurl_cmd(opts, callback)
           or response.headers['Content-Type']
           or ''
 
-        utils.log_info('Detected content type: ' .. content_type)
+        utils.log_info('Detected content type: '..content_type)
 
         if utils.is_json_response(content_type) then
           container.show(response, 'json')
@@ -271,17 +267,8 @@ end
 local function run_at_lines(start_line, end_line, opts, callback)
   opts = opts or {}
   -- Get the lines from the buffer
-  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
-
-  if not lines or vim.tbl_isempty(lines) then
-    vim.notify('hurl: no lines to run', vim.log.levels.WARN)
-    return
-  end
-
-  run_lines(lines, opts, callback)
-end
-
-function M.setup()
+  utils.log_info('hurl: running request at line '..result.start_line..' to '..result.end_line)
+  run_at_lines(result.start_line, result.end_line, opts.fargs)
   -- Run request for a range of lines or the entire file
   utils.create_cmd('HurlRunner', function(opts)
     if opts.range ~= 0 then
@@ -312,10 +299,8 @@ function M.setup()
       )
       run_at_lines(result.start_line, result.end_line, opts.fargs)
     else
-      vim.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
-    end
-  end, { nargs = '*', range = true })
-
+  utils.log_info('hurl: running request to entry #'..vim.inspect(result))
+  run_current_file(opts.fargs)
   -- Run request to current entry if there is a HTTP method
   utils.create_cmd('HurlRunnerToEntry', function(opts)
     local result = http.find_http_verb_positions_in_buffer()
