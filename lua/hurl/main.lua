@@ -346,4 +346,3 @@ local function run_at_lines(start_line, end_line, opts, callback)
 end
 
 return M
-    end
