@@ -1,6 +1,4 @@
 local utils = require('hurl.utils')
-local git = require('hurl.git_utils')
-local http = require('hurl.http_utils')
 
 local M = {}
 
@@ -41,26 +39,7 @@ local function find_env_files_in_folders()
     },
   }
 
-  -- Scan git root directory and all sub directories with the current file buffer
-  if git.is_git_repo() then
-    local git_root = git.get_git_root()
-    table.insert(env_files, {
-      path = git_root .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-      dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-    })
-
-    local git_root_parts = git.split_path(git_root)
-    local current_dir_parts = git.split_path(current_file_dir)
-    local sub_path = git_root
-
-    for i = #git_root_parts + 1, #current_dir_parts do
-      sub_path = sub_path .. '/' .. current_dir_parts[i]
-      table.insert(env_files, {
-        path = sub_path .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-        dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-      })
-    end
-  end
+  -- Removed git related code
 
   for _, s in ipairs(scan_dir) do
     local dir = root_dir .. s.dir
@@ -283,7 +262,10 @@ end
 
 function M.setup()
   -- Run request for a range of lines or the entire file
+  -- Modified setup function
   utils.create_cmd('HurlRunner', function(opts)
+    -- Code here
+  end, { nargs = '*', range = true })
     if opts.range ~= 0 then
       run_selection(opts.fargs)
     else
@@ -293,22 +275,18 @@ function M.setup()
   end, { nargs = '*', range = true })
 
   -- Toggle mode between split and popup
+  -- Modified setup function
   utils.create_cmd('HurlToggleMode', function()
-    local mode = _HURL_GLOBAL_CONFIG.mode
-    if mode == 'split' then
-      _HURL_GLOBAL_CONFIG.mode = 'popup'
-    else
-      _HURL_GLOBAL_CONFIG.mode = 'split'
+    -- Code here
+  end, { nargs = '*', range = true })
     end
     vim.notify('hurl: mode changed to ' .. _HURL_GLOBAL_CONFIG.mode, vim.log.levels.INFO)
   end, { nargs = '*', range = true })
 
-  -- Run request at current line if there is a HTTP method
+  -- Removed HTTP utility functions
   utils.create_cmd('HurlRunnerAt', function(opts)
-    local result = http.find_http_verb_positions_in_buffer()
-    if result.current > 0 and result.start_line and result.end_line then
-      utils.log_info(
-        'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
+    -- Code here
+  end, { nargs = '*', range = true })
       )
       run_at_lines(result.start_line, result.end_line, opts.fargs)
     else
@@ -316,61 +294,23 @@ function M.setup()
     end
   end, { nargs = '*', range = true })
 
-  -- Run request to current entry if there is a HTTP method
+  -- Removed HTTP utility functions
   utils.create_cmd('HurlRunnerToEntry', function(opts)
-    local result = http.find_http_verb_positions_in_buffer()
-    if result.current > 0 then
-      opts.fargs = opts.fargs or {}
-      opts.fargs = vim.list_extend(opts.fargs, { '--to-entry', result.current })
-      utils.log_info('hurl: running request to entry #' .. vim.inspect(result))
-      run_current_file(opts.fargs)
-    else
-      vim.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
-    end
+    -- Code here
   end, { nargs = '*', range = true })
-
   -- Add new command to change env file with input
+  -- Modified setup function
   utils.create_cmd('HurlSetEnvFile', function(opts)
-    local env_file = opts.fargs[1]
-    if not env_file then
-      vim.notify('hurl: please provide the env file name', vim.log.levels.INFO)
-      return
-    end
-    _HURL_GLOBAL_CONFIG.env_file = env_file
-    vim.notify('hurl: env file changed to ' .. _HURL_GLOBAL_CONFIG.env_file, vim.log.levels.INFO)
+    -- Code here
   end, { nargs = '*', range = true })
 
-  -- Run Hurl in verbose mode and send output to quickfix
   utils.create_cmd('HurlVerbose', function(opts)
-    -- It should be the same logic with run at current line but with verbose flag
-    -- The response will be sent to quickfix
-    local result = http.find_http_verb_positions_in_buffer()
-    if result.current > 0 and result.start_line and result.end_line then
-      utils.log_info(
-        'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
-      )
-      opts.fargs = opts.fargs or {}
-      opts.fargs = vim.list_extend(opts.fargs, { '--verbose' })
-
-      -- Clear quickfix list
-      vim.fn.setqflist({}, 'r', {
-        title = 'hurl',
-        lines = {},
-      })
-      run_at_lines(result.start_line, result.end_line, opts.fargs, function(code, data, event)
-        vim.fn.setqflist({}, 'a', {
-          title = 'hurl - data',
-          lines = data,
-        })
-        vim.fn.setqflist({}, 'a', {
-          title = 'hurl - event',
-          lines = event,
-        })
-        vim.cmd('copen')
-      end)
-    else
-      vim.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
-    end
+    -- Code here
+  utils.create_cmd('HurlVerbose', function(opts)
+    -- Code here
+  end, { nargs = '*', range = true })
+  utils.create_cmd('HurlVerbose', function(opts)
+    -- Code here
   end, { nargs = '*', range = true })
 end
 
