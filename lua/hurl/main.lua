@@ -7,7 +7,7 @@ local M = {}
 local response = {}
 local is_running = false
 
--- Looking for vars.env file base on the current file buffer
+-- Finds the HTTP verb in a given line and returns it along with its start and end positions
 ---@return table
 local function find_env_files_in_folders()
   local root_dir = vim.fn.expand('%:p:h')
@@ -41,8 +41,9 @@ local function find_env_files_in_folders()
     },
   }
 
-  -- Scan git root directory and all sub directories with the current file buffer
-  if git.is_git_repo() then
+  -- Checks if the current directory is a git repository
+    if git.is_git_repo() then
+    local git_root = git.get_git_root()
     local git_root = git.get_git_root()
     table.insert(env_files, {
       path = git_root .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
@@ -78,6 +79,7 @@ local function find_env_files_in_folders()
   end)
 
   return env_files
+end
 end
 
 --- Output handler
@@ -223,7 +225,7 @@ local function run_current_file(opts)
   execute_hurl_cmd(opts)
 end
 
---- Create a temporary file with the lines to run
+--- Runs the given lines with the provided options
 ---@param lines string[]
 ---@param opts table The options
 ---@param callback? function The callback function
@@ -263,7 +265,7 @@ local function run_selection(opts)
   run_lines(lines, opts)
 end
 
---- Run at current line
+--- Runs the lines between the given start and end lines with the provided options
 ---@param start_line number
 ---@param end_line number
 ---@param opts table
