@@ -73,6 +73,8 @@ local function find_env_files_in_folders()
     end
   end
 
+  return env_files
+end
   -- sort by path length, the current buffer file path will be the first
   table.sort(env_files, function(a, b)
     return #a.path > #b.path
