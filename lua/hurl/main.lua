@@ -1,32 +1,11 @@
 local utils = require('hurl.utils')
+local git = require('hurl.git_utils')
+local http = require('hurl.http_utils')
 
 local M = {}
 
 local response = {}
 local is_running = false
-
---- Check if the current directory is a git repo
----@return boolean
-local function is_git_repo()
-  vim.fn.system('git rev-parse --is-inside-work-tree')
-
-  return vim.v.shell_error == 0
-end
-
---- Get the git root directory
----@return string|nil The git root directory
-local function get_git_root()
-  local dot_git_path = vim.fn.finddir('.git', '.;')
-  return vim.fn.fnamemodify(dot_git_path, ':h')
-end
-
-local function split_path(path)
-  local parts = {}
-  for part in string.gmatch(path, '[^/]+') do
-    table.insert(parts, part)
-  end
-  return parts
-end
 
 -- Looking for vars.env file base on the current file buffer
 ---@return table
@@ -63,15 +42,15 @@ local function find_env_files_in_folders()
   }
 
   -- Scan git root directory and all sub directories with the current file buffer
-  if is_git_repo() then
-    local git_root = get_git_root()
+  if git.is_git_repo() then
+    local git_root = git.get_git_root()
     table.insert(env_files, {
       path = git_root .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
       dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
     })
 
-    local git_root_parts = split_path(git_root)
-    local current_dir_parts = split_path(current_file_dir)
+    local git_root_parts = git.split_path(git_root)
+    local current_dir_parts = git.split_path(current_file_dir)
     local sub_path = git_root
 
     for i = #git_root_parts + 1, #current_dir_parts do
@@ -120,6 +99,7 @@ local on_output = function(code, data, event)
     return
   end
 
+  -- TODO: The header parser sometime not working properly, e.g: https://google.com
   local status = tonumber(string.match(data[1], '([%w+]%d+)'))
   head_state = 'start'
   if status then
@@ -182,8 +162,8 @@ local function execute_hurl_cmd(opts, callback)
   utils.log_info('hurl: running command' .. vim.inspect(cmd))
 
   vim.fn.jobstart(cmd, {
-    on_stdout = on_output,
-    on_stderr = on_output,
+    on_stdout = callback or on_output,
+    on_stderr = callback or on_output,
     on_exit = function(i, code)
       utils.log_info('exit at ' .. i .. ' , code ' .. code)
       is_running = false
@@ -246,7 +226,8 @@ end
 --- Create a temporary file with the lines to run
 ---@param lines string[]
 ---@param opts table The options
-local function run_lines(lines, opts)
+---@param callback? function The callback function
+local function run_lines(lines, opts, callback)
   -- Create a temporary file with the lines to run
   local fname = utils.create_tmp_file(lines)
   if not fname then
@@ -256,7 +237,7 @@ local function run_lines(lines, opts)
 
   -- Add the temporary file to the arguments
   table.insert(opts, fname)
-  execute_hurl_cmd(opts)
+  execute_hurl_cmd(opts, callback)
 
   -- Clean up the temporary file after a delay
   local timeout = 1000
@@ -286,7 +267,8 @@ end
 ---@param start_line number
 ---@param end_line number
 ---@param opts table
-local function run_at_lines(start_line, end_line, opts)
+---@param callback? function
+local function run_at_lines(start_line, end_line, opts, callback)
   opts = opts or {}
   -- Get the lines from the buffer
   local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
@@ -296,75 +278,7 @@ local function run_at_lines(start_line, end_line, opts)
     return
   end
 
-  run_lines(lines, opts)
-end
-
-local function find_http_verb(line, current_line_number)
-  if not line then
-    return nil
-  end
-
-  local verbs = { 'GET', 'POST', 'PUT', 'DELETE', 'PATCH' }
-  local verb_start, verb_end, verb
-
-  for _, v in ipairs(verbs) do
-    verb_start, verb_end = line:find(v)
-    if verb_start then
-      verb = v
-      break
-    end
-  end
-
-  if verb_start then
-    return {
-      line_number = current_line_number,
-      start_pos = verb_start,
-      end_pos = verb_end,
-      method = verb,
-    }
-  else
-    return nil
-  end
-end
-
---- Find the HTTP verbs in the current buffer
----@return table
-local function find_http_verb_positions_in_buffer()
-  local buf = vim.api.nvim_get_current_buf()
-  local total_lines = vim.api.nvim_buf_line_count(buf)
-  local cursor = vim.api.nvim_win_get_cursor(0)
-  local current_line_number = cursor[1]
-
-  local next_entry = 0
-  local current_index = 0
-  local current_verb = nil
-  local end_line = total_lines -- Default to the last line of the buffer
-
-  for i = 1, total_lines do
-    local line = vim.api.nvim_buf_get_lines(buf, i - 1, i, false)[1]
-    local result = find_http_verb(line, i)
-    if result then
-      next_entry = next_entry + 1
-      if i == current_line_number then
-        current_index = next_entry
-        current_verb = result
-      elseif current_verb and i > current_verb.line_number then
-        end_line = i - 1 -- The end line of the current verb is the line before the next verb starts
-        break -- No need to continue once the end line of the current verb is found
-      end
-    end
-  end
-
-  if current_verb and current_index == next_entry then
-    -- If the current verb is the last one, the end line is the last line of the buffer
-    end_line = total_lines
-  end
-
-  return {
-    current = current_index,
-    start_line = current_verb and current_verb.line_number or nil,
-    end_line = end_line,
-  }
+  run_lines(lines, opts, callback)
 end
 
 function M.setup()
@@ -391,7 +305,7 @@ function M.setup()
 
   -- Run request at current line if there is a HTTP method
   utils.create_cmd('HurlRunnerAt', function(opts)
-    local result = find_http_verb_positions_in_buffer()
+    local result = http.find_http_verb_positions_in_buffer()
     if result.current > 0 and result.start_line and result.end_line then
       utils.log_info(
         'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
@@ -404,7 +318,7 @@ function M.setup()
 
   -- Run request to current entry if there is a HTTP method
   utils.create_cmd('HurlRunnerToEntry', function(opts)
-    local result = find_http_verb_positions_in_buffer()
+    local result = http.find_http_verb_positions_in_buffer()
     if result.current > 0 then
       opts.fargs = opts.fargs or {}
       opts.fargs = vim.list_extend(opts.fargs, { '--to-entry', result.current })
@@ -424,6 +338,39 @@ function M.setup()
     end
     _HURL_GLOBAL_CONFIG.env_file = env_file
     vim.notify('hurl: env file changed to ' .. _HURL_GLOBAL_CONFIG.env_file, vim.log.levels.INFO)
+  end, { nargs = '*', range = true })
+
+  -- Run Hurl in verbose mode and send output to quickfix
+  utils.create_cmd('HurlVerbose', function(opts)
+    -- It should be the same logic with run at current line but with verbose flag
+    -- The response will be sent to quickfix
+    local result = http.find_http_verb_positions_in_buffer()
+    if result.current > 0 and result.start_line and result.end_line then
+      utils.log_info(
+        'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
+      )
+      opts.fargs = opts.fargs or {}
+      opts.fargs = vim.list_extend(opts.fargs, { '--verbose' })
+
+      -- Clear quickfix list
+      vim.fn.setqflist({}, 'r', {
+        title = 'hurl',
+        lines = {},
+      })
+      run_at_lines(result.start_line, result.end_line, opts.fargs, function(code, data, event)
+        vim.fn.setqflist({}, 'a', {
+          title = 'hurl - data',
+          lines = data,
+        })
+        vim.fn.setqflist({}, 'a', {
+          title = 'hurl - event',
+          lines = event,
+        })
+        vim.cmd('copen')
+      end)
+    else
+      vim.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+    end
   end, { nargs = '*', range = true })
 end
 
