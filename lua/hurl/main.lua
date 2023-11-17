@@ -62,6 +62,7 @@ local function find_env_files_in_folders()
       })
     end
   end
+end
 
   for _, s in ipairs(scan_dir) do
     local dir = root_dir .. s.dir
@@ -81,7 +82,6 @@ end
   end)
 
   return env_files
-end
 end
 
 --- Output handler
@@ -294,7 +294,8 @@ function M.setup()
       utils.log_info('hurl: running current file')
       run_current_file(opts.fargs)
     end
-  end, { nargs = '*', range = true })
+    response.headers = { status = data[1] }
+    end
 
   -- Toggle mode between split and popup
   utils.create_cmd('HurlToggleMode', function()
