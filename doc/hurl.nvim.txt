@@ -1,4 +1,4 @@
-*hurl.nvim.txt*          For NVIM v0.8.0         Last change: 2023 November 15
+*hurl.nvim.txt*          For NVIM v0.8.0         Last change: 2023 November 17
 
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
@@ -45,6 +45,7 @@ Add the following configuration to your Neovim setup with lazy.nvim
         { "<leader>a", "<cmd>HurlRunnerAt<CR>", desc = "Run Api request" },
         { "<leader>te", "<cmd>HurlRunnerToEntry<CR>", desc = "Run Api request to entry" },
         { "<leader>tm", "<cmd>HurlToggleMode<CR>", desc = "Hurl Toggle Mode" },
+        { "<leader>tv", "<cmd>HurlVerbose<CR>", desc = "Run Api in verbose mode" },
         -- Run Hurl request in visual mode
         { "<leader>h", ":HurlRunner<CR>", desc = "Hurl Runner", mode = "v" },
       },
