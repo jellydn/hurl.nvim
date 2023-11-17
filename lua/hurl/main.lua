@@ -1,6 +1,11 @@
 local utils = require('hurl.utils')
 local git = require('hurl.git_utils')
+local is_git_repo = git.is_git_repo
+local get_git_root = git.get_git_root
+local split_path = git.split_path
 local http = require('hurl.http_utils')
+local find_http_verb = http.find_http_verb
+local find_http_verb_positions_in_buffer = http.find_http_verb_positions_in_buffer
 
 local M = {}
 
@@ -227,7 +232,7 @@ end
 ---@param lines string[]
 ---@param opts table The options
 ---@param callback? function The callback function
-local function run_lines(lines, opts, callback)
+local function run_lines(lines, opts, callback, start_line, end_line)
   -- Create a temporary file with the lines to run
   local fname = utils.create_tmp_file(lines)
   if not fname then
@@ -268,7 +273,7 @@ end
 ---@param end_line number
 ---@param opts table
 ---@param callback? function
-local function run_at_lines(start_line, end_line, opts, callback)
+local function run_at_lines(start_line, end_line, opts, callback, lines)
   opts = opts or {}
   -- Get the lines from the buffer
   local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
@@ -344,7 +349,7 @@ function M.setup()
   utils.create_cmd('HurlVerbose', function(opts)
     -- It should be the same logic with run at current line but with verbose flag
     -- The response will be sent to quickfix
-    local result = http.find_http_verb_positions_in_buffer()
+    local result = find_http_verb_positions_in_buffer()
     if result.current > 0 and result.start_line and result.end_line then
       utils.log_info(
         'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
