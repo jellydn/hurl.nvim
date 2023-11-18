@@ -83,6 +83,8 @@ end
 --- Output handler
 ---@class Output
 local on_output = function(code, data, event)
+  utils.log_info('hurl: on_output ' .. vim.inspect(code) .. vim.inspect(data))
+
   local head_state
   if data[1] == '' then
     table.remove(data, 1)
@@ -358,6 +360,7 @@ function M.setup()
         lines = {},
       })
       run_at_lines(result.start_line, result.end_line, opts.fargs, function(code, data, event)
+        utils.log_info('hurl: verbose callback ' .. vim.inspect(code) .. vim.inspect(data))
         vim.fn.setqflist({}, 'a', {
           title = 'hurl - data',
           lines = data,
