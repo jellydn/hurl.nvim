@@ -107,6 +107,12 @@ Place your cursor on the line you want to run and press `<leader>a` or run `Hurl
 
 [![Run at current line in popup mode](https://i.gyazo.com/20efd2cf3f73238bd57e79fc662208b1.gif)](https://gyazo.com/20efd2cf3f73238bd57e79fc662208b1)
 
+#### Verbose mode
+
+Run `HurlVerbose` command to execute the request in verbose mode. The response will be displayed in QuickFix window. This is useful for debugging purposes or getting the curl command from hurl file.
+
+[![Run at current line in verbose mode](https://i.gyazo.com/7d0f709e2db53f8c9e05655347f11bc9.gif)](https://gyazo.com/7d0f709e2db53f8c9e05655347f11bc9)
+
 ### Run to entry
 
 Place your cursor on the line you want to run to that entry and press `<leader>te` or run `HurlRunnerToEntry` command to execute the request. It need be one of the HTTP methods listed: GET, POST, PUT, DELETE, PATCH.
