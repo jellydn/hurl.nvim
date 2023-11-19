@@ -1,1 +1,6 @@
 report
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
