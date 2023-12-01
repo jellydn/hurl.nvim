@@ -1,4 +1,4 @@
-*hurl.nvim.txt*          For NVIM v0.8.0         Last change: 2023 November 19
+*hurl.nvim.txt*          For NVIM v0.8.0         Last change: 2023 December 01
 
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
@@ -38,6 +38,15 @@ Add the following configuration to your Neovim setup with lazy.nvim
         debug = false,
         -- Show response in popup or split
         mode = "split",
+        -- Default formatter
+        formatters = {
+          json = { 'jq' }, -- Make sure you have install jq in your system, e.g: brew install jq
+          html = {
+            'prettier', -- Make sure you have install prettier in your system, e.g: npm install -g prettier
+            '--parser',
+            'html',
+          },
+        },
       },
       keys = {
         -- Run API request
@@ -121,7 +130,10 @@ setups.
 SWAPPABLE ENVIRONMENT ~
 
 To change the environment file name, use the `HurlSetEnvFile` command followed
-by the new file name. #### Notes
+by the new file name.
+
+
+NOTES
 
 - Ensure that the new environment file exists in the directories where the plugin searches for it, as outlined in the |hurl.nvim-file-location| section.
 - This change will apply globally for the current session of Neovim. If you restart Neovim, it will revert to the default `vars.env` unless you change it again.
