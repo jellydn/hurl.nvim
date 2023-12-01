@@ -44,3 +44,6 @@ isempty
 bunx
 luarocks
 vusted
+finddir
+dotenv
+DOTENV
