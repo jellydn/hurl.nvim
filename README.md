@@ -25,6 +25,15 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
     debug = false,
     -- Show response in popup or split
     mode = "split",
+    -- Default formatter
+    formatters = {
+      json = { 'jq' }, -- Make sure you have install jq in your system, e.g: brew install jq
+      html = {
+        'prettier', -- Make sure you have install prettier in your system, e.g: npm install -g prettier
+        '--parser',
+        'html',
+      },
+    },
   },
   keys = {
     -- Run API request
@@ -68,18 +77,20 @@ The plugin searches for a `vars.env` (env_file config) in multiple locations to 
 1. **Current File's Directory:** The directory where the current file is located. This is particularly useful for projects where environment variables are specific to a particular module or component.
 
 2. **Specific Directories in Project:** The plugin scans predefined directories within the project, which are commonly used for organizing different aspects of a project:
+
    - `src/`: The source code directory.
    - `test/` and `tests/`: Directories typically used for test scripts.
    - `server/`: If your project includes a server component, this directory is checked.
    - `src/tests/` and `server/tests/`: These are checked for environment variables specific to tests within the respective `src` and `server` directories.
 
-3. **Intermediate Directories from Git Root to Current File:** If the project is a git repository, the plugin identifies the root of the repository and then searches for `vars.env` in every directory on the path from this root to the current file's directory. This feature is particularly useful in monorepo setups or large projects, where different modules or packages may have their own environment variables. 
+3. **Intermediate Directories from Git Root to Current File:** If the project is a git repository, the plugin identifies the root of the repository and then searches for `vars.env` in every directory on the path from this root to the current file's directory. This feature is particularly useful in monorepo setups or large projects, where different modules or packages may have their own environment variables.
 
 By checking these locations, the plugin ensures a comprehensive search for environment variables, catering to a wide range of project structures and setups.
 
 ### Swappable environment
 
-To change the environment file name, use the `HurlSetEnvFile` command followed by the new file name. 
+To change the environment file name, use the `HurlSetEnvFile` command followed by the new file name.
+
 #### Notes
 
 - Ensure that the new environment file exists in the directories where the plugin searches for it, as outlined in the [File Location](#file-location) section.
@@ -126,8 +137,6 @@ Note: it's running to that entry and ignore the remaining of the file. It is use
 Run `HurlToggleMode` command to toggle between split and popup mode.
 
 [![Toggle mode](https://i.gyazo.com/b36b19ab76524b95015eafe4c6e1c81f.gif)](https://gyazo.com/b36b19ab76524b95015eafe4c6e1c81f)
-
-
 
 ## Default Key Mappings
 
