@@ -93,11 +93,20 @@ util.format = function(body, type)
     return vim.split(body, '\n')
   end
 
+  util.log_info('formatting body with ' .. type)
   local stdout = vim.fn.systemlist(formatters[type], body)
   if vim.v.shell_error ~= 0 then
+    util.log_error('formatter failed' .. vim.v.shell_error)
     vim.notify('formatter failed' .. vim.v.shell_error, vim.log.levels.ERROR)
     return vim.split(body, '\n')
   end
+
+  if stdout == nil or #stdout == 0 then
+    util.log_info('formatter returned empty body')
+    return vim.split(body, '\n')
+  end
+
+  util.log_info('formatted body: ' .. table.concat(stdout, '\n'))
   return stdout
 end
 

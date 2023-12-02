@@ -41,19 +41,25 @@ M.show = function(data, type)
 
   local content = utils.format(data.body, type)
   if not content then
+    utils.log_info('No content')
     return
   end
 
+  -- Add content to the bottom
+  utils.log_info('Adding content to buffer:' .. vim.inspect(content))
+  vim.api.nvim_buf_set_lines(split.bufnr, headers_table.line, -1, false, content)
+
   split:map('n', 'q', '<cmd>q<cr>')
 
-  -- Set content to highlight
-  vim.api.nvim_buf_set_option(split.bufnr, 'filetype', type)
-
-  -- Set word to wrap
-  vim.api.nvim_buf_set_option(split.bufnr, 'wrap', true)
-
-  -- Add content to the bottom
-  vim.api.nvim_buf_set_lines(split.bufnr, headers_table.line, -1, false, content)
+  -- Only change the buffer option on nightly builds
+  if vim.fn.has('nvim-0.10.0') == 1 then
+    -- Set content to highlight
+    vim.api.nvim_buf_set_option(split.bufnr, 'filetype', type)
+    -- Add word wrap
+    vim.api.nvim_buf_set_option(split.bufnr, 'wrap', true)
+    -- Enable folding for bottom buffer
+    vim.api.nvim_buf_set_option(split.bufnr, 'foldmethod', 'expr')
+  end
 end
 
 return M

@@ -81,20 +81,25 @@ M.show = function(data, type)
 
   local content = utils.format(data.body, type)
   if not content then
+    utils.log_info('No content')
     return
   end
 
-  -- Set content to highlight
-  vim.api.nvim_buf_set_option(popups.top.bufnr, 'filetype', 'bash')
-  -- Add word wrap
-  vim.api.nvim_buf_set_option(popups.top.bufnr, 'wrap', true)
-
-  -- Enable folding for bottom buffer
-  vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'foldmethod', 'expr')
-  vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'filetype', type)
-
   -- Add content to the bottom
+  utils.log_info('Adding content to buffer:' .. vim.inspect(content))
   vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, content)
+
+  -- Only change the buffer option on nightly builds
+  if vim.fn.has('nvim-0.10.0') == 1 then
+    -- Set content to highlight for top buffer
+    vim.api.nvim_buf_set_option(popups.top.bufnr, 'filetype', 'bash')
+    -- Add word wrap
+    vim.api.nvim_buf_set_option(popups.top.bufnr, 'wrap', true)
+
+    -- Enable folding for bottom buffer
+    vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'foldmethod', 'expr')
+    vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'filetype', type)
+  end
 end
 
 return M
