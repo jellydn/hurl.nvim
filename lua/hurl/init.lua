@@ -11,7 +11,7 @@ local default_config = {
     width = 80,
     height = 40,
   },
-  env_file = 'vars.env',
+  env_file = { 'vars.env' },
   formatters = {
     json = { 'jq' },
     html = {
@@ -30,6 +30,10 @@ local M = {}
 --       - debug: (boolean | nil) default: false.
 --       - mode: ('popup' | 'split') default: popup.
 function M.setup(options)
+  if options.env_file ~= nil and type(options.env_file) == 'string' then
+    options.env_file = { options.env_file }
+  end
+
   _HURL_GLOBAL_CONFIG = vim.tbl_extend('force', _HURL_GLOBAL_CONFIG, options or default_config)
 
   require('hurl.main').setup()
