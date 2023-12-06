@@ -354,7 +354,10 @@ function M.setup()
       return
     end
     _HURL_GLOBAL_CONFIG.env_file = vim.split(env_file, ',')
-    vim.notify('hurl: env file changed to ' .. _HURL_GLOBAL_CONFIG.env_file, vim.log.levels.INFO)
+    vim.notify(
+      'hurl: env file changed to ' .. vim.inspect(_HURL_GLOBAL_CONFIG.env_file),
+      vim.log.levels.INFO
+    )
   end, { nargs = '*', range = true })
 
   -- Run Hurl in verbose mode and send output to quickfix
