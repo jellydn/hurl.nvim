@@ -1,3 +1,4 @@
+local utils = require('hurl.utils')
 --- Default configuration for hurl.nvim
 local default_config = {
   debug = false,
@@ -30,7 +31,8 @@ local M = {}
 --       - debug: (boolean | nil) default: false.
 --       - mode: ('popup' | 'split') default: popup.
 function M.setup(options)
-  if options.env_file ~= nil and type(options.env_file) == 'string' then
+  if options and options.env_file ~= nil and type(options.env_file) == 'string' then
+    utils.log_warn('env_file should be a table')
     options.env_file = { options.env_file }
   end
 
