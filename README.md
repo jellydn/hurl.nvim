@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to hurl.nvim 👋</h1>
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <p>
   <strong>Hurl.nvim</strong> is a Neovim plugin designed to run HTTP requests directly from `.hurl` files. Elevate your API development workflow by executing and viewing responses without leaving your editor.
@@ -261,6 +261,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://productsway.com/"><img src="https://avatars.githubusercontent.com/u/870029?v=4?s=100" width="100px;" alt="Dung Duc Huynh (Kaka)"/><br /><sub><b>Dung Duc Huynh (Kaka)</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=jellydn" title="Code">💻</a> <a href="https://github.com/jellydn/hurl.nvim/commits?author=jellydn" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://cenk.kilic.dev/"><img src="https://avatars.githubusercontent.com/u/26881592?v=4?s=100" width="100px;" alt="Cenk Kılıç"/><br /><sub><b>Cenk Kılıç</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=cenk1cenk2" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>

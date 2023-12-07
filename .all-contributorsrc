@@ -19,6 +19,15 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "cenk1cenk2",
+      "name": "Cenk Kılıç",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26881592?v=4",
+      "profile": "https://cenk.kilic.dev/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
