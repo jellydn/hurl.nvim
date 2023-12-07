@@ -65,7 +65,9 @@ Here's how to set a custom environment file name in your `hurl.nvim` setup:
 ```lua
 require('hurl').setup({
   -- Specify your custom environment file name here
-  env_file = 'hurl.env',
+  env_file = {
+      'hurl.env',
+  },
   -- Other configuration options...
 })
 ```
@@ -89,7 +91,7 @@ By checking these locations, the plugin ensures a comprehensive search for envir
 
 ### Swappable environment
 
-To change the environment file name, use the `HurlSetEnvFile` command followed by the new file name.
+To change the environment file name, use the `HurlSetEnvFile` command followed by the new file name. You can have multiple variable files by having comma-seperated values.
 
 #### Notes
 
@@ -172,7 +174,9 @@ local default_config = {
   },
 
   -- Default environment file name
-  env_file = 'vars.env',
+  env_file = {
+      'vars.env',
+  },
 
   -- Specify formatters for different response types
   formatters = {
@@ -192,7 +196,7 @@ To apply these configurations, include them in your Neovim setup like this:
 require('hurl').setup({
   debug = true,          -- Enable to show detailed logs
   mode = 'popup',        -- Change to 'popup' to display responses in a popup window
-  env_file = 'vars.env', -- Change this to use a different environment file name
+  env_file = { 'vars.env' }, -- Change this to use a different environment file name
   formatters = {
     json = { 'jq' },    -- Customize the JSON formatter command
     html = {

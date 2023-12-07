@@ -13,12 +13,15 @@ local function find_env_files_in_folders()
   local root_dir = vim.fn.expand('%:p:h')
   local cache_dir = vim.fn.stdpath('cache')
   local current_file_dir = vim.fn.expand('%:p:h:h')
-  local env_files = {
-    {
-      path = root_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-      dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-    },
-  }
+  local env_files = {}
+
+  for _, file in ipairs(_HURL_GLOBAL_CONFIG.env_file) do
+    table.insert(env_files, {
+      path = root_dir .. '/' .. file,
+      dest = cache_dir .. '/' .. file,
+    })
+  end
+
   -- NOTE: it may be better to use a user config to define the scan directories
   local scan_dir = {
     {
@@ -44,10 +47,13 @@ local function find_env_files_in_folders()
   -- Scan git root directory and all sub directories with the current file buffer
   if git.is_git_repo() then
     local git_root = git.get_git_root()
-    table.insert(env_files, {
-      path = git_root .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-      dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-    })
+
+    for _, file in ipairs(_HURL_GLOBAL_CONFIG.env_file) do
+      table.insert(env_files, {
+        path = git_root .. '/' .. file,
+        dest = cache_dir .. '/' .. file,
+      })
+    end
 
     local git_root_parts = git.split_path(git_root)
     local current_dir_parts = git.split_path(current_file_dir)
@@ -55,20 +61,25 @@ local function find_env_files_in_folders()
 
     for i = #git_root_parts + 1, #current_dir_parts do
       sub_path = sub_path .. '/' .. current_dir_parts[i]
-      table.insert(env_files, {
-        path = sub_path .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-        dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-      })
+
+      for _, file in ipairs(_HURL_GLOBAL_CONFIG.env_file) do
+        table.insert(env_files, {
+          path = sub_path .. '/' .. file,
+          dest = cache_dir .. '/' .. file,
+        })
+      end
     end
   end
 
   for _, s in ipairs(scan_dir) do
     local dir = root_dir .. s.dir
     if vim.fn.isdirectory(dir) == 1 then
-      table.insert(env_files, {
-        path = dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-        dest = cache_dir .. '/' .. _HURL_GLOBAL_CONFIG.env_file,
-      })
+      for _, file in ipairs(_HURL_GLOBAL_CONFIG.env_file) do
+        table.insert(env_files, {
+          path = dir .. '/' .. file,
+          dest = cache_dir .. '/' .. file,
+        })
+      end
     end
   end
 
@@ -149,9 +160,13 @@ local function execute_hurl_cmd(opts, callback)
   -- Then inject the command with --variables-file vars.env
   local env_files = find_env_files_in_folders()
   for _, env in ipairs(env_files) do
-    utils.log_info('hurl: looking for ' .. _HURL_GLOBAL_CONFIG.env_file .. ' in ' .. env.path)
+    utils.log_info(
+      'hurl: looking for ' .. vim.inspect(_HURL_GLOBAL_CONFIG.env_file) .. ' in ' .. env.path
+    )
     if vim.fn.filereadable(env.path) == 1 then
-      utils.log_info('hurl: found ' .. _HURL_GLOBAL_CONFIG.env_file .. ' in ' .. env.path)
+      utils.log_info(
+        'hurl: found ' .. vim.inspect(_HURL_GLOBAL_CONFIG.env_file) .. ' in ' .. env.path
+      )
       table.insert(opts, '--variables-file')
       table.insert(opts, env.path)
       break
@@ -338,8 +353,11 @@ function M.setup()
       vim.notify('hurl: please provide the env file name', vim.log.levels.INFO)
       return
     end
-    _HURL_GLOBAL_CONFIG.env_file = env_file
-    vim.notify('hurl: env file changed to ' .. _HURL_GLOBAL_CONFIG.env_file, vim.log.levels.INFO)
+    _HURL_GLOBAL_CONFIG.env_file = vim.split(env_file, ',')
+    vim.notify(
+      'hurl: env file changed to ' .. vim.inspect(_HURL_GLOBAL_CONFIG.env_file),
+      vim.log.levels.INFO
+    )
   end, { nargs = '*', range = true })
 
   -- Run Hurl in verbose mode and send output to quickfix
