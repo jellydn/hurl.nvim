@@ -24,6 +24,7 @@ FEATURES                                                  *hurl.nvim-features*
 - 🚀 Execute HTTP requests directly from `.hurl` files.
 - 👁‍🗨 Multiple display modes for API response: popup or split.
 - 🌈 Highly customizable through settings.
+- [Add new or updated features here]
 
 
 USAGE                                                        *hurl.nvim-usage*
@@ -60,10 +61,10 @@ Add the following configuration to your Neovim setup with lazy.nvim
         { "<leader>tv", "<cmd>HurlVerbose<CR>", desc = "Run Api in verbose mode" },
         -- Run Hurl request in visual mode
         { "<leader>h", ":HurlRunner<CR>", desc = "Hurl Runner", mode = "v" },
+        -- [Add new or updated usage instructions here]
       },
     }
 <
-
 Simple demo in split mode:
 
 <https://gyazo.com/19492e8b5366cec3f22d5fd97a63f37a>
