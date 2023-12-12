@@ -140,7 +140,12 @@ local on_output = function(code, data, event)
 
   utils.log_info('hurl: response status ' .. response.status)
   utils.log_info('hurl: response headers ' .. vim.inspect(response.headers))
-  utils.log_info('hurl: response body ' .. response.body)
+  if response.body then
+    utils.log_info('hurl: response body ' .. response.body)
+  else
+    -- Fall back to empty string for non-body responses
+    response.body = ''
+  end
 end
 
 --- Call hurl command
@@ -207,13 +212,16 @@ local function execute_hurl_cmd(opts, callback)
           return
         end
 
-        local container = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
         local content_type = response.headers['content-type']
           or response.headers['Content-Type']
-          or ''
+          or 'unknown'
 
         utils.log_info('Detected content type: ' .. content_type)
+        if response.headers['content-length'] == '0' then
+          vim.notify('hurl: empty response', vim.log.levels.INFO)
+        end
 
+        local container = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
         if utils.is_json_response(content_type) then
           container.show(response, 'json')
         else
