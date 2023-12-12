@@ -4,7 +4,7 @@ local default_config = {
   debug = false,
   mode = 'split',
   auto_close = true,
--- Default split options
+  -- Default split options
   split_position = 'right',
   split_size = '50%',
   -- Default popup options
