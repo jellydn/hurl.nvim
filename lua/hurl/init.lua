@@ -5,21 +5,21 @@ local default_config = {
   mode = 'split',
   auto_close = true,
   -- Default split options
-  split_position = 'right',
-  split_size = '50%',
+    split_position = 'right',
+    split_size = '50%',
   -- Default popup options
-  popup_position = '50%',
-  popup_size = {
+    popup_position = '50%',
+    popup_size = {
     width = 80,
     height = 40,
   },
-  env_file = { 'vars.env' },
-  formatters = {
-    json = { 'jq' },
-    html = {
-      'prettier',
-      '--parser',
-      'html',
+    env_file = { 'vars.env' },
+    formatters = {
+      json = { 'jq' },
+      html = {
+        'prettier',
+        '--parser',
+        'html',
     },
   },
 }
@@ -33,8 +33,8 @@ local M = {}
 --       - mode: ('popup' | 'split') default: popup.
 function M.setup(options)
   if options and options.env_file ~= nil and type(options.env_file) == 'string' then
-    utils.log_warn('env_file should be a table')
-    options.env_file = { options.env_file }
+      utils.log_warn('env_file should be a table')
+      options.env_file = { options.env_file }
   end
 
   _HURL_GLOBAL_CONFIG = vim.tbl_extend('force', _HURL_GLOBAL_CONFIG, options or default_config)
