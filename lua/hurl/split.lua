@@ -23,10 +23,12 @@ M.show = function(data, type)
   -- mount/open the component
   split:mount()
 
-  -- unmount component when cursor leaves buffer
-  split:on(event.BufLeave, function()
-    split:unmount()
-  end)
+  if _HURL_GLOBAL_CONFIG.auto_close then
+    -- unmount component when buffer is closed
+    split:on(event.BufLeave, function()
+      split:unmount()
+    end)
+  end
 
   -- Add headers to the top
   local headers_table = utils.render_header_table(data.headers)
@@ -49,7 +51,13 @@ M.show = function(data, type)
   utils.log_info('Adding content to buffer:' .. vim.inspect(content))
   vim.api.nvim_buf_set_lines(split.bufnr, headers_table.line, -1, false, content)
 
-  split:map('n', 'q', '<cmd>q<cr>')
+  local function quit()
+    vim.cmd('q')
+    split:unmount()
+  end
+  split:map('n', 'q', function()
+    quit()
+  end)
 
   -- Only change the buffer option on nightly builds
   if vim.fn.has('nvim-0.10.0') == 1 then
