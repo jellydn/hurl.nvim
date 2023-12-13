@@ -67,7 +67,7 @@ M.show = function(data, type)
 
   -- Map <Ctr-n> to next popup
   popups.top:map('n', '<C-n>', function()
-    M.clearBufferAndDisplayProcessingMessage()
+    M.clear_buffer_and_display_processing_message()
     vim.api.nvim_set_current_win(popups.bottom.winid)
   end)
   popups.bottom:map('n', '<C-n>', function()
