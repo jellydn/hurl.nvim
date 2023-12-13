@@ -45,6 +45,7 @@ M.show = function(data, type)
               return
             end
           end
+          M.clearBufferAndDisplayProcessingMessage()
           layout:unmount()
         end)
       end)
@@ -66,6 +67,7 @@ M.show = function(data, type)
 
   -- Map <Ctr-n> to next popup
   popups.top:map('n', '<C-n>', function()
+    M.clearBufferAndDisplayProcessingMessage()
     vim.api.nvim_set_current_win(popups.bottom.winid)
   end)
   popups.bottom:map('n', '<C-n>', function()
@@ -86,6 +88,7 @@ M.show = function(data, type)
     vim.api.nvim_win_close(popups.top.winid, true)
   else
     if headers_table.line > 0 then
+      M.clearBufferAndDisplayProcessingMessage()
       vim.api.nvim_buf_set_lines(popups.top.bufnr, 0, 1, false, headers_table.headers)
     end
   end
@@ -97,6 +100,7 @@ M.show = function(data, type)
   end
 
   -- Add content to the bottom
+  M.clearBufferAndDisplayProcessingMessage()
   utils.log_info('Adding content to buffer:' .. vim.inspect(content))
   vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, content)
 
@@ -113,7 +117,7 @@ M.show = function(data, type)
   end
 end
 
-M.clear = function()
+M.clearBufferAndDisplayProcessingMessage = function()
   -- Check if popup is open
   if not popups.bottom.winid then
     return
