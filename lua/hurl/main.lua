@@ -161,6 +161,13 @@ local function execute_hurl_cmd(opts, callback)
   is_running = true
   vim.notify('hurl: running request', vim.log.levels.INFO)
 
+  local is_verbose_mode = vim.tbl_contains(opts, '--verbose')
+  if not _HURL_GLOBAL_CONFIG.auto_close and not is_verbose_mode and response.body then
+    local container = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
+    utils.log_info('hurl: clear previous response if this is not auto close')
+    container.clear()
+  end
+
   -- Check vars.env exist on the current file buffer
   -- Then inject the command with --variables-file vars.env
   local env_files = find_env_files_in_folders()

@@ -113,4 +113,14 @@ M.show = function(data, type)
   end
 end
 
+M.clear = function()
+  -- Check if popup is open
+  if not popups.bottom.winid then
+    return
+  end
+  -- Clear the buffer and adding `Processing...` message
+  vim.api.nvim_buf_set_lines(popups.top.bufnr, 0, -1, false, { 'Processing...' })
+  vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, { 'Processing...' })
+end
+
 return M

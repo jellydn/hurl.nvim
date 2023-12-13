@@ -70,4 +70,14 @@ M.show = function(data, type)
   end
 end
 
+M.clear = function()
+  -- Check if split is open
+  if not split.winid then
+    return
+  end
+
+  -- Clear the buffer and adding `Processing...` message
+  vim.api.nvim_buf_set_lines(split.bufnr, 0, -1, false, { 'Processing...' })
+end
+
 return M
