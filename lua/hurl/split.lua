@@ -48,7 +48,7 @@ M.show = function(data, type)
   end
 
   -- Add content to the bottom
-  M.clearBufferAndDisplayProcessingMessage()
+  M.clear_buffer_and_display_processing_message()
   utils.log_info('Adding content to buffer:' .. vim.inspect(content))
   vim.api.nvim_buf_set_lines(split.bufnr, headers_table.line, -1, false, content)
 
@@ -71,7 +71,7 @@ M.show = function(data, type)
   end
 end
 
-M.clearBufferAndDisplayProcessingMessage = function()
+M.clear_buffer_and_display_processing_message = function()
   -- Check if split is open
   if not split.winid then
     return
