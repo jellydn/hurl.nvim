@@ -144,7 +144,7 @@ end
 ---@param content_type string
 ---@return boolean
 util.is_json_response = function(content_type)
-  return string.find(content_type, 'json') ~= nil
+  return content_type == 'application/json' or content_type == 'application/vnd.api+json'
 end
 
 util.is_html_response = function(content_type)
