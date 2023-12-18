@@ -29,8 +29,18 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "andrevdm",
+      "name": "Andre Van Der Merwe",
+      "avatar_url": "https://avatars.githubusercontent.com/u/74154?v=4",
+      "profile": "http://www.andrevdm.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
-  "linkToUsage": true
+  "linkToUsage": true,
+  "commitType": "docs"
 }
