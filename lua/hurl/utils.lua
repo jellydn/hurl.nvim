@@ -148,7 +148,6 @@ util.is_json_response = function(content_type)
          string.find(content_type, 'application/vnd.api%+json') ~= nil
 end
 
-
 util.is_html_response = function(content_type)
   return string.find(content_type, 'text/html') ~= nil
 end
