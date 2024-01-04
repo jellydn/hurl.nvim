@@ -2,6 +2,12 @@ local log = require('hurl.vlog')
 
 local util = {}
 
+--- Get the log file path
+---@return string
+util.get_log_file_path = function()
+  return log.get_log_file()
+end
+
 --- Log info
 ---@vararg any
 util.log_info = function(...)

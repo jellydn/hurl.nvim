@@ -4,7 +4,9 @@
 </p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![IT Man - Effortless APIs with Hurl.nvim: A Developer's Guide to Neovim Tooling [Vietnamese]](https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg)](https://www.youtube.com/watch?v=nr_RbHvnnwk)
@@ -161,7 +163,7 @@ These key mappings are active within the popup windows that `hurl.nvim` displays
 ```lua
 local default_config = {
   -- Toggle debugging information
-  debug = false, -- If true, logs will be saved at ~/.cache/nvim/hurl.nvim.log
+  debug = false, -- If true, logs will be saved at ~/.local/state/nvim/hurl.nvim.log
 
   -- Set the display mode for the response: 'split' or 'popup'
   mode = 'split',
@@ -216,7 +218,7 @@ Adjust the settings as per your needs to enhance your development experience wit
 
 ### Tips
 
-- Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.cache/nvim/hurl.nvim.log` on macOS.
+- Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.local/state/nvim/hurl.nvim.log` on macOS.
 - **Split Mode with Edgy:** `hurl.nvim` can be used with [edgy.nvim](https://github.com/folke/edgy.nvim) to manage layout when using the split mode.
 
 ```lua
@@ -283,4 +285,3 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
-

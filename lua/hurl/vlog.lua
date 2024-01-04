@@ -42,10 +42,14 @@ local log = {}
 
 local unpack = unpack or table.unpack
 
+log.get_log_file = function()
+  return string.format('%s/%s.log', vim.fn.stdpath('state'), default_config.plugin)
+end
+
 log.new = function(config, standalone)
   config = vim.tbl_deep_extend('force', default_config, config)
 
-  local outfile = string.format('%s/%s.log', vim.fn.stdpath('cache'), config.plugin)
+  local outfile = log.get_log_file()
 
   local obj
   if standalone then
