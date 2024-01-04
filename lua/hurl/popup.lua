@@ -97,7 +97,6 @@ M.show = function(data, type)
   end
 
   -- Add content to the bottom
-  utils.log_info('Adding content to buffer:' .. vim.inspect(content))
   vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, content)
 
   -- Only change the buffer option on nightly builds
