@@ -1,4 +1,4 @@
-*hurl.nvim.txt*          For NVIM v0.8.0         Last change: 2023 December 18
+*hurl.nvim.txt*          For NVIM v0.8.0          Last change: 2024 January 04
 
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
@@ -221,7 +221,7 @@ CONFIGURATION                                        *hurl.nvim-configuration*
 >lua
     local default_config = {
       -- Toggle debugging information
-      debug = false, -- If true, logs will be saved at ~/.cache/nvim/hurl.nvim.log
+      debug = false, -- If true, logs will be saved at ~/.local/state/nvim/hurl.nvim.log
     
       -- Set the display mode for the response: 'split' or 'popup'
       mode = 'split',
@@ -278,7 +278,7 @@ with `hurl.nvim`.
 
 TIPS ~
 
-- Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.cache/nvim/hurl.nvim.log` on macOS.
+- Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.local/state/nvim/hurl.nvim.log` on macOS.
 - **Split Mode with Edgy:** `hurl.nvim` can be used with edgy.nvim <https://github.com/folke/edgy.nvim> to manage layout when using the split mode.
 
 >lua
