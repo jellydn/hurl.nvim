@@ -404,16 +404,16 @@ function M.setup()
     else
       vim.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
     end
-  end, { nargs = '*', range = true })
+  end, { numberOfArguments = '*', range = true })
 
   -- Show debug info
-  utils.create_cmd('HurlDebugInfo', function()
+  utils.create_cmd('DisplayHurlDebugInformation', function()
     -- Get the log file path
-    local log_file_path = utils.get_log_file_path()
+    local hurlLogFileLocation = utils.get_log_file_path()
 
     -- Create a popup with the log file path
-    local lines = { 'Hurl.nvim Info:', 'Log file path: ' .. log_file_path }
-    local width = 0
+    local popupContentLines = { 'Hurl.nvim Info:', 'Log file path: ' .. log_file_path }
+    local popupWidth = 0
     for _, line in ipairs(lines) do
       width = math.max(width, #line)
     end
@@ -441,7 +441,7 @@ function M.setup()
     )
   end, {
     nargs = '*',
-    range = true,
+    isRange = true,
   })
 end
 
