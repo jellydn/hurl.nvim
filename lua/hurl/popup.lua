@@ -6,10 +6,15 @@ local utils = require('hurl.utils')
 
 local M = {}
 local popups = {
-  bottom = Popup({ border = 'single', enter = true }),
-  top = Popup({ border = {
-    style = 'rounded',
-  } }),
+  bottom = Popup({
+    border = 'single',
+    enter = true,
+    buf_options = { filetype = 'json' },
+  }),
+  top = Popup({
+    border = { style = 'rounded' },
+    buf_options = { filetype = 'bash' },
+  }),
 }
 
 local layout = Layout(
@@ -99,17 +104,8 @@ M.show = function(data, type)
   -- Add content to the bottom
   vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, content)
 
-  -- Only change the buffer option on nightly builds
-  if vim.fn.has('nvim-0.10.0') == 1 then
-    -- Set content to highlight for top buffer
-    vim.api.nvim_buf_set_option(popups.top.bufnr, 'filetype', 'bash')
-    -- Add word wrap
-    vim.api.nvim_buf_set_option(popups.top.bufnr, 'wrap', true)
-
-    -- Enable folding for bottom buffer
-    vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'foldmethod', 'expr')
-    vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'filetype', type)
-  end
+  -- Set content to highlight, refer https://github.com/MunifTanjim/nui.nvim/issues/76#issuecomment-1001358770
+  vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'filetype', type)
 end
 
 M.clear = function()

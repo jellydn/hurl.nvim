@@ -58,7 +58,6 @@ M.show = function(data, type)
     quit()
   end)
 
-  -- Only change the buffer option on nightly builds
   -- Set content to highlight, refer https://github.com/MunifTanjim/nui.nvim/issues/76#issuecomment-1001358770
   vim.api.nvim_buf_set_option(split.bufnr, 'filetype', type)
 end
