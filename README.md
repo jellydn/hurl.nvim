@@ -4,7 +4,9 @@
 </p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![IT Man - Effortless APIs with Hurl.nvim: A Developer's Guide to Neovim Tooling [Vietnamese]](https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg)](https://www.youtube.com/watch?v=nr_RbHvnnwk)
@@ -55,6 +57,9 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
 Simple demo in split mode:
 
 [![Show in split mode](https://i.gyazo.com/19492e8b5366cec3f22d5fd97a63f37a.gif)](https://gyazo.com/19492e8b5366cec3f22d5fd97a63f37a)
+
+> [!NOTE]
+> I frequently utilize the nightly version of Neovim, so if you encounter any issues, I recommend trying that version first. I may not have the time to address problems in the stable version. Your contributions via pull requests are always welcome.
 
 ## Env File Support: vars.env
 
