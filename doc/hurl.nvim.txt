@@ -69,6 +69,11 @@ Simple demo in split mode:
 <https://gyazo.com/19492e8b5366cec3f22d5fd97a63f37a>
 
 
+  [!NOTE] I frequently utilize the nightly version of Neovim, so if you encounter
+  any issues, I recommend trying that version first. I may not have the time to
+  address problems in the stable version. Your contributions via pull requests
+  are always welcome.
+
 ENV FILE SUPPORT: VARS.ENV              *hurl.nvim-env-file-support:-vars.env*
 
 `hurl.nvim` seamlessly integrates with environment files named `vars.env` to
