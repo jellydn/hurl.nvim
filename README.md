@@ -223,7 +223,7 @@ Adjust the settings as per your needs to enhance your development experience wit
 
 ```lua
 right = {
-  { title = "Hurl Nvim", ft = "hurl-nvim" }
+  { title = "Hurl Nvim", size = { width = 0.5 }, ft = "hurl-nvim" },
 }
 ```
 
