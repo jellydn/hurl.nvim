@@ -59,14 +59,8 @@ M.show = function(data, type)
   end)
 
   -- Only change the buffer option on nightly builds
-  if vim.fn.has('nvim-0.10.0') == 1 then
-    -- Set content to highlight
-    vim.api.nvim_buf_set_option(split.bufnr, 'filetype', type)
-    -- Add word wrap
-    vim.api.nvim_buf_set_option(split.bufnr, 'wrap', true)
-    -- Enable folding for bottom buffer
-    vim.api.nvim_buf_set_option(split.bufnr, 'foldmethod', 'expr')
-  end
+  -- Set content to highlight, refer https://github.com/MunifTanjim/nui.nvim/issues/76#issuecomment-1001358770
+  vim.api.nvim_buf_set_option(split.bufnr, 'filetype', type)
 end
 
 M.clear = function()
