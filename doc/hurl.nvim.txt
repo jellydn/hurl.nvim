@@ -1,4 +1,4 @@
-*hurl.nvim.txt*          For NVIM v0.8.0          Last change: 2024 January 04
+*hurl.nvim.txt*          For NVIM v0.8.0          Last change: 2024 January 26
 
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
@@ -283,7 +283,7 @@ TIPS ~
 
 >lua
     right = {
-      { title = "Hurl Nvim", ft = "hurl-nvim" }
+      { title = "Hurl Nvim", size = { width = 0.5 }, ft = "hurl-nvim" },
     }
 <
 
