@@ -448,8 +448,8 @@ function M.setup()
     -- Bind 'q' to close the window
     vim.api.nvim_buf_set_keymap(
       bufnr,
-      'n',
-      'q',
+'n',
+'q',
       '<cmd>close<CR>',
       { noremap = true, silent = true }
     )
