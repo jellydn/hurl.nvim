@@ -1,5 +1,34 @@
 local utils = require('hurl.utils')
 --- Default configuration for hurl.nvim
+local utils = require('hurl.utils')
+local default_config = {
+  debug = false,
+  mode = 'split',
+  show_notification = false,
+  auto_close = true,
+  -- Default split options
+  split_position = 'right',
+  split_size = '50%',
+  -- Default popup options
+  popup_position = '50%',
+  popup_size = {
+    width = 80,
+    height = 40,
+
+  },
+  env_file = { 'vars.env' },
+  formatters = {
+    json = { 'jq' },
+    html = {
+      'prettier',
+      '--parser',
+      'html',
+    },
+  },
+}
+--- Global configuration for entire plugin, easy to access from anywhere
+_HURL_GLOBAL_CONFIG = default_config
+local M = {}
 local default_config = {
   debug = false,
   mode = 'split',
@@ -29,7 +58,11 @@ _HURL_GLOBAL_CONFIG = default_config
 local M = {}
 
 --- Setup hurl.nvim
----@param options (table | nil)
+--- Setup hurl.nvim
+---@param options table|nil
+--       - debug: (boolean|nil) default: false.
+--       - mode: ('popup'|'split') default: popup.
+function M.setup(options)
 --       - debug: (boolean | nil) default: false.
 --       - mode: ('popup' | 'split') default: popup.
 function M.setup(options)
