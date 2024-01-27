@@ -169,6 +169,9 @@ local function execute_hurl_cmd(opts, callback)
     utils.log_info('hurl: clear previous response if this is not auto close')
     container.clear()
   end
+-- Add a comment explaining the purpose of the function
+--@param opts table The options
+--@param callback? function The callback function
 
   -- Check vars.env exist on the current file buffer
   -- Then inject the command with --variables-file vars.env
