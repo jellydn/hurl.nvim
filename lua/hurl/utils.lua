@@ -70,7 +70,7 @@ util.create_tmp_file = function(content)
 
   if not tmp_file then
     util.lor_error('hurl: failed to create tmp file')
-    util.notify('hurl: failed to create tmp file', vim.log.levels.ERROR)
+    util.notify('hurl: failed to create tmp file', vim.logger.levels.ERROR)
     return
   end
 
@@ -80,11 +80,11 @@ util.create_tmp_file = function(content)
   end
   if type(content) == 'table' then
     local c = vim.fn.join(content, '\n')
-    f:write(c)
+    file:write(c)
   else
     f:write(content)
   end
-  f:close()
+  file:close()
 
   return tmp_file
 end
