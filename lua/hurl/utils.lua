@@ -33,7 +33,7 @@ end
 --- Show info notification
 ---@vararg any
 util.notify = function(...)
-  -- Only save log when debug is on
+  --  Ignore if the flag is off
   if not _HURL_GLOBAL_CONFIG.show_notification then
     return
   end
