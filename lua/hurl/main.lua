@@ -5,6 +5,7 @@ local http = require('hurl.http_utils')
 local M = {}
 
 local response = {}
+local options = {}
 local is_running = false
 
 -- Looking for vars.env file base on the current file buffer
@@ -88,7 +89,7 @@ local function find_env_files_in_folders()
     return #a.path > #b.path
   end)
 
-  return env_files
+  return envFiles
 end
 
 --- Output handler
