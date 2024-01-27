@@ -4,9 +4,7 @@
 </p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
 [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
-
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![IT Man - Effortless APIs with Hurl.nvim: A Developer's Guide to Neovim Tooling [Vietnamese]](https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg)](https://www.youtube.com/watch?v=nr_RbHvnnwk)
@@ -271,7 +269,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://productsway.com/"><img src="https://avatars.githubusercontent.com/u/870029?v=4?s=100" width="100px;" alt="Dung Duc Huynh (Kaka)"/><br /><sub><b>Dung Duc Huynh (Kaka)</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=jellydn" title="Code">💻</a> <a href="https://github.com/jellydn/hurl.nvim/commits?author=jellydn" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://cenk.kilic.dev/"><img src="https://avatars.githubusercontent.com/u/26881592?v=4?s=100" width="100px;" alt="Cenk Kılıç"/><br /><sub><b>Cenk Kılıç</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=cenk1cenk2" title="Code">💻</a> <a href="https://github.com/jellydn/hurl.nvim/commits?author=cenk1cenk2" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://www.andrevdm.com"><img src="https://avatars.githubusercontent.com/u/74154?v=4?s=100" width="100px;" alt="Andre Van Der Merwe"/><br /><sub><b>Andre Van Der Merwe</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=andrevdm" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/skoch13"><img src="https://avatars.githubusercontent.com/u/29177689?v=4?s=100" width="100px;" alt="Sergey Kochetkov"/><br /><sub><b>Sergey Kochetkov</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=skoch13" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/skoch13"><img src="https://avatars.githubusercontent.com/u/29177689?v=4?s=100" width="100px;" alt="Sergey Kochetkov"/><br /><sub><b>Sergey Kochetkov</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=skoch13" title="Documentation">📖</a> <a href="https://github.com/jellydn/hurl.nvim/commits?author=skoch13" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
