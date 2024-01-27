@@ -450,7 +450,7 @@ function M.setup()
       bufnr,
 'n',
 'q',
-      '<cmd>close<CR>',
+'<cmd>close<CR>',
       { noremap = true, silent = true }
     )
   end, {
