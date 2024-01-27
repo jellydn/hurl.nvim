@@ -13,6 +13,11 @@ local default_config = {
 
   -- Should print the output to neovim while running
   use_console = false,
+  highlights = true,
+  use_file = true,
+  level = 'trace',
+  float_precision = 0.01,
+}
 
   -- Should highlighting be used in console (using echohl)
   highlights = true,
