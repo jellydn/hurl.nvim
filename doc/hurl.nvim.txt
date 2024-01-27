@@ -1,4 +1,4 @@
-*hurl.nvim.txt*          For NVIM v0.8.0          Last change: 2024 January 26
+*hurl.nvim.txt*          For NVIM v0.8.0          Last change: 2024 January 27
 
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
@@ -39,6 +39,8 @@ Add the following configuration to your Neovim setup with lazy.nvim
       opts = {
         -- Show debugging info
         debug = false,
+        -- Show notification on run
+        show_notification = false,
         -- Show response in popup or split
         mode = "split",
         -- Default formatter
