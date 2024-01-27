@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to hurl.nvim 👋</h1>
 <p>
-  <strong>Hurl.nvim</strong> is a Neovim plugin designed to run HTTP requests directly from `.hurl` files. Elevate your API development workflow by executing and viewing responses without leaving your editor.
+  <strong>hurl.nvim</strong> is a Neovim plugin designed to run HTTP requests directly from `.hurl` files. Elevate your API development workflow by executing and viewing responses without leaving your editor.
 </p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
@@ -74,9 +74,7 @@ Here's how to set a custom environment file name in your `hurl.nvim` setup:
 ```lua
 require('hurl').setup({
   -- Specify your custom environment file name here
-  env_file = {
-      'hurl.env',
-  },
+  env_file = { 'hurl.env', },
   -- Other configuration options...
 })
 ```
