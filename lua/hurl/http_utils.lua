@@ -13,7 +13,10 @@ local function find_http_verb(line, current_line_number)
 
   for _, v in ipairs(verbs) do
     verb_start, verb_end = line:find(v)
-    if verb_start then
+      if verb_start then
+    verb = v
+    break
+  end
       verb = v
       break
     end
@@ -73,4 +76,4 @@ end
 
 M.find_http_verb_positions_in_buffer = find_http_verb_positions_in_buffer
 
-return M
+-- Return module table
