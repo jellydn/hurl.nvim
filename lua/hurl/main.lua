@@ -154,12 +154,14 @@ end
 local function execute_hurl_cmd(opts, callback)
   -- Check if a request is currently running
   if is_running then
-    vim.notify('hurl: request is running. Please try again later.', vim.log.levels.INFO)
+    utils.log_info('hurl: request is already running')
+    utils.notify('hurl: request is running. Please try again later.', vim.log.levels.INFO)
     return
   end
 
   is_running = true
-  vim.notify('hurl: running request', vim.log.levels.INFO)
+  utils.log_info('hurl: running request')
+  utils.notify('hurl: running request', vim.log.levels.INFO)
 
   local is_verbose_mode = vim.tbl_contains(opts, '--verbose')
   if not _HURL_GLOBAL_CONFIG.auto_close and not is_verbose_mode and response.body then
@@ -208,7 +210,8 @@ local function execute_hurl_cmd(opts, callback)
         return
       end
 
-      vim.notify('hurl: request finished', vim.log.levels.INFO)
+      utils.log_info('hurl: request finished')
+      utils.notify('hurl: request finished', vim.log.levels.INFO)
 
       if callback then
         return callback(response)
@@ -225,7 +228,8 @@ local function execute_hurl_cmd(opts, callback)
 
         utils.log_info('Detected content type: ' .. content_type)
         if response.headers['content-length'] == '0' then
-          vim.notify('hurl: empty response', vim.log.levels.INFO)
+          utils.log_info('hurl: empty response')
+          utils.notify('hurl: empty response', vim.log.levels.INFO)
         end
 
         local container = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
@@ -260,7 +264,8 @@ local function run_lines(lines, opts, callback)
   -- Create a temporary file with the lines to run
   local fname = utils.create_tmp_file(lines)
   if not fname then
-    vim.notify('hurl: create tmp file failed. Please try again!', vim.log.levels.WARN)
+    utils.log_warn('hurl: create tmp file failed')
+    utils.notify('hurl: create tmp file failed. Please try again!', vim.log.levels.WARN)
     return
   end
 
@@ -273,7 +278,8 @@ local function run_lines(lines, opts, callback)
   vim.defer_fn(function()
     local success = os.remove(fname)
     if not success then
-      vim.notify('hurl: remove file failed', vim.log.levels.WARN)
+      utils.log_info('hurl: remove file failed ' .. fname)
+      utils.notify('hurl: remove file failed', vim.log.levels.WARN)
     else
       utils.log_info('hurl: remove file success ' .. fname)
     end
@@ -303,7 +309,8 @@ local function run_at_lines(start_line, end_line, opts, callback)
   local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
 
   if not lines or vim.tbl_isempty(lines) then
-    vim.notify('hurl: no lines to run', vim.log.levels.WARN)
+    utils.log_warn('hurl: no lines to run')
+    utils.notify('hurl: no lines to run', vim.log.levels.WARN)
     return
   end
 
@@ -329,7 +336,8 @@ function M.setup()
     else
       _HURL_GLOBAL_CONFIG.mode = 'split'
     end
-    vim.notify('hurl: mode changed to ' .. _HURL_GLOBAL_CONFIG.mode, vim.log.levels.INFO)
+    utils.log_info('hurl: mode changed to ' .. _HURL_GLOBAL_CONFIG.mode)
+    utils.notify('hurl: mode changed to ' .. _HURL_GLOBAL_CONFIG.mode, vim.log.levels.INFO)
   end, { nargs = '*', range = true })
 
   -- Run request at current line if there is a HTTP method
@@ -341,7 +349,8 @@ function M.setup()
       )
       run_at_lines(result.start_line, result.end_line, opts.fargs)
     else
-      vim.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+      utils.log_info('hurl: not HTTP method found in the current line' .. result.start_line)
+      utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
     end
   end, { nargs = '*', range = true })
 
@@ -354,7 +363,8 @@ function M.setup()
       utils.log_info('hurl: running request to entry #' .. vim.inspect(result))
       run_current_file(opts.fargs)
     else
-      vim.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+      utils.log_info('hurl: not HTTP method found in the current line' .. result.end_line)
+      utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
     end
   end, { nargs = '*', range = true })
 
@@ -362,14 +372,14 @@ function M.setup()
   utils.create_cmd('HurlSetEnvFile', function(opts)
     local env_file = opts.fargs[1]
     if not env_file then
-      vim.notify('hurl: please provide the env file name', vim.log.levels.INFO)
+      utils.log_info('hurl: please provide the env file name')
+      utils.notify('hurl: please provide the env file name', vim.log.levels.INFO)
       return
     end
     _HURL_GLOBAL_CONFIG.env_file = vim.split(env_file, ',')
-    vim.notify(
-      'hurl: env file changed to ' .. vim.inspect(_HURL_GLOBAL_CONFIG.env_file),
-      vim.log.levels.INFO
-    )
+    local updated_env = vim.inspect(_HURL_GLOBAL_CONFIG.env_file)
+    utils.log_info('hurl: env file changed to ' .. updated_env)
+    utils.notify('hurl: env file changed to ' .. updated_env, vim.log.levels.INFO)
   end, { nargs = '*', range = true })
 
   -- Run Hurl in verbose mode and send output to quickfix
@@ -402,7 +412,8 @@ function M.setup()
         vim.cmd('copen')
       end)
     else
-      vim.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+      utils.log_info('hurl: not HTTP method found in the current line' .. result.start_line)
+      utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
     end
   end, { nargs = '*', range = true })
 
