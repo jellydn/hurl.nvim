@@ -28,7 +28,7 @@ local layout = Layout(
       height = '20%',
     } }),
     Layout.Box(popups.bottom, { grow = 1 }),
-  }, { dir = 'col' })
+   }, { dir = 'col' }
 )
 
 -- Show content in a popup
@@ -58,7 +58,7 @@ M.show = function(data, type)
 
   local function quit()
     vim.cmd('q')
-    layout:unmount()
+  layout:unmount()
   end
 
   -- Map q to quit
@@ -107,6 +107,8 @@ M.show = function(data, type)
   -- Set content to highlight, refer https://github.com/MunifTanjim/nui.nvim/issues/76#issuecomment-1001358770
   vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'filetype', type)
 end
+
+return M
 
 M.clear = function()
   -- Check if popup is open
