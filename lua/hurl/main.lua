@@ -72,7 +72,7 @@ local function find_env_files_in_folders()
   end
 
   for _, s in ipairs(scan_dir) do
-    local dir = root_dir..s.dir
+    local dir = root_dir .. s.dir
     if vim.fn.isdirectory(dir) == 1 then
       for _, file in ipairs(_HURL_GLOBAL_CONFIG.env_file) do
         table.insert(env_files, {
