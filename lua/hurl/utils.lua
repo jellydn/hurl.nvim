@@ -30,6 +30,17 @@ util.log_error = function(...)
   log.error(...)
 end
 
+--- Show info notification
+---@vararg any
+util.notify = function(...)
+  --  Ignore if the flag is off
+  if not _HURL_GLOBAL_CONFIG.show_notification then
+    return
+  end
+
+  vim.notify(...)
+end
+
 --- Get visual selection
 ---@return string[]
 util.get_visual_selection = function()
@@ -58,7 +69,8 @@ util.create_tmp_file = function(content)
   )
 
   if not tmp_file then
-    vim.notify('hurl: failed to create tmp file', vim.log.levels.ERROR)
+    util.lor_error('hurl: failed to create tmp file')
+    util.notify('hurl: failed to create tmp file', vim.log.levels.ERROR)
     return
   end
 
@@ -103,7 +115,7 @@ util.format = function(body, type)
   local stdout = vim.fn.systemlist(formatters[type], body)
   if vim.v.shell_error ~= 0 then
     util.log_error('formatter failed' .. vim.v.shell_error)
-    vim.notify('formatter failed' .. vim.v.shell_error, vim.log.levels.ERROR)
+    util.notify('formatter failed' .. vim.v.shell_error, vim.log.levels.ERROR)
     return vim.split(body, '\n')
   end
 

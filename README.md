@@ -29,6 +29,8 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
   opts = {
     -- Show debugging info
     debug = false,
+    -- Show notification on run
+    show_notification = false,
     -- Show response in popup or split
     mode = "split",
     -- Default formatter

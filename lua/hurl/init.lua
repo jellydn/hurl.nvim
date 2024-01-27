@@ -3,6 +3,7 @@ local utils = require('hurl.utils')
 local default_config = {
   debug = false,
   mode = 'split',
+  show_notification = false,
   auto_close = true,
   -- Default split options
   split_position = 'right',
