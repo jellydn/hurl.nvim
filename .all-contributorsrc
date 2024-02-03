@@ -48,6 +48,15 @@
         "doc",
         "code"
       ]
+    },
+    {
+      "login": "rbingham",
+      "name": "rbingham",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7032804?v=4",
+      "profile": "https://github.com/rbingham",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
