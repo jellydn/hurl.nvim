@@ -9,18 +9,61 @@ local is_running = false
 
 -- Looking for vars.env file base on the current file buffer
 ---@return table
+local function find_env_files(file, root_dir, cache_dir, current_file_dir, scan_dir)
+  local files = {
+    {
+      path = root_dir .. '/' .. file,
+      dest = cache_dir .. '/' .. file,
+    },
+  }
+
+  -- Scan git root directory and all sub directories with the current file buffer
+  if git.is_git_repo() then
+    local git_root = git.get_git_root()
+
+    table.insert(files, {
+      path = git_root .. '/' .. file,
+      dest = cache_dir .. '/' .. file,
+    })
+
+    local git_root_parts = git.split_path(git_root)
+    local current_dir_parts = git.split_path(current_file_dir)
+    local sub_path = git_root
+
+    for i = #git_root_parts + 1, #current_dir_parts do
+      sub_path = sub_path .. '/' .. current_dir_parts[i]
+
+      table.insert(files, {
+        path = sub_path .. '/' .. file,
+        dest = cache_dir .. '/' .. file,
+      })
+    end
+  end
+
+  for _, s in ipairs(scan_dir) do
+    local dir = root_dir .. s.dir
+    if vim.fn.isdirectory(dir) == 1 then
+      table.insert(files, {
+        path = dir .. '/' .. file,
+        dest = cache_dir .. '/' .. file,
+      })
+    end
+  end
+
+  -- sort by path length, the current buffer file path will be the first
+  table.sort(files, function(a, b)
+    return #a.path > #b.path
+  end)
+  return files
+end
+
+-- Looking for vars.env file base on the current file buffer
+---@return table
 local function find_env_files_in_folders()
   local root_dir = vim.fn.expand('%:p:h')
   local cache_dir = vim.fn.stdpath('cache')
   local current_file_dir = vim.fn.expand('%:p:h:h')
   local env_files = {}
-
-  for _, file in ipairs(_HURL_GLOBAL_CONFIG.env_file) do
-    table.insert(env_files, {
-      path = root_dir .. '/' .. file,
-      dest = cache_dir .. '/' .. file,
-    })
-  end
 
   -- NOTE: it may be better to use a user config to define the scan directories
   local scan_dir = {
@@ -44,52 +87,14 @@ local function find_env_files_in_folders()
     },
   }
 
-  -- Scan git root directory and all sub directories with the current file buffer
-  if git.is_git_repo() then
-    local git_root = git.get_git_root()
-
-    for _, file in ipairs(_HURL_GLOBAL_CONFIG.env_file) do
-      table.insert(env_files, {
-        path = git_root .. '/' .. file,
-        dest = cache_dir .. '/' .. file,
-      })
-    end
-
-    local git_root_parts = git.split_path(git_root)
-    local current_dir_parts = git.split_path(current_file_dir)
-    local sub_path = git_root
-
-    for i = #git_root_parts + 1, #current_dir_parts do
-      sub_path = sub_path .. '/' .. current_dir_parts[i]
-
-      for _, file in ipairs(_HURL_GLOBAL_CONFIG.env_file) do
-        table.insert(env_files, {
-          path = sub_path .. '/' .. file,
-          dest = cache_dir .. '/' .. file,
-        })
-      end
-    end
+  for _, file in ipairs(_HURL_GLOBAL_CONFIG.env_file) do
+    local temp_file = find_env_files(file, root_dir, cache_dir, current_file_dir, scan_dir)
+    vim.list_extend(env_files, temp_file)
   end
-
-  for _, s in ipairs(scan_dir) do
-    local dir = root_dir .. s.dir
-    if vim.fn.isdirectory(dir) == 1 then
-      for _, file in ipairs(_HURL_GLOBAL_CONFIG.env_file) do
-        table.insert(env_files, {
-          path = dir .. '/' .. file,
-          dest = cache_dir .. '/' .. file,
-        })
-      end
-    end
-  end
-
-  -- sort by path length, the current buffer file path will be the first
-  table.sort(env_files, function(a, b)
-    return #a.path > #b.path
-  end)
 
   return env_files
 end
+
 
 --- Output handler
 ---@class Output
