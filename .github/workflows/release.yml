@@ -17,8 +17,8 @@ jobs:
       - name: tag stable versions
         if: ${{ steps.release.outputs.release_created }}
         run: |
-          git config user.name github-actions[bot]
-          git config user.email github-actions[bot]@users.noreply.github.com
+          git config --global user.name github-actions[bot]
+          git config --global user.email github-actions[bot]@users.noreply.github.com
           git remote add gh-token "https://${{ secrets.GITHUB_TOKEN }}@github.com/google-github-actions/release-please-action.git"
           git tag -d stable || true
           git push origin :stable || true
