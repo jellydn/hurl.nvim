@@ -309,7 +309,7 @@ CREDITS                                                    *hurl.nvim-credits*
 
 AUTHOR                                                      *hurl.nvim-author*
 
-👤 **Huynh Duc Dung**
+👤 **Huynh Duc Dung**rbingham
 
 - Website: https://productsway.com/
 - Twitter: @jellydn <https://twitter.com/jellydn>
