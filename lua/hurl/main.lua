@@ -95,7 +95,6 @@ local function find_env_files_in_folders()
   return env_files
 end
 
-
 --- Output handler
 ---@class Output
 local on_output = function(code, data, event)
