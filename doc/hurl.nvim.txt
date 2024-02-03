@@ -329,7 +329,7 @@ CONTRIBUTORS ✨                                  *hurl.nvim-contributors-✨*
 Thanks goes to these wonderful people (emoji key
 <https://allcontributors.org/docs/en/emoji-key>):
 
-Dung Duc Huynh (Kaka)💻 📖Cenk Kılıç💻 📖Andre Van Der Merwe💻Sergey Kochetkov📖 💻rbingham💻
+Dung Duc Huynh (Kaka)💻 📖Cenk Kılıç💻 📖Andre Van Der Merwe💻Sergey Kochetkov📖💻rbingham💻
 Add your contributions
 This project follows the all-contributors
 <https://github.com/all-contributors/all-contributors> specification.
