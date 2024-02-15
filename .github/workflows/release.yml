@@ -1,7 +1,16 @@
 name: Release
 on:
   push:
+    branches:
+      - release
   pull_request:
+    branches:
+      - main
+      - release
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   release:
@@ -13,7 +22,8 @@ jobs:
         with:
           release-type: simple
           package-name: hurl.nvim
-      - uses: actions/checkout@v4
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
       - name: tag stable versions
         if: ${{ steps.release.outputs.release_created }}
         run: |
