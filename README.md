@@ -4,7 +4,9 @@
 </p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![IT Man - Effortless APIs with Hurl.nvim: A Developer's Guide to Neovim Tooling [Vietnamese]](https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg)](https://www.youtube.com/watch?v=nr_RbHvnnwk)
@@ -229,6 +231,14 @@ right = {
   { title = "Hurl Nvim", size = { width = 0.5 }, ft = "hurl-nvim" },
 }
 ```
+
+- **Syntax Highlighting in Stable Neovim:** If you're using a stable version of Neovim that doesn't support Hurl syntax highlighting, you can set the filetype to `sh` or `bash` for your `.hurl` files. This will enable basic syntax highlighting that can improve readability. To do this, add the following line to your Neovim configuration:
+
+```vim
+autocmd BufRead,BufNewFile *.hurl setfiletype sh
+```
+
+For example, here is my [autocmd](https://github.com/jellydn/lazy-nvim-ide/commit/141edf7114839ba7656c4484f852199179c4f11f) for `.hurl` files.
 
 ## Resources
 
