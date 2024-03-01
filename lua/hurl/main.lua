@@ -416,8 +416,10 @@ function M.setup()
         vim.cmd('copen')
       end)
     else
-      utils.log_info('hurl: not HTTP method found in the current line' .. result.start_line)
-      utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+      if result then
+        utils.log_info('hurl: not HTTP method found in the current line' .. result.start_line)
+        utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+      end
     end
   end, { nargs = '*', range = true })
 
