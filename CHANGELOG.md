@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/jellydn/hurl.nvim/compare/v1.0.0...v1.0.1) (2024-03-01)
+
+
+### Bug Fixes
+
+* add null check for result before call save log ([b1c4516](https://github.com/jellydn/hurl.nvim/commit/b1c4516c7dbd45fb8cc80e1c87d088155d1b53eb)), closes [#89](https://github.com/jellydn/hurl.nvim/issues/89)
+
 ## 1.0.0 (2024-02-15)
 
 
