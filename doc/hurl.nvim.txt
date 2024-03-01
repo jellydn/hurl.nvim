@@ -283,7 +283,15 @@ Adjust the settings as per your needs to enhance your development experience
 with `hurl.nvim`.
 
 
-TIPS ~
+- **Syntax Highlighting in Stable Neovim:** If you’re using a stable version of Neovim that doesn’t support Hurl syntax highlighting, you can set the filetype to `sh` or `bash` for your `.hurl` files. This will enable basic syntax highlighting that can improve readability. To do this, add the following line to your Neovim configuration:
+
+>vim
+    autocmd BufRead,BufNewFile *.hurl setfiletype sh
+<
+
+For example, here is my autocmd
+<https://github.com/jellydn/lazy-nvim-ide/commit/141edf7114839ba7656c4484f852199179c4f11f>
+for `.hurl` files.TIPS ~
 
 - Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.local/state/nvim/hurl.nvim.log` on macOS.
 - **Split Mode with Edgy:** `hurl.nvim` can be used with edgy.nvim <https://github.com/folke/edgy.nvim> to manage layout when using the split mode.
