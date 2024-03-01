@@ -223,8 +223,15 @@ Adjust the settings as per your needs to enhance your development experience wit
 
 ### Tips
 
-- Enable debug mode with `debug = true` for detailed logs. Logs are saved at `~/.local/state/nvim/hurl.nvim.log` on macOS.
-- **Split Mode with Edgy:** `hurl.nvim` can be used with [edgy.nvim](https://github.com/folke/edgy.nvim) to manage layout when using the split mode.
+> [!TIP]
+> Enable debug mode with `debug = true` for detailed logs
+
+- Logs are saved at `~/.local/state/nvim/hurl.nvim.log` on macOS.
+
+> [!TIP]
+> Split mode with Edgy
+
+- `hurl.nvim` can be used with [edgy.nvim](https://github.com/folke/edgy.nvim) to manage layout when using the split mode.
 
 ```lua
 right = {
@@ -232,7 +239,10 @@ right = {
 }
 ```
 
-- **Syntax Highlighting in Stable Neovim:** If you're using a stable version of Neovim that doesn't support Hurl syntax highlighting, you can set the filetype to `sh` or `bash` for your `.hurl` files. This will enable basic syntax highlighting that can improve readability. To do this, add the following line to your Neovim configuration:
+> [!TIP]
+> Syntax Highlighting in Stable Neovim
+
+- If you're using a stable version of Neovim that doesn't support Hurl syntax highlighting, you can set the filetype to `sh` or `bash` for your `.hurl` files. This will enable basic syntax highlighting that can improve readability. To do this, add the following line to your Neovim configuration:
 
 ```vim
 autocmd BufRead,BufNewFile *.hurl setfiletype sh
