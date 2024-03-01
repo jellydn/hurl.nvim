@@ -37,8 +37,8 @@ Add the following configuration to your Neovim setup with lazy.nvim
       dependencies = { "MunifTanjim/nui.nvim" },
       ft = "hurl",
       opts = {
-        -- Show debugging info
-        debug = false,
+    -- Enable debug mode for detailed logs
+    debug = true,
         -- Show notification on run
         show_notification = false,
         -- Show response in popup or split
@@ -79,12 +79,6 @@ Simple demo in split mode:
 ENV FILE SUPPORT: VARS.ENV              *hurl.nvim-env-file-support:-vars.env*
 
 `hurl.nvim` seamlessly integrates with environment files named `vars.env` to
-manage environment variables for your HTTP requests. These environment
-variables are essential for customizing your requests with dynamic data such as
-API keys, base URLs, and other configuration values.
-
-
-CUSTOMIZATION ~
 
 You can specify the name of the environment file in your `hurl.nvim`
 configuration. By default, `hurl.nvim` looks for a file named `vars.env`, but
