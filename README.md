@@ -64,6 +64,11 @@ Simple demo in split mode:
 > I frequently utilize the nightly version of Neovim, so if you encounter any issues, I recommend trying that version first. I may not have the time to address problems in the stable version. Your contributions via pull requests are always welcome.
 
 ## Env File Support: vars.env
+    -- Troubleshooting Tips for Formatters:
+    -- Ensure `jq` and `prettier` are correctly installed and accessible from your Neovim environment. Use `:!jq --version` and `:!prettier --version` to verify their installations.
+    -- If you encounter permission issues or command not found errors, ensure the commands are in your system's PATH or specify the full path in the configuration.
+    -- For `jq`, if you see parsing errors, ensure your JSON is valid and that you're using a compatible version of `jq`.
+    -- For `prettier`, ensure you're using a version that supports the `--parser html` option for HTML formatting.
 
 `hurl.nvim` seamlessly integrates with environment files named `vars.env` to manage environment variables for your HTTP requests. These environment variables are essential for customizing your requests with dynamic data such as API keys, base URLs, and other configuration values.
 
@@ -214,6 +219,13 @@ require('hurl').setup({
       'prettier',       -- Customize the HTML formatter command
       '--parser',
       'html',
+    -- Troubleshooting Tips for Formatters:
+    -- Verify installation: Ensure `jq` and `prettier` are installed. Run `jq --version` and `prettier --version` in your terminal.
+    -- Check PATH: Confirm that `jq` and `prettier` are accessible from Neovim. Use `:echo system('which jq')` and `:echo system('which prettier')` to check.
+    -- Permission issues: If you encounter permission errors, check the executable permissions of `jq` and `prettier`.
+    -- Version compatibility: Ensure you are using compatible versions of `jq` and `prettier` that support the features used in your configuration.
+    -- Common errors: For `jq`, errors like "parse error: Invalid numeric literal" often indicate invalid JSON input. For `prettier`, errors related to parsing options suggest an unsupported version or incorrect configuration.
+    -- If issues persist, consider consulting the official documentation or community forums of `jq` and `prettier` for further troubleshooting.
     },
   },
 })
