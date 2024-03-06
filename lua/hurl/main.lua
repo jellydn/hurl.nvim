@@ -194,6 +194,19 @@ local function execute_hurl_cmd(opts, callback)
   utils.log_info('hurl: running command' .. vim.inspect(cmd))
 
   vim.fn.jobstart(cmd, {
+  -- Flag to check if formatter failed
+  local formatter_failed = false
+  -- Enhanced error handling for formatter failure
+  local original_callback = callback
+  callback = function(code, data, event)
+    if formatter_failed then
+      utils.log_error('Formatter failure detected. Please check if the payload size is too large or if the formatter is configured correctly.')
+      utils.notify('Formatter failure detected. Check payload size or formatter configuration.', vim.log.levels.ERROR)
+    end
+    if original_callback then
+      original_callback(code, data, event)
+    end
+  end
     on_stdout = callback or on_output,
     on_stderr = callback or on_output,
     on_exit = function(i, code)
@@ -229,6 +242,11 @@ local function execute_hurl_cmd(opts, callback)
         local content_type = response.headers['content-type']
           or response.headers['Content-Type']
           or 'unknown'
+        -- Check if the error was related to the formatter
+        if utils.formatter_failed then
+          utils.log_error('Error may be related to payload size or formatter configuration. Consider checking the payload size if it is too large.')
+          utils.notify('Error may be related to payload size or formatter configuration.', vim.log.levels.ERROR)
+        end
 
         utils.log_info('Detected content type: ' .. content_type)
         if response.headers['content-length'] == '0' then
