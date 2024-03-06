@@ -34,6 +34,8 @@ end
 ---@vararg any
 util.notify = function(...)
   --  Ignore if the flag is off
+local io = require('io')
+local os = require('os')
   if not _HURL_GLOBAL_CONFIG.show_notification then
     return
   end
@@ -103,8 +105,28 @@ end
 ---@param type 'json' | 'html' | 'text'
 ---@return string[] | nil
 util.format = function(body, type)
-  local formatters = _HURL_GLOBAL_CONFIG.formatters
-    or { json = { 'jq' }, html = { 'prettier', '--parser', 'html' } }
+  local threshold = 10240 -- 10KB
+  local tmp_file_path
+  local should_use_file = #body > threshold
+  if should_use_file then
+    tmp_file_path = os.tmpname()
+    local file, err = io.open(tmp_file_path, 'w')
+    if not file then
+      util.log_error('Failed to create temporary file: ' .. err)
+      util.notify('Failed to create temporary file: ' .. err, vim.log.levels.ERROR)
+      return vim.split(body, '\n')
+    end
+    file:write(body)
+    file:close()
+  end
+  
+  local formatters = _HURL_GLOBAL_CONFIG.formatters or { json = { 'jq' }, html = { 'prettier', '--parser', 'html' } }
+  local command = formatters[type]
+  if should_use_file then
+    table.insert(command, tmp_file_path)
+  else
+    command = vim.tbl_flatten({command, body})
+  end
 
   -- If no formatter is defined, return the body
   if not formatters[type] then
@@ -123,7 +145,26 @@ util.format = function(body, type)
     util.log_info('formatter returned empty body')
     return vim.split(body, '\n')
   end
-
+  local stdout
+  if should_use_file then
+    stdout = vim.fn.systemlist(command)
+    -- Read the formatted content from the temporary file
+    local file, err = io.open(tmp_file_path, 'r')
+    if not file then
+      util.log_error('Failed to read temporary file: ' .. err)
+      util.notify('Failed to read temporary file: ' .. err, vim.log.levels.ERROR)
+      return vim.split(body, '\n')
+    end
+    stdout = {}
+    for line in file:lines() do
+      table.insert(stdout, line)
+    end
+    file:close()
+    -- Delete the temporary file
+    os.remove(tmp_file_path)
+  else
+    stdout = vim.fn.systemlist(command)
+  end
   util.log_info('formatted body: ' .. table.concat(stdout, '\n'))
   return stdout
 end
