@@ -259,6 +259,24 @@ local function run_current_file(opts)
   table.insert(opts, vim.fn.expand('%:p'))
   execute_hurl_cmd(opts)
 end
+        local content_type = response.headers['content-type']
+          or response.headers['Content-Type']
+          or 'unknown'
+
+        utils.log_info('Detected content type: ' .. content_type)
+        if response.headers['content-length'] == '0' then
+          utils.log_info('hurl: empty response')
+          utils.notify('hurl: empty response', vim.log.levels.INFO)
+        end
+
+        if utils.is_json_response(content_type) or content_type:lower():find('html') then
+          local formatted_body = utils.format(response.body, content_type:lower():find('json') and 'json' or 'html')
+          if formatted_body then
+            response.body = formatted_body
+          end
+        end
+
+        local container = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
 
 --- Create a temporary file with the lines to run
 ---@param lines string[]
