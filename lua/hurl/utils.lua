@@ -112,10 +112,10 @@ util.format = function(body, type)
   end
 
   util.log_info('formatting body with ' .. type)
-  local stdout = vim.fn.systemlist(formatters[type], body)
-  if vim.v.shell_error ~= 0 then
-    util.log_error('formatter failed' .. vim.v.shell_error)
-    util.notify('formatter failed' .. vim.v.shell_error, vim.log.levels.ERROR)
+  local stdout, stderr = vim.fn.jobwait({vim.fn.jobstart(formatters[type], {stdin = body})}, 5000)
+  if stderr ~= "" then
+    util.log_error('formatter failed: ' .. stderr)
+    util.notify('formatter failed: ' .. stderr, vim.log.levels.ERROR)
     return vim.split(body, '\n')
   end
 
