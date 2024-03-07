@@ -112,13 +112,23 @@ util.format = function(body, type)
   end
 
   util.log_info('formatting body with ' .. type)
-  local stdout = vim.fn.systemlist(formatters[type], body)
-  if vim.v.shell_error ~= 0 then
-    util.log_error('formatter failed' .. vim.v.shell_error)
-    util.notify('formatter failed' .. vim.v.shell_error, vim.log.levels.ERROR)
+  local tempFilePath = vim.fn.tempname()
+  local ok, err = pcall(vim.fn.writefile, vim.split(body, '\n'), tempFilePath)
+  if not ok then
+    util.log_error('Failed to write to temp file: ' .. err)
+    util.notify('Failed to write to temp file: ' .. err, vim.log.levels.ERROR)
     return vim.split(body, '\n')
   end
-
+  -- Modify the command to use the temp file path
+  local modifiedCommand = vim.tbl_deep_extend("force", formatters[type], {tempFilePath})
+  local stdout, readErr = pcall(vim.fn.readfile, tempFilePath)
+  if not stdout or #stdout == 0 then
+    util.log_error('Failed to read formatted body from temp file: ' .. (readErr or 'Unknown error'))
+    util.notify('Failed to read formatted body from temp file: ' .. (readErr or 'Unknown error'), vim.log.levels.ERROR)
+    return vim.split(body, '\n')
+  end
+  -- Ensure to delete the temporary file
+  os.remove(tempFilePath)
   if stdout == nil or #stdout == 0 then
     util.log_info('formatter returned empty body')
     return vim.split(body, '\n')
