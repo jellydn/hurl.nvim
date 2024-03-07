@@ -346,7 +346,7 @@ function M.setup()
 
   -- Run request at current line if there is a HTTP method
   utils.create_cmd('HurlRunnerAt', function(opts)
-    local result = http.find_http_verb_positions_in_buffer()
+    local result = http.find_hurl_entry_positions_in_buffer()
     if result.current > 0 and result.start_line and result.end_line then
       utils.log_info(
         'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
@@ -360,7 +360,7 @@ function M.setup()
 
   -- Run request to current entry if there is a HTTP method
   utils.create_cmd('HurlRunnerToEntry', function(opts)
-    local result = http.find_http_verb_positions_in_buffer()
+    local result = http.find_hurl_entry_positions_in_buffer()
     if result.current > 0 then
       opts.fargs = opts.fargs or {}
       opts.fargs = vim.list_extend(opts.fargs, { '--to-entry', result.current })
@@ -390,7 +390,7 @@ function M.setup()
   utils.create_cmd('HurlVerbose', function(opts)
     -- It should be the same logic with run at current line but with verbose flag
     -- The response will be sent to quickfix
-    local result = http.find_http_verb_positions_in_buffer()
+    local result = http.find_hurl_entry_positions_in_buffer()
     if result.current > 0 and result.start_line and result.end_line then
       utils.log_info(
         'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line

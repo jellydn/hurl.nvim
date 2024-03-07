@@ -24,7 +24,10 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
 ```lua
 {
   "jellydn/hurl.nvim",
-  dependencies = { "MunifTanjim/nui.nvim" },
+  dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-treesitter/nvim-treesitter"
+  },
   ft = "hurl",
   opts = {
     -- Show debugging info
@@ -55,6 +58,9 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
   },
 }
 ```
+
+When configuring nvim-treesitter add `hurl` to the `ensure_installed` list of
+parsers.
 
 Simple demo in split mode:
 
@@ -127,7 +133,7 @@ Select a range of lines and press `<leader>h` to execute the request or run `Hur
 
 ### Run at current line
 
-Place your cursor on the line you want to run and press `<leader>a` or run `HurlRunnerAt` command to execute the request. It need be one of the HTTP methods listed: GET, POST, PUT, DELETE, PATCH.
+Place your cursor on a HURL entry and press `<leader>a` or run `HurlRunnerAt` command to execute the entry request.
 
 [![Run at current line in popup mode](https://i.gyazo.com/20efd2cf3f73238bd57e79fc662208b1.gif)](https://gyazo.com/20efd2cf3f73238bd57e79fc662208b1)
 
@@ -139,11 +145,11 @@ Run `HurlVerbose` command to execute the request in verbose mode. The response w
 
 ### Run to entry
 
-Place your cursor on the line you want to run to that entry and press `<leader>te` or run `HurlRunnerToEntry` command to execute the request. It need be one of the HTTP methods listed: GET, POST, PUT, DELETE, PATCH.
+Place your cursor on the line you want to run to that entry and press `<leader>te` or run `HurlRunnerToEntry` command to execute the request.
 
 [![Run to entry in split mode](https://i.gyazo.com/14d47adbfcab9e945f89e020b83328a9.gif)](https://gyazo.com/14d47adbfcab9e945f89e020b83328a9)
 
-Note: it's running to that entry and ignore the remaining of the file. It is useful for debugging purposes.
+Note: it's running from start of file to the selected entry and ignore the remaining of the file. It is useful for debugging purposes.
 
 ### Toggle Mode
 
