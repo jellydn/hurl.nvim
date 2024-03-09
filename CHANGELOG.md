@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/jellydn/hurl.nvim/compare/v1.1.0...v1.1.1) (2024-03-09)
+
+
+### Reverts
+
+* add find http verb position util ([f77a52f](https://github.com/jellydn/hurl.nvim/commit/f77a52f30629091d2d0032ee2edb63703d7d407d))
+
 ## [1.1.0](https://github.com/jellydn/hurl.nvim/compare/v1.0.1...v1.1.0) (2024-03-09)
 
 ### Features
