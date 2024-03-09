@@ -36,7 +36,7 @@ Add the following configuration to your Neovim setup with lazy.nvim
       "jellydn/hurl.nvim",
       dependencies = {
           "MunifTanjim/nui.nvim",
-          "nvim-treesitter/nvim-treesitter"
+    "nvim-treesitter/nvim-treesitter"
       },
       ft = "hurl",
       opts = {
