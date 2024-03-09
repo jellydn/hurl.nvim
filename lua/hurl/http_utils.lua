@@ -36,7 +36,7 @@ local function find_hurl_entry_positions_in_buffer()
   local ts = vim.treesitter
   local node = ts.get_node()
 
-  while node and node:type() ~= "entry" do
+  while node and node:type() ~= 'entry' do
     node = node:parent()
   end
 
@@ -52,7 +52,7 @@ local function find_hurl_entry_positions_in_buffer()
     return {
       current = r1 + 1,
       start_line = r1 + 1,
-      end_line = r2 + 1
+      end_line = r2 + 1,
     }
   end
 end
