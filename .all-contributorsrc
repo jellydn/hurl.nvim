@@ -57,6 +57,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "hsanson",
+      "name": "Horacio Sanson",
+      "avatar_url": "https://avatars.githubusercontent.com/u/900716?v=4",
+      "profile": "http://www.allm.net",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
