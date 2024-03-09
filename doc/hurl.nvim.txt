@@ -1,4 +1,4 @@
-*hurl.nvim.txt*           For NVIM v0.8.0           Last change: 2024 March 02
+*hurl.nvim.txt*           For NVIM v0.8.0           Last change: 2024 March 09
 
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
@@ -34,7 +34,10 @@ Add the following configuration to your Neovim setup with lazy.nvim
 >lua
     {
       "jellydn/hurl.nvim",
-      dependencies = { "MunifTanjim/nui.nvim" },
+      dependencies = {
+          "MunifTanjim/nui.nvim",
+          "nvim-treesitter/nvim-treesitter"
+      },
       ft = "hurl",
       opts = {
         -- Show debugging info
@@ -65,6 +68,9 @@ Add the following configuration to your Neovim setup with lazy.nvim
       },
     }
 <
+
+When configuring nvim-treesitter add `hurl` to the `ensure_installed` list of
+parsers.
 
 Simple demo in split mode:
 
@@ -174,9 +180,8 @@ Select a range of lines and press `<leader>h` to execute the request or run
 
 RUN AT CURRENT LINE ~
 
-Place your cursor on the line you want to run and press `<leader>a` or run
-`HurlRunnerAt` command to execute the request. It need be one of the HTTP
-methods listed: GET, POST, PUT, DELETE, PATCH.
+Place your cursor on a HURL entry and press `<leader>a` or run `HurlRunnerAt`
+command to execute the entry request.
 
 <https://gyazo.com/20efd2cf3f73238bd57e79fc662208b1>
 
@@ -193,13 +198,12 @@ getting the curl command from hurl file.
 RUN TO ENTRY ~
 
 Place your cursor on the line you want to run to that entry and press
-`<leader>te` or run `HurlRunnerToEntry` command to execute the request. It need
-be one of the HTTP methods listed: GET, POST, PUT, DELETE, PATCH.
+`<leader>te` or run `HurlRunnerToEntry` command to execute the request.
 
 <https://gyazo.com/14d47adbfcab9e945f89e020b83328a9>
 
-Note: it’s running to that entry and ignore the remaining of the file. It is
-useful for debugging purposes.
+Note: it’s running from start of file to the selected entry and ignore the
+remaining of the file. It is useful for debugging purposes.
 
 
 TOGGLE MODE ~
