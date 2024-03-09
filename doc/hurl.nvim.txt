@@ -198,8 +198,7 @@ getting the curl command from hurl file.
 RUN TO ENTRY ~
 
 Place your cursor on the line you want to run to that entry and press
-`<leader>te` or run `HurlRunnerToEntry` command to execute the request. It need
-be one of the HTTP methods listed: GET, POST, PUT, DELETE, PATCH.
+`<leader>te` or run `HurlRunnerToEntry` command to execute the request. It needs to be one of the HTTP methods listed: GET, POST, PUT, DELETE, PATCH.
 
 <https://gyazo.com/14d47adbfcab9e945f89e020b83328a9>
 
