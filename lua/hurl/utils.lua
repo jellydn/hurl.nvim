@@ -130,6 +130,16 @@ util.format = function(body, type)
     )
     return vim.split(body, '\n')
   end
+  os.remove(tempFilePath)
+  if stdout == nil or #stdout == 0 then
+  if not stdout or #stdout == 0 then
+    util.log_error('Failed to read formatted body from temp file: ' .. (readErr or 'Unknown error'))
+    util.notify(
+      'Failed to read formatted body from temp file: ' .. (readErr or 'Unknown error'),
+      vim.log.levels.ERROR
+    )
+    return vim.split(body, '\n')
+  end
   -- Ensure to delete the temporary file
   os.remove(tempFilePath)
   if stdout == nil or #stdout == 0 then
