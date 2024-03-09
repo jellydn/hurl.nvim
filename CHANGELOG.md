@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/jellydn/hurl.nvim/compare/v1.0.1...v1.1.0) (2024-03-09)
+
+
+### Features
+
+* Add treesitter support ([#103](https://github.com/jellydn/hurl.nvim/issues/103)) ([6a16d4f](https://github.com/jellydn/hurl.nvim/commit/6a16d4f9d8b6bc488f9a6bfdf62c204dd80fed8c))
+
 ## [1.0.1](https://github.com/jellydn/hurl.nvim/compare/v1.0.0...v1.0.1) (2024-03-01)
 
 
