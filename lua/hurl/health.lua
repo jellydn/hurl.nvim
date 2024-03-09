@@ -23,9 +23,12 @@ M.check = function()
   end
 
   local ts
-  if xpcall(
-      function()  ts = require("nvim-treesitter-language") end,
-      function(e) ts = e end)
+  if
+    xpcall(function()
+      ts = require('nvim-treesitter-language')
+    end, function(e)
+      ts = e
+    end)
   then
     ok('nvim-treesitter found')
     if ts.language.get_lang('hurl') == 'hurl' then
