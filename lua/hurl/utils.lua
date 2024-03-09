@@ -120,11 +120,14 @@ util.format = function(body, type)
     return vim.split(body, '\n')
   end
   -- Modify the command to use the temp file path
-  local modifiedCommand = vim.tbl_deep_extend("force", formatters[type], {tempFilePath})
+  local modifiedCommand = vim.tbl_deep_extend('force', formatters[type], { tempFilePath })
   local stdout, readErr = pcall(vim.fn.readfile, tempFilePath)
   if not stdout or #stdout == 0 then
     util.log_error('Failed to read formatted body from temp file: ' .. (readErr or 'Unknown error'))
-    util.notify('Failed to read formatted body from temp file: ' .. (readErr or 'Unknown error'), vim.log.levels.ERROR)
+    util.notify(
+      'Failed to read formatted body from temp file: ' .. (readErr or 'Unknown error'),
+      vim.log.levels.ERROR
+    )
     return vim.split(body, '\n')
   end
   -- Ensure to delete the temporary file
