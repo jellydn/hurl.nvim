@@ -360,7 +360,7 @@ function M.setup()
 
   -- Run request to current entry if there is a HTTP method
   utils.create_cmd('HurlRunnerToEntry', function(opts)
-    local result = http.find_hurl_entry_positions_in_buffer()
+    local result = http.find_http_verb_positions_in_buffer()
     if result.current > 0 then
       opts.fargs = opts.fargs or {}
       opts.fargs = vim.list_extend(opts.fargs, { '--to-entry', result.current })
