@@ -126,7 +126,7 @@ local on_output = function(code, data, event)
 
   -- TODO: The header parser sometime not working properly, e.g: https://google.com
   local status = tonumber(string.match(data[1], '([%w+]%d+)'))
-  head_state = 'start'
+  response_state = 'start'
   if status then
     response.status = status
     response.headers = { status = data[1] }
