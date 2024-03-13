@@ -33,7 +33,6 @@ local function find_env_files(file, root_dir, cache_dir, current_file_dir, scan_
 
     for i = #git_root_parts + 1, #current_dir_parts do
       sub_path = sub_path .. '/' .. current_dir_parts[i]
-
       table.insert(files, {
         path = sub_path .. '/' .. file,
         dest = cache_dir .. '/' .. file,
