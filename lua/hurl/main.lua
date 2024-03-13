@@ -136,7 +136,7 @@ local on_output = function(code, data, event)
   for i = 2, #data do
     local line = data[i]
     if line == '' or line == nil then
-      head_state = 'body'
+      response_state = 'body'
     elseif head_state == 'start' then
       local key, value = string.match(line, '([%w-]+):%s*(.+)')
       if key and value then
