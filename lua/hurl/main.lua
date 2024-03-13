@@ -151,7 +151,7 @@ local on_output = function(code, data, event)
   end
   response.raw = data
 
-  utils.log_info('hurl: response status ' .. response.status)
+  utils.log_info('hurl: response status ' .. response.status'))
   utils.log_info('hurl: response headers ' .. vim.inspect(response.headers))
   if response.body then
     utils.log_info('hurl: response body ' .. response.body)
