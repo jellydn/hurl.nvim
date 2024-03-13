@@ -2,10 +2,9 @@
 
 ## [1.1.2](https://github.com/jellydn/hurl.nvim/compare/v1.1.1...v1.1.2) (2024-03-13)
 
-
 ### Bug Fixes
 
-* add body state handling for payload is too big ([c596962](https://github.com/jellydn/hurl.nvim/commit/c596962d952bef76dd3c34580e54c803069e84ef))
+- add body state handling for payload is too big ([c596962](https://github.com/jellydn/hurl.nvim/commit/c596962d952bef76dd3c34580e54c803069e84ef))
 
 ## [1.1.1](https://github.com/jellydn/hurl.nvim/compare/v1.1.0...v1.1.1) (2024-03-09)
 
