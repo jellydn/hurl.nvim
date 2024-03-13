@@ -1,1 +1,1 @@
-1.1.2
+1.1.2 - Add body state handling for large payloads
