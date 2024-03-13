@@ -45,7 +45,7 @@ local function find_hurl_entry_positions_in_buffer()
     return {
       current = current_node_idx,
       start_line = r1 + 1,
-      end_line = r2 + 1,
+      end_line = r2,
     }
   end
 end
