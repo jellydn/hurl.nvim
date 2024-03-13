@@ -5,7 +5,7 @@ local http = require('hurl.http_utils')
 local M = {}
 
 local response = {}
-local head_state = ''
+local response_state = ''
 local is_running = false
 
 -- Looking for vars.env file base on the current file buffer
