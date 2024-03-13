@@ -116,7 +116,7 @@ local on_output = function(code, data, event)
     return
   end
 
-  if head_state == 'body' then
+  if response_state == 'body' then
     -- Append the data to the body if we are in the body state
     utils.log_info('hurl: append data to body' .. vim.inspect(data))
     response.body = response.body or ''
