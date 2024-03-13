@@ -138,7 +138,7 @@ local on_output = function(code, data, event)
     if line == '' or line == nil then
       response_state = 'body'
     elseif head_state == 'start' then
-      local key, value = string.match(line, '([%w-]+):%s*(.+)')
+      local key, value = string.match(line, '([%w-]+):%s*(.+)') or line, ''
       if key and value then
         response.headers[key] = value
         response.headers_str = response.headers_str .. line .. '\r\n'
