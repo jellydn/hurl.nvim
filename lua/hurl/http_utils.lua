@@ -24,10 +24,10 @@ local function find_hurl_entry_positions_in_buffer()
     local hurl_file = current_node:parent()
 
     local current_node_idx = 1
-    if (hurl_file and hurl_file:type() == 'hurl_file') then
+    if hurl_file and hurl_file:type() == 'hurl_file' then
       -- Find the current node index
       for node in hurl_file:iter_children() do
-        if (node:id() == current_node:id()) then
+        if node:id() == current_node:id() then
           break
         end
         current_node_idx = current_node_idx + 1
@@ -38,7 +38,7 @@ local function find_hurl_entry_positions_in_buffer()
       return {
         current = 0,
         start_line = cursor_line,
-        end_line = cursor_line
+        end_line = cursor_line,
       }
     end
 
