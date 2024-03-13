@@ -145,7 +145,8 @@ local on_output = function(code, data, event)
       end
     elseif head_state == 'body' then
       response.body = response.body or ''
-      response.body = response.body .. line
+      response.body = response.body .. 
+  line
     end
   end
   response.raw = data
