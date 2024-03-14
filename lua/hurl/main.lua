@@ -99,7 +99,7 @@ end
 
 --- Output handler
 ---@class Output
-local on_output = function(code, data, event)
+local function on_output(code, data, event)
   utils.log_info('hurl: on_output ' .. vim.inspect(code) .. vim.inspect(data))
 
   if data[1] == '' then
