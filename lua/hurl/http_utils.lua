@@ -1,14 +1,16 @@
 local M = {}
 
+--- Finds the HTTP verb at the current cursor position.
+-- @return string: The HTTP verb at the current cursor position.
+M.find_http_verb = function()
+
 --- Find the closest HURL entry at the current cursor position.
 M.find_hurl_entry_positions_in_buffer = function()
-  local ts = vim.treesitter
-
-  -- Look for closest `entry` node to cursor position.
-  local current_node = ts.get_node()
-  while current_node and current_node:type() ~= 'entry' do
-    current_node = current_node:parent()
-  end
+  --- Look for the closest `entry` node to the cursor position.
+    local current_node = ts.get_node()
+    while current_node and current_node:type() ~= 'entry' do
+      current_node = current_node:parent()
+    end
 
   if not current_node then
     local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
