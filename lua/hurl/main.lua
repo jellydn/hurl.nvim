@@ -1,6 +1,7 @@
 local utils = require('hurl.utils')
 local git = require('hurl.git_utils')
 local http = require('hurl.http_utils')
+local spinner = require('hurl.spinner')
 
 local M = {}
 
@@ -172,6 +173,7 @@ local function execute_hurl_cmd(opts, callback)
   end
 
   is_running = true
+  spinner.show()
   head_state = ''
   utils.log_info('hurl: running request')
   utils.notify('hurl: running request', vim.log.levels.INFO)
@@ -208,6 +210,7 @@ local function execute_hurl_cmd(opts, callback)
     on_exit = function(i, code)
       utils.log_info('exit at ' .. i .. ' , code ' .. code)
       is_running = false
+      spinner.hide()
       if code ~= 0 then
         -- Send error code and response to quickfix and open it
         -- It should display the error message
