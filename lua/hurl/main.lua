@@ -7,7 +7,7 @@ local M = {}
 
 local response = {}
 local head_state = ''
-local is_running=false
+local is_running = false
 
 -- Looking for vars.env file base on the current file buffer
 ---@return table
@@ -53,7 +53,7 @@ local function find_env_files(file, root_dir, cache_dir, current_file_dir, scan_
   end
 
   -- sort by path length, the current buffer file path will be the first
-table.sort(files, function(a, b)
+  table.sort(files, function(a, b)
     return #a.path > #b.path
   end)
   return files
@@ -103,7 +103,7 @@ local on_output = function(code, data, event)
   utils.log_info('hurl: on_output ' .. vim.inspect(code) .. vim.inspect(data))
 
   if data[1] == '' then
-table.remove(data, 1)
+    table.remove(data, 1)
   end
   if not data[1] then
     return
@@ -193,7 +193,7 @@ local function execute_hurl_cmd(opts, callback)
       'hurl: looking for ' .. vim.inspect(_HURL_GLOBAL_CONFIG.env_file) .. ' in ' .. env.path
     )
     if vim.fn.filereadable(env.path) == 1 then
-utils.log_info('hurl: found env file in ' .. env.path)
+      utils.log_info('hurl: found env file in ' .. env.path)
       table.insert(opts, '--variables-file')
       table.insert(opts, env.path)
     end
