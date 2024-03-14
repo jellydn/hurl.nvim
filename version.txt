@@ -1,1 +1,1 @@
-1.2.1
+1.2.1 - Add spinner to indicate request progress. Ref: CHANGELOG.md
