@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/jellydn/hurl.nvim/compare/v1.2.0...v1.2.1) (2024-03-14)
+
+### Bug Fixes
+
+- add case-insensitive content-type header detection ([89ea4d4](https://github.com/jellydn/hurl.nvim/commit/89ea4d49371b836dc9e1451dab084576a4f063a9))
+- **hurl:** Improve HurlRunnerToEntry command and remove unnecessary log ([4d4e4ff](https://github.com/jellydn/hurl.nvim/commit/4d4e4ff9df020522dca8a6dc9ea7fd3dfa25069d))
+
 ## [1.2.0](https://github.com/jellydn/hurl.nvim/compare/v1.1.3...v1.2.0) (2024-03-14)
 
 ### Features
