@@ -2,15 +2,13 @@
 
 ## [1.2.0](https://github.com/jellydn/hurl.nvim/compare/v1.1.3...v1.2.0) (2024-03-14)
 
-
 ### Features
 
-* **hurl:** add spinner to indicate request progress ([0e307f3](https://github.com/jellydn/hurl.nvim/commit/0e307f327201ad08817118c5819650c86c6253a0))
-
+- **hurl:** add spinner to indicate request progress ([0e307f3](https://github.com/jellydn/hurl.nvim/commit/0e307f327201ad08817118c5819650c86c6253a0))
 
 ### Bug Fixes
 
-* HurlRunnterToEntry using treesitter ([8885e2f](https://github.com/jellydn/hurl.nvim/commit/8885e2f216d0bdd8b24a2de494342bd4d80de02c))
+- HurlRunnterToEntry using treesitter ([8885e2f](https://github.com/jellydn/hurl.nvim/commit/8885e2f216d0bdd8b24a2de494342bd4d80de02c))
 
 ## [1.1.3](https://github.com/jellydn/hurl.nvim/compare/v1.1.2...v1.1.3) (2024-03-13)
 
