@@ -1,3 +1,4 @@
+# Get manga details with manga_id on vars.env file
 GET https://api.mangadex.org/statistics/manga/{{manga_id}}
 
 HTTP 200
