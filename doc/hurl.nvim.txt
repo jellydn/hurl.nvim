@@ -150,6 +150,7 @@ SWAPPABLE ENVIRONMENT ~
 To change the environment file name, use the `HurlSetEnvFile` command followed
 by the new file name. You can have multiple variable files by having
 comma-separated values.
+comma-separated values.
 
 
 NOTES
