@@ -108,7 +108,7 @@ By checking these locations, the plugin ensures a comprehensive search for envir
 
 ### Swappable environment
 
-To change the environment file name, use the `HurlSetEnvFile` command followed by the new file name. You can have multiple variable files by having comma-seperated values.
+To change the environment file name, use the `HurlSetEnvFile` command followed by the new file name. You can have multiple variable files by having comma-separated values.
 
 #### Notes
 
@@ -145,7 +145,7 @@ Run `HurlVerbose` command to execute the request in verbose mode. The response w
 
 ### Run to entry
 
-Place your cursor on the line you want to run to that entry and press `<leader>te` or run `HurlRunnerToEntry` command to execute the request. It need be one of the HTTP methods listed: GET, POST, PUT, DELETE, PATCH.
+Place your cursor on the line you want to run to that entry and press `<leader>te` or run `HurlRunnerToEntry` command to execute the request.
 
 [![Run to entry in split mode](https://i.gyazo.com/14d47adbfcab9e945f89e020b83328a9.gif)](https://gyazo.com/14d47adbfcab9e945f89e020b83328a9)
 
