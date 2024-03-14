@@ -1,7 +1,7 @@
 local M = {}
 
 --- Find the closest HURL entry at the current cursor position.
-local function find_hurl_entry_positions_in_buffer()
+M.find_hurl_entry_positions_in_buffer = function()
   local ts = vim.treesitter
 
   -- Look for closest `entry` node to cursor position.
@@ -49,7 +49,5 @@ local function find_hurl_entry_positions_in_buffer()
     }
   end
 end
-
-M.find_hurl_entry_positions_in_buffer = find_hurl_entry_positions_in_buffer
 
 return M
