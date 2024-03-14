@@ -240,6 +240,7 @@ local function execute_hurl_cmd(opts, callback)
 
         local content_type = response.headers['content-type']
           or response.headers['Content-Type']
+          or response.headers['Content-type']
           or 'unknown'
 
         utils.log_info('Detected content type: ' .. content_type)
