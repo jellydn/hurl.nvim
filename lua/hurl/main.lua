@@ -325,7 +325,6 @@ local function run_at_lines(start_line, end_line, opts, callback)
   local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
 
   if not lines or vim.tbl_isempty(lines) then
-    utils.log_warn('hurl: no lines to run')
     utils.notify('hurl: no lines to run', vim.log.levels.WARN)
     return
   end
@@ -373,11 +372,9 @@ function M.setup()
   -- Run request to current entry if there is a HTTP method
   utils.create_cmd('HurlRunnerToEntry', function(opts)
     local result = http.find_hurl_entry_positions_in_buffer()
+    utils.log_info('hurl: running request to entry #' .. vim.inspect(result))
     if result.current > 0 then
-      opts.fargs = opts.fargs or {}
-      opts.fargs = vim.list_extend(opts.fargs, { '--to-entry', result.current })
-      utils.log_info('hurl: running request to entry #' .. vim.inspect(result))
-      run_current_file(opts.fargs)
+      run_at_lines(1, result.end_line, opts.fargs)
     else
       utils.log_info('hurl: not HTTP method found in the current line' .. result.end_line)
       utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
