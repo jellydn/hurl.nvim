@@ -128,7 +128,9 @@ a project:
 - `src/`: The source code directory.
 - `test/` and `tests/`: Directories typically used for test scripts.
 - `server/`: If your project includes a server component, this directory is checked.
-- `src/tests/` and `server/tests/`: These are checked for environment variables specific to tests within the respective `src` and `server` directories.
+To change the environment file name, use the `HurlSetEnvFile` command followed
+by the new file name. You can have multiple variable files by having
+comma-separated values.
 
 
 3. **Intermediate Directories from Git Root to Current File:** If the project is a
