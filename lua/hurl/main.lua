@@ -5,6 +5,7 @@ local http = require('hurl.http_utils')
 local M = {}
 
 local response = {}
+local head_state = ''
 local is_running = false
 
 -- Looking for vars.env file base on the current file buffer
@@ -100,7 +101,6 @@ end
 local on_output = function(code, data, event)
   utils.log_info('hurl: on_output ' .. vim.inspect(code) .. vim.inspect(data))
 
-  local head_state
   if data[1] == '' then
     table.remove(data, 1)
   end
@@ -113,6 +113,14 @@ local on_output = function(code, data, event)
     utils.log_error(vim.inspect(data))
     response.raw = data
     response.headers = {}
+    return
+  end
+
+  if head_state == 'body' then
+    -- Append the data to the body if we are in the body state
+    utils.log_info('hurl: append data to body' .. vim.inspect(data))
+    response.body = response.body or ''
+    response.body = response.body .. table.concat(data, '\n')
     return
   end
 
@@ -164,6 +172,7 @@ local function execute_hurl_cmd(opts, callback)
   end
 
   is_running = true
+  head_state = ''
   utils.log_info('hurl: running request')
   utils.notify('hurl: running request', vim.log.levels.INFO)
 
@@ -346,7 +355,7 @@ function M.setup()
 
   -- Run request at current line if there is a HTTP method
   utils.create_cmd('HurlRunnerAt', function(opts)
-    local result = http.find_hurl_entry_positions_in_buffer()
+    local result = http.find_http_verb_positions_in_buffer()
     if result.current > 0 and result.start_line and result.end_line then
       utils.log_info(
         'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
@@ -390,7 +399,7 @@ function M.setup()
   utils.create_cmd('HurlVerbose', function(opts)
     -- It should be the same logic with run at current line but with verbose flag
     -- The response will be sent to quickfix
-    local result = http.find_hurl_entry_positions_in_buffer()
+    local result = http.find_http_verb_positions_in_buffer()
     if result.current > 0 and result.start_line and result.end_line then
       utils.log_info(
         'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
