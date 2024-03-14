@@ -4,8 +4,13 @@ local M = {}
 -- @return string: The HTTP verb at the current cursor position.
 M.find_http_verb = function()
 
+
+--- Finds the HTTP verb at the current cursor position.
+-- @return string: The HTTP verb at the current cursor position.
+
 --- Find the closest HURL entry at the current cursor position.
 M.find_hurl_entry_positions_in_buffer = function()
+  --- Find the closest HURL entry at the current cursor position.
   --- Look for the closest `entry` node to the cursor position.
     local current_node = ts.get_node()
     while current_node and current_node:type() ~= 'entry' do
