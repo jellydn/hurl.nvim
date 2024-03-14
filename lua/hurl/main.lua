@@ -193,7 +193,7 @@ local function execute_hurl_cmd(opts, callback)
       'hurl: looking for ' .. vim.inspect(_HURL_GLOBAL_CONFIG.env_file) .. ' in ' .. env.path
     )
     if vim.fn.filereadable(env.path) == 1 then
-      utils.log_info('hurl: found env file in ' .. env.path)
+utils.log_info('hurl: found env file in ' .. env.path)
       table.insert(opts, '--variables-file')
       table.insert(opts, env.path)
     end
