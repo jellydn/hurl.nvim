@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.0](https://github.com/jellydn/hurl.nvim/compare/v1.1.3...v1.2.0) (2024-03-14)
+## [1.2.0](https://github.com/JellyDN/hurl.nvim/compare/v1.1.3...v1.2.0) (2024-03-14)
 
 ### Features
 
@@ -14,7 +14,7 @@
 
 ### Reverts
 
-- revert to find verb instead of treesitter parser ([1bb1106](https://github.com/jellydn/hurl.nvim/commit/1bb1106b0357eb2ce6117a4e2fa5196592db9d12))
+- revert to find verb instead of treesitter parser ([1bb1106](https://github.com/JellyDN/hurl.nvim/commit/1bb1106b0357eb2ce6117a4e2fa5196592db9d12))
 
 ## [1.1.2](https://github.com/jellydn/hurl.nvim/compare/v1.1.1...v1.1.2) (2024-03-13)
 
@@ -28,7 +28,7 @@
 
 - add find http verb position util ([f77a52f](https://github.com/jellydn/hurl.nvim/commit/f77a52f30629091d2d0032ee2edb63703d7d407d))
 
-## [1.1.0](https://github.com/jellydn/hurl.nvim/compare/v1.0.1...v1.1.0) (2024-03-09)
+## [1.1.0](https://github.com/JellyDN/hurl.nvim/compare/v1.0.1...v1.1.0) (2024-03-09)
 
 ### Features
 
@@ -44,7 +44,7 @@
 
 ### Features
 
-- add custom file type for split ([61ccf1f](https://github.com/jellydn/hurl.nvim/commit/61ccf1f40d0aa42bb7b8fd0a9955854d03f620df))
+- add custom file type for split ([61ccf1f](https://github.com/JellyDN/hurl.nvim/commit/61ccf1f40d0aa42bb7b8fd0a9955854d03f620df))
 - add default option for popup mode ([d47c320](https://github.com/jellydn/hurl.nvim/commit/d47c320593e87f0dea4da4704bd29740a80ad49b))
 - add health check ([2a0d40b](https://github.com/jellydn/hurl.nvim/commit/2a0d40b019bf73f01d13fb5d3cc15c0e9bb42a2a))
 - add HurlToggleMode command ([3063bba](https://github.com/jellydn/hurl.nvim/commit/3063bba232a4055e3c74c87ab76f35cee4890181))
@@ -58,7 +58,7 @@
 - enable folding for popup mode ([2a9bf8f](https://github.com/jellydn/hurl.nvim/commit/2a9bf8fa408c72b2c228f59191559a4e73556376))
 - init hurl.nvim plugin ([f3f615a](https://github.com/jellydn/hurl.nvim/commit/f3f615a5f674bd1a7aaaad24efbf4fc6140cd2dd))
 - init project ([0207117](https://github.com/jellydn/hurl.nvim/commit/020711770e2951b7fe0cf3798e91b8d2b72b7227))
-- introduce new config for env file ([2cef196](https://github.com/jellydn/hurl.nvim/commit/2cef1967d96b0c3184333cf19e183bcf24341c6e))
+- introduce new config for env file ([2cef196](https://github.com/JellyDN/hurl.nvim/commit/2cef1967d96b0c3184333cf19e183bcf24341c6e))
 - Make env search maintain provided order ([#69](https://github.com/jellydn/hurl.nvim/issues/69)) ([275368b](https://github.com/jellydn/hurl.nvim/commit/275368ba1d47d594b58a759e2da99938b16d6527))
 - notify when hurl is running ([12a5804](https://github.com/jellydn/hurl.nvim/commit/12a5804a2db188a45b3e292bbd8e13cd841191eb))
 - only set buffer option on nightly builds ([c3a4311](https://github.com/jellydn/hurl.nvim/commit/c3a4311567c7dee1ea36e305c2a7bbddb030a9b6))
@@ -74,7 +74,7 @@
 
 ### Bug Fixes
 
-- **ci:** rename secret token for publish doc ([ebd7486](https://github.com/jellydn/hurl.nvim/commit/ebd748605d8a6251a12385fd56b65533d64f29e4))
+- **ci:** rename secret token for publish doc ([ebd7486](https://github.com/JellyDN/hurl.nvim/commit/ebd748605d8a6251a12385fd56b65533d64f29e4))
 - **ci:** setup release version ([c4d1447](https://github.com/jellydn/hurl.nvim/commit/c4d144716f6269e9ab7e45089b38179e6d2e085a))
 - **ci:** upgrade checkout v4 ([c4d1447](https://github.com/jellydn/hurl.nvim/commit/c4d144716f6269e9ab7e45089b38179e6d2e085a))
 - display popup position base on editor ([6951948](https://github.com/jellydn/hurl.nvim/commit/69519488a96e74da67ae3fefc17619a65c1c8c00))
