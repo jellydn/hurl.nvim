@@ -1,4 +1,4 @@
-# Get breeds and then get the first breed
+# Get a list of dog breeds and then get the details of the first breed
 GET https://dogapi.dog/api/v2/breeds
 
 HTTP 200
