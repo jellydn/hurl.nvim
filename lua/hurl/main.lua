@@ -103,7 +103,7 @@ local on_output = function(code, data, event)
   utils.log_info('hurl: on_output ' .. vim.inspect(code) .. vim.inspect(data))
 
   if data[1] == '' then
-    table.remove(data, 1)
+table.remove(data, 1)
   end
   if not data[1] then
     return
