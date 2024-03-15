@@ -358,7 +358,9 @@ function M.setup()
 
   -- Run request at current line if there is a HTTP method
   utils.create_cmd('HurlRunnerAt', function(opts)
-    local result = http.find_hurl_entry_positions_in_buffer()
+    local is_nightly_build = utils.is_nightly()
+    local result = is_nightly_build and http.find_hurl_entry_positions_in_buffer()
+      or http.find_http_verb_positions_in_buffer()
     if result.current > 0 and result.start_line and result.end_line then
       utils.log_info(
         'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
@@ -372,7 +374,9 @@ function M.setup()
 
   -- Run request to current entry if there is a HTTP method
   utils.create_cmd('HurlRunnerToEntry', function(opts)
-    local result = http.find_hurl_entry_positions_in_buffer()
+    local is_nightly_build = utils.is_nightly()
+    local result = is_nightly_build and http.find_hurl_entry_positions_in_buffer()
+      or http.find_http_verb_positions_in_buffer()
     utils.log_info('hurl: running request to entry #' .. vim.inspect(result))
     if result.current > 0 then
       run_at_lines(1, result.end_line, opts.fargs)
@@ -400,7 +404,9 @@ function M.setup()
   utils.create_cmd('HurlVerbose', function(opts)
     -- It should be the same logic with run at current line but with verbose flag
     -- The response will be sent to quickfix
-    local result = http.find_hurl_entry_positions_in_buffer()
+    local is_nightly_build = utils.is_nightly()
+    local result = is_nightly_build and http.find_hurl_entry_positions_in_buffer()
+      or http.find_http_verb_positions_in_buffer()
     if result.current > 0 and result.start_line and result.end_line then
       utils.log_info(
         'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
@@ -413,7 +419,7 @@ function M.setup()
         title = 'hurl',
         lines = {},
       })
-      run_at_lines(result.start_line, result.end_line, opts.fargs, function(code, data, event)
+      run_at_lines(1, result.end_line, opts.fargs, function(code, data, event)
         utils.log_info('hurl: verbose callback ' .. vim.inspect(code) .. vim.inspect(data))
         vim.fn.setqflist({}, 'a', {
           title = 'hurl - data',

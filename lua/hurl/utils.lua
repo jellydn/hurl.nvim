@@ -169,4 +169,13 @@ util.is_html_response = function(content_type)
   return string.find(content_type, 'text/html') ~= nil
 end
 
+util.is_nightly = function()
+  local is_stable_version = false
+  if vim.fn.has('nvim-0.10.0') == 1 then
+    is_stable_version = true
+  end
+
+  return is_stable_version
+end
+
 return util
