@@ -169,6 +169,8 @@ util.is_html_response = function(content_type)
   return string.find(content_type, 'text/html') ~= nil
 end
 
+--- Check if nvim is running in nightly or stable version
+---@return boolean
 util.is_nightly = function()
   local is_stable_version = false
   if vim.fn.has('nvim-0.10.0') == 1 then
@@ -177,5 +179,15 @@ util.is_nightly = function()
 
   return is_stable_version
 end
+
+--- Check if a treesitter parser is available
+---@param ft string
+---@return boolean
+local function treesitter_parser_available(ft)
+  local res, parser = pcall(vim.treesitter.get_parser, 0, ft)
+  return res and parser ~= nil
+end
+
+util.is_hurl_parser_available = treesitter_parser_available('hurl')
 
 return util

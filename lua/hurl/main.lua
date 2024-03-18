@@ -366,8 +366,8 @@ function M.setup()
 
   -- Run request at current line if there is a HTTP method
   utils.create_cmd('HurlRunnerAt', function(opts)
-    local is_nightly_build = utils.is_nightly()
-    local result = is_nightly_build and http.find_hurl_entry_positions_in_buffer()
+    local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
+    local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
       or http.find_http_verb_positions_in_buffer()
     if result.current > 0 and result.start_line and result.end_line then
       utils.log_info(
@@ -382,8 +382,8 @@ function M.setup()
 
   -- Run request to current entry if there is a HTTP method
   utils.create_cmd('HurlRunnerToEntry', function(opts)
-    local is_nightly_build = utils.is_nightly()
-    local result = is_nightly_build and http.find_hurl_entry_positions_in_buffer()
+    local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
+    local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
       or http.find_http_verb_positions_in_buffer()
     utils.log_info('hurl: running request to entry #' .. vim.inspect(result))
     if result.current > 0 then
@@ -412,8 +412,8 @@ function M.setup()
   utils.create_cmd('HurlVerbose', function(opts)
     -- It should be the same logic with run at current line but with verbose flag
     -- The response will be sent to quickfix
-    local is_nightly_build = utils.is_nightly()
-    local result = is_nightly_build and http.find_hurl_entry_positions_in_buffer()
+    local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
+    local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
       or http.find_http_verb_positions_in_buffer()
     if result.current > 0 and result.start_line and result.end_line then
       utils.log_info(

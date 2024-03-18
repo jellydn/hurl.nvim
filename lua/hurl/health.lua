@@ -2,6 +2,7 @@ local M = {}
 
 local start = vim.health.start or vim.health.report_start
 local ok = vim.health.ok or vim.health.report_ok
+local warn = vim.health.warn or vim.health.report_warn
 local error = vim.health.error or vim.health.report_error
 
 -- Add health check for default formatter: jq and prettier
@@ -22,22 +23,12 @@ M.check = function()
     ok('prettier found')
   end
 
-  local ts
-  if
-    xpcall(function()
-      ts = require('nvim-treesitter-language')
-    end, function(e)
-      ts = e
-    end)
-  then
-    ok('nvim-treesitter found')
-    if ts.language.get_lang('hurl') == 'hurl' then
-      ok('  hurl parser installed')
-    else
-      error('  hurl parser not found')
-    end
+  if require('hurl.utils').is_hurl_parser_available then
+    ok('treesitter[hurl]: installed')
   else
-    error('nvim-treesitter not found')
+    warn(
+      'treesitter[hurl]: missing parser for syntax highlighting. Install "nvim-treesitter/nvim-treesitter" plugin and run ":TSInstall hurl".'
+    )
   end
 
   ok('hurl.nvim: All good!')
