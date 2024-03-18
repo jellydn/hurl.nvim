@@ -146,7 +146,6 @@ Run `HurlVerbose` command to execute the request in verbose mode. The response w
 ### Run to entry
 
 Place your cursor on the line you want to run to that entry and press `<leader>te` or run `HurlRunnerToEntry` command to execute the request.
-
 [![Run to entry in split mode](https://i.gyazo.com/14d47adbfcab9e945f89e020b83328a9.gif)](https://gyazo.com/14d47adbfcab9e945f89e020b83328a9)
 
 Note: it's running from start of file to the selected entry and ignore the remaining of the file. It is useful for debugging purposes.
@@ -156,6 +155,37 @@ Note: it's running from start of file to the selected entry and ignore the remai
 Run `HurlToggleMode` command to toggle between split and popup mode.
 
 [![Toggle mode](https://i.gyazo.com/b36b19ab76524b95015eafe4c6e1c81f.gif)](https://gyazo.com/b36b19ab76524b95015eafe4c6e1c81f)
+
+## HurlSetVariable
+
+The `HurlSetVariable` command allows you to set environment variables for your HTTP requests. This is particularly useful for setting dynamic data such as API keys, base URLs, and other configuration values.
+
+To use this command, type `:HurlSetVariable` followed by the variable name and its value. For example:
+
+```vim
+:HurlSetVariable API_KEY your_api_key
+```
+
+This will set the `API_KEY` environment variable to `your_api_key`. You can then use this variable in your `.hurl` files like this:
+
+```hurl
+GET https://api.example.com
+Authorization: Bearer {{API_KEY}}
+```
+
+## HurlManageVariable
+
+The `HurlManageVariable` command provides a convenient way to view your environment variables. When you run this command, it opens a new buffer in popup with the current environment variables and their values.
+
+To use this command, simply type `:HurlManageVariable` in the command line:
+
+```vim
+:HurlManageVariable
+```
+
+Please note that as of now, this command only supports viewing the variables. The ability to add new variables, modify existing ones, or delete variables directly from this buffer is not available yet. However, this feature is on the roadmap and will be added in future updates.
+
+For now, if you want to modify the global variables, you can do so by using the `HurlSetVariable` command or by editing your `vars.env` file directly.
 
 ## Default Key Mappings
 
