@@ -118,4 +118,44 @@ M.clear = function()
   vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, { 'Processing...' })
 end
 
+M.show_text = function(title, lines)
+  -- Create a new popup
+  local text_popup = Popup({
+    enter = true,
+    focusable = true,
+    border = {
+      style = 'rounded',
+      text = {
+        top = title,
+        top_align = 'center',
+        bottom = 'Press `q` to close',
+        bottom_align = 'left',
+      },
+    },
+    position = '50%',
+    size = {
+      width = '50%',
+      height = '50%',
+    },
+  })
+
+  text_popup:on('BufLeave', function()
+    text_popup:unmount()
+  end, { once = true })
+
+  vim.api.nvim_buf_set_lines(text_popup.bufnr, 0, 1, false, lines)
+
+  local function quit()
+    vim.cmd('q')
+    text_popup:unmount()
+  end
+
+  -- Map q to quit
+  text_popup:map('n', 'q', function()
+    quit()
+  end)
+
+  text_popup:mount()
+end
+
 return M

@@ -466,48 +466,20 @@ function M.setup()
 
   -- Show all global variables
   utils.create_cmd('HurlManageVariable', function()
-    -- Check if there are any global variables
+    -- Prepare the lines to display in the popup
+    local lines = {}
     if not _HURL_GLOBAL_CONFIG.global_vars or vim.tbl_isempty(_HURL_GLOBAL_CONFIG.global_vars) then
       utils.log_info('hurl: no global variables set')
       utils.notify('hurl: no global variables set', vim.log.levels.INFO)
-      return
+      table.insert(lines, 'No global variables set. Please use :HurlSetVariable to set one.')
+    else
+      for var_name, var_value in pairs(_HURL_GLOBAL_CONFIG.global_vars) do
+        table.insert(lines, var_name .. ' = ' .. var_value)
+      end
     end
 
-    -- Prepare the lines to display in the popup
-    local lines = { 'Hurl.nvim Global Variables:' }
-    for var_name, var_value in pairs(_HURL_GLOBAL_CONFIG.global_vars) do
-      table.insert(lines, var_name .. ' = ' .. var_value)
-    end
-
-    -- Calculate the width of the popup
-    local width = 0
-    for _, line in ipairs(lines) do
-      width = math.max(width, #line)
-    end
-
-    -- Create a popup with the global variables
-    local height = #lines
-    local opts = {
-      relative = 'editor',
-      width = width + 4,
-      height = height + 2,
-      row = (vim.o.lines - height) / 2 - 1,
-      col = (vim.o.columns - width) / 2,
-      style = 'minimal',
-      border = 'rounded',
-    }
-    local bufnr = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-    vim.api.nvim_open_win(bufnr, true, opts)
-
-    -- Bind 'q' to close the window
-    vim.api.nvim_buf_set_keymap(
-      bufnr,
-      'n',
-      'q',
-      '<cmd>close<CR>',
-      { noremap = true, silent = true }
-    )
+    local popup = require('hurl.popup')
+    popup.show_text('Hurl.nvim - Global variables', lines)
   end, {
     nargs = '*',
     range = true,
@@ -517,35 +489,9 @@ function M.setup()
   utils.create_cmd('HurlDebugInfo', function()
     -- Get the log file path
     local log_file_path = utils.get_log_file_path()
-
-    -- Create a popup with the log file path
-    local lines = { 'Hurl.nvim Info:', 'Log file path: ' .. log_file_path }
-    local width = 0
-    for _, line in ipairs(lines) do
-      width = math.max(width, #line)
-    end
-    local height = #lines
-    local opts = {
-      relative = 'editor',
-      width = width + 4,
-      height = height + 2,
-      row = (vim.o.lines - height) / 2 - 1,
-      col = (vim.o.columns - width) / 2,
-      style = 'minimal',
-      border = 'rounded',
-    }
-    local bufnr = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-    vim.api.nvim_open_win(bufnr, true, opts)
-
-    -- Bind 'q' to close the window
-    vim.api.nvim_buf_set_keymap(
-      bufnr,
-      'n',
-      'q',
-      '<cmd>close<CR>',
-      { noremap = true, silent = true }
-    )
+    local lines = { 'Log file path: ' .. log_file_path }
+    local popup = require('hurl.popup')
+    popup.show_text('Hurl.nvim - Debug info', lines)
   end, {
     nargs = '*',
     range = true,
