@@ -199,6 +199,14 @@ local function execute_hurl_cmd(opts, callback)
     end
   end
 
+  -- Inject global variables into the command
+  if _HURL_GLOBAL_CONFIG.global_vars then
+    for var_name, var_value in pairs(_HURL_GLOBAL_CONFIG.global_vars) do
+      table.insert(opts, '--variable')
+      table.insert(opts, var_name .. '=' .. var_value)
+    end
+  end
+
   local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
   response = {}
 
@@ -438,6 +446,72 @@ function M.setup()
       end
     end
   end, { nargs = '*', range = true })
+
+  utils.create_cmd('HurlSetVariable', function(opts)
+    local var_name = opts.fargs[1]
+    local var_value = opts.fargs[2]
+    if not var_name or not var_value then
+      utils.log_info('hurl: please provide the variable name and its value')
+      utils.notify('hurl: please provide the variable name and its value', vim.log.levels.INFO)
+      return
+    end
+    _HURL_GLOBAL_CONFIG.global_vars = _HURL_GLOBAL_CONFIG.global_vars or {}
+    _HURL_GLOBAL_CONFIG.global_vars[var_name] = var_value
+    utils.log_info('hurl: global variable ' .. var_name .. ' set to ' .. var_value)
+    utils.notify(
+      'hurl: global variable ' .. var_name .. ' set to ' .. var_value,
+      vim.log.levels.INFO
+    )
+  end, { nargs = '*', range = true })
+
+  -- Show all global variables
+  utils.create_cmd('HurlManageVariable', function()
+    -- Check if there are any global variables
+    if not _HURL_GLOBAL_CONFIG.global_vars or vim.tbl_isempty(_HURL_GLOBAL_CONFIG.global_vars) then
+      utils.log_info('hurl: no global variables set')
+      utils.notify('hurl: no global variables set', vim.log.levels.INFO)
+      return
+    end
+
+    -- Prepare the lines to display in the popup
+    local lines = { 'Hurl.nvim Global Variables:' }
+    for var_name, var_value in pairs(_HURL_GLOBAL_CONFIG.global_vars) do
+      table.insert(lines, var_name .. ' = ' .. var_value)
+    end
+
+    -- Calculate the width of the popup
+    local width = 0
+    for _, line in ipairs(lines) do
+      width = math.max(width, #line)
+    end
+
+    -- Create a popup with the global variables
+    local height = #lines
+    local opts = {
+      relative = 'editor',
+      width = width + 4,
+      height = height + 2,
+      row = (vim.o.lines - height) / 2 - 1,
+      col = (vim.o.columns - width) / 2,
+      style = 'minimal',
+      border = 'rounded',
+    }
+    local bufnr = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+    vim.api.nvim_open_win(bufnr, true, opts)
+
+    -- Bind 'q' to close the window
+    vim.api.nvim_buf_set_keymap(
+      bufnr,
+      'n',
+      'q',
+      '<cmd>close<CR>',
+      { noremap = true, silent = true }
+    )
+  end, {
+    nargs = '*',
+    range = true,
+  })
 
   -- Show debug info
   utils.create_cmd('HurlDebugInfo', function()
