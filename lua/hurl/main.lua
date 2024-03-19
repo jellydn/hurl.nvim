@@ -212,7 +212,7 @@ local function execute_hurl_cmd(opts, callback)
   response = {}
 
   utils.log_info('hurl: opts parameter values: ' .. vim.inspect(opts))
-utils.log_info('hurl: running command' .. vim.inspect(cmd))
+  utils.log_info('hurl: running command' .. vim.inspect(cmd))
 
   vim.fn.jobstart(cmd, {
     on_stdout = callback or on_output,
