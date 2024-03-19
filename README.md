@@ -312,6 +312,10 @@ If this guide has been helpful, please give it a ⭐️.
 [![paypal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/dunghd)
 [![buymeacoffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/dunghd)
 
+### Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=jellydn/hurl.nvim&type=Date)](https://star-history.com/#jellydn/hurl.nvim)
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
