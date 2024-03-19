@@ -2,13 +2,12 @@
 
 ## [1.3.0](https://github.com/jellydn/hurl.nvim/compare/v1.2.1...v1.3.0) (2024-03-19)
 
-
 ### Features
 
-* **http_utils:** add support for finding HTTP verbs in buffer for stable neovim ([c10a905](https://github.com/jellydn/hurl.nvim/commit/c10a9053d51fe96c94f1be8eee4df582bc705708))
-* **hurl.nvim:** improve treesitter parser detection and warnings ([00d76db](https://github.com/jellydn/hurl.nvim/commit/00d76db0a668767b2dd4da6cebe499ba21a354ee))
-* **hurl:** add support for global variables ([d67e972](https://github.com/jellydn/hurl.nvim/commit/d67e9721e9902b2a01cf87b2d994f6956061668b))
-* **popup:** add show_text function and refactor commands ([4408df9](https://github.com/jellydn/hurl.nvim/commit/4408df92de8410b59205784832b06fdb2994c092))
+- **http_utils:** add support for finding HTTP verbs in buffer for stable neovim ([c10a905](https://github.com/jellydn/hurl.nvim/commit/c10a9053d51fe96c94f1be8eee4df582bc705708))
+- **hurl.nvim:** improve treesitter parser detection and warnings ([00d76db](https://github.com/jellydn/hurl.nvim/commit/00d76db0a668767b2dd4da6cebe499ba21a354ee))
+- **hurl:** add support for global variables ([d67e972](https://github.com/jellydn/hurl.nvim/commit/d67e9721e9902b2a01cf87b2d994f6956061668b))
+- **popup:** add show_text function and refactor commands ([4408df9](https://github.com/jellydn/hurl.nvim/commit/4408df92de8410b59205784832b06fdb2994c092))
 
 ## [1.2.1](https://github.com/jellydn/hurl.nvim/compare/v1.2.0...v1.2.1) (2024-03-14)
 
