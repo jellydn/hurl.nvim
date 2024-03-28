@@ -4,9 +4,7 @@
 </p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
-
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![IT Man - Effortless APIs with Hurl.nvim: A Developer's Guide to Neovim Tooling [Vietnamese]](https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg)](https://www.youtube.com/watch?v=nr_RbHvnnwk)
@@ -333,6 +331,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/skoch13"><img src="https://avatars.githubusercontent.com/u/29177689?v=4?s=100" width="100px;" alt="Sergey Kochetkov"/><br /><sub><b>Sergey Kochetkov</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=skoch13" title="Documentation">📖</a> <a href="https://github.com/jellydn/hurl.nvim/commits?author=skoch13" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/rbingham"><img src="https://avatars.githubusercontent.com/u/7032804?v=4?s=100" width="100px;" alt="rbingham"/><br /><sub><b>rbingham</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=rbingham" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://www.allm.net"><img src="https://avatars.githubusercontent.com/u/900716?v=4?s=100" width="100px;" alt="Horacio Sanson"/><br /><sub><b>Horacio Sanson</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=hsanson" title="Code">💻</a> <a href="https://github.com/jellydn/hurl.nvim/commits?author=hsanson" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/bytedaring"><img src="https://avatars.githubusercontent.com/u/4506063?v=4?s=100" width="100px;" alt="xiwang"/><br /><sub><b>xiwang</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=bytedaring" title="Code">💻</a> <a href="https://github.com/jellydn/hurl.nvim/commits?author=bytedaring" title="Documentation">📖</a></td>
     </tr>
   </tbody>
   <tfoot>
