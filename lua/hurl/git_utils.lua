@@ -11,8 +11,10 @@ end
 --- Get the git root directory
 ---@return string|nil The git root directory
 local function get_git_root()
-  local dot_git_path = vim.fn.finddir('.git', '.;')
-  return vim.fn.fnamemodify(dot_git_path, ':h')
+  local git_root_path = require('plenary.job')
+    :new({ command = 'git', args = { 'rev-parse', '--show-toplevel' } })
+    :sync()[1]
+  return git_root_path
 end
 
 local function split_path(path)
