@@ -2,10 +2,9 @@
 
 ## [1.3.1](https://github.com/jellydn/hurl.nvim/compare/v1.3.0...v1.3.1) (2024-03-28)
 
-
 ### Bug Fixes
 
-* update the implementation method of obtaining the git root direc… ([#146](https://github.com/jellydn/hurl.nvim/issues/146)) ([c16f7f6](https://github.com/jellydn/hurl.nvim/commit/c16f7f60a4df043cd3b136aa5fb519de668c6148))
+- update the implementation method of obtaining the git root direc… ([#146](https://github.com/jellydn/hurl.nvim/issues/146)) ([c16f7f6](https://github.com/jellydn/hurl.nvim/commit/c16f7f60a4df043cd3b136aa5fb519de668c6148))
 
 ## [1.3.0](https://github.com/jellydn/hurl.nvim/compare/v1.2.1...v1.3.0) (2024-03-19)
 
