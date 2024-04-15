@@ -212,6 +212,24 @@ local function execute_hurl_cmd(opts, callback)
 
   utils.log_info('hurl: running command' .. vim.inspect(cmd))
 
+  -- Parse [Captures] section and update global variables
+  if _HURL_GLOBAL_CONFIG.captures then
+    for capture_name, capture_method in pairs(_HURL_GLOBAL_CONFIG.captures) do
+      local captured_value = nil -- Placeholder for capture extraction logic
+      -- TODO: Implement capture extraction logic based on capture_method
+
+      if captured_value then
+        _HURL_GLOBAL_CONFIG.global_vars = _HURL_GLOBAL_CONFIG.global_vars or {}
+        _HURL_GLOBAL_CONFIG.global_vars[capture_name] = captured_value
+        utils.log_info('hurl: captured variable ' .. capture_name .. ' set to ' .. captured_value)
+        utils.notify('hurl: captured variable ' .. capture_name .. ' set to ' .. captured_value, vim.log.levels.INFO)
+      else
+        utils.log_error('hurl: failed to capture variable ' .. capture_name)
+        utils.notify('hurl: failed to capture variable ' .. capture_name, vim.log.levels.ERROR)
+      end
+    end
+  end
+
   vim.fn.jobstart(cmd, {
     on_stdout = callback or on_output,
     on_stderr = callback or on_output,
