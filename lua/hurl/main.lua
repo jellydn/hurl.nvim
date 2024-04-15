@@ -222,7 +222,10 @@ local function execute_hurl_cmd(opts, callback)
         _HURL_GLOBAL_CONFIG.global_vars = _HURL_GLOBAL_CONFIG.global_vars or {}
         _HURL_GLOBAL_CONFIG.global_vars[capture_name] = captured_value
         utils.log_info('hurl: captured variable ' .. capture_name .. ' set to ' .. captured_value)
-        utils.notify('hurl: captured variable ' .. capture_name .. ' set to ' .. captured_value, vim.log.levels.INFO)
+        utils.notify(
+          'hurl: captured variable ' .. capture_name .. ' set to ' .. captured_value,
+          vim.log.levels.INFO
+        )
       else
         utils.log_error('hurl: failed to capture variable ' .. capture_name)
         utils.notify('hurl: failed to capture variable ' .. capture_name, vim.log.levels.ERROR)
