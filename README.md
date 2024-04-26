@@ -188,6 +188,14 @@ Please note that as of now, this command only supports viewing the variables. Th
 
 For now, if you want to modify the global variables, you can do so by using the `HurlSetVariable` command or by editing your `vars.env` file directly.
 
+## HurlShowLastResponse
+
+The `HurlShowLastResponse` command allows you to view the response of your last HTTP request.
+
+```vim
+:HurlShowLastResponse
+```
+
 ## Default Key Mappings
 
 `hurl.nvim` comes with some default key mappings to streamline your workflow:

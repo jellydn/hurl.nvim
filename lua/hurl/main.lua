@@ -496,6 +496,16 @@ function M.setup()
     nargs = '*',
     range = true,
   })
+
+  -- TODO: Keep last 10 requests and add key binding to navigate through them
+  -- Show last request response
+  utils.create_cmd('HurlShowLastResponse', function()
+    local history = require('hurl.history')
+    history.show(response)
+  end, {
+    nargs = '*',
+    range = true,
+  })
 end
 
 return M
