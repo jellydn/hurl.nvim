@@ -1,4 +1,4 @@
-*hurl.nvim.txt*           For NVIM v0.8.0           Last change: 2024 March 28
+*hurl.nvim.txt*           For NVIM v0.8.0           Last change: 2024 April 26
 
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
@@ -9,6 +9,7 @@ Table of Contents                                *hurl.nvim-table-of-contents*
   - Demo                                                      |hurl.nvim-demo|
   - HurlSetVariable                                |hurl.nvim-hurlsetvariable|
   - HurlManageVariable                          |hurl.nvim-hurlmanagevariable|
+  - HurlShowLastResponse                      |hurl.nvim-hurlshowlastresponse|
   - Default Key Mappings                      |hurl.nvim-default-key-mappings|
   - Configuration                                    |hurl.nvim-configuration|
   - Resources                                            |hurl.nvim-resources|
@@ -257,6 +258,16 @@ roadmap and will be added in future updates.
 
 For now, if you want to modify the global variables, you can do so by using the
 `HurlSetVariable` command or by editing your `vars.env` file directly.
+
+
+HURLSHOWLASTRESPONSE                          *hurl.nvim-hurlshowlastresponse*
+
+The `HurlShowLastResponse` command allows you to view the response of your last
+HTTP request.
+
+>vim
+    :HurlShowLastResponse
+<
 
 
 DEFAULT KEY MAPPINGS                          *hurl.nvim-default-key-mappings*
