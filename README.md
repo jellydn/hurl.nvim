@@ -184,7 +184,12 @@ To use this command, simply type `:HurlManageVariable` in the command line:
 :HurlManageVariable
 ```
 
-Please note that as of now, this command only supports viewing the variables. The ability to add new variables, modify existing ones, or delete variables directly from this buffer is not available yet. However, this feature is on the roadmap and will be added in future updates.
+The default keymap for this buffer is:
+
+- `q`: Close the buffer
+- `e`: Edit the variable
+
+[![Manage variables](https://i.gyazo.com/0492719eb7a14f42cebff6996bde8672.gif)](https://gyazo.com/0492719eb7a14f42cebff6996bde8672)
 
 For now, if you want to modify the global variables, you can do so by using the `HurlSetVariable` command or by editing your `vars.env` file directly.
 

@@ -118,7 +118,12 @@ M.clear = function()
   vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, { 'Processing...' })
 end
 
-M.show_text = function(title, lines)
+--- Show text in a popup
+---@param title string
+---@param lines table
+---@param bottom? string
+---@return any
+M.show_text = function(title, lines, bottom)
   -- Create a new popup
   local text_popup = Popup({
     enter = true,
@@ -128,7 +133,7 @@ M.show_text = function(title, lines)
       text = {
         top = title,
         top_align = 'center',
-        bottom = 'Press `q` to close',
+        bottom = bottom or 'Press `q` to close',
         bottom_align = 'left',
       },
     },
@@ -156,6 +161,8 @@ M.show_text = function(title, lines)
   end)
 
   text_popup:mount()
+
+  return text_popup
 end
 
 return M

@@ -479,7 +479,22 @@ function M.setup()
     end
 
     local popup = require('hurl.popup')
-    popup.show_text('Hurl.nvim - Global variables', lines)
+    local text_popup = popup.show_text(
+      'Hurl.nvim - Global variables',
+      lines,
+      'Press `q` to close. Press `e` to edit the variable.'
+    )
+
+    -- Add e key binding to edit the variable
+    text_popup:map('n', 'e', function()
+      local line = vim.api.nvim_get_current_line()
+      local var_name = line:match('^(.-) =')
+      if var_name then
+        local new_value = vim.fn.input('Enter new value for ' .. var_name .. ': ')
+        _HURL_GLOBAL_CONFIG.global_vars[var_name] = new_value
+        vim.api.nvim_set_current_line(var_name .. ' = ' .. new_value)
+      end
+    end)
   end, {
     nargs = '*',
     range = true,
