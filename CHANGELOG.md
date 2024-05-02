@@ -2,11 +2,10 @@
 
 ## [1.4.0](https://github.com/jellydn/hurl.nvim/compare/v1.3.1...v1.4.0) (2024-05-02)
 
-
 ### Features
 
-* add HurlShowLastResponse command to show last request response ([1075110](https://github.com/jellydn/hurl.nvim/commit/1075110f334a1ae8fb10554611befa4b58caabdf))
-* **hurl.nvim:** add variable editing functionality in HurlManageVariable buffer ([7e56e3f](https://github.com/jellydn/hurl.nvim/commit/7e56e3f9249dde6e18a52f01779fa702044bced9))
+- add HurlShowLastResponse command to show last request response ([1075110](https://github.com/jellydn/hurl.nvim/commit/1075110f334a1ae8fb10554611befa4b58caabdf))
+- **hurl.nvim:** add variable editing functionality in HurlManageVariable buffer ([7e56e3f](https://github.com/jellydn/hurl.nvim/commit/7e56e3f9249dde6e18a52f01779fa702044bced9))
 
 ## [1.3.1](https://github.com/jellydn/hurl.nvim/compare/v1.3.0...v1.3.1) (2024-03-28)
 
