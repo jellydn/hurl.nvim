@@ -482,7 +482,7 @@ function M.setup()
     local text_popup = popup.show_text(
       'Hurl.nvim - Global variables',
       lines,
-      'Press `q` to close. Press `e` to edit the variable.'
+      "Press 'q' to close, 'e' to edit, or 'n' to create a variable."
     )
 
     -- Add e key binding to edit the variable
@@ -494,6 +494,32 @@ function M.setup()
         _HURL_GLOBAL_CONFIG.global_vars[var_name] = new_value
         vim.api.nvim_set_current_line(var_name .. ' = ' .. new_value)
       end
+    end)
+
+    -- Add 'n' to create new variable
+    text_popup:map('n', 'n', function()
+      local var_name = vim.fn.input('Enter new variable name: ')
+      if not var_name or var_name == '' then
+        utils.notify('hurl: variable name cannot be empty', vim.log.levels.INFO)
+        return
+      end
+
+      local var_value = vim.fn.input('Enter new variable value: ')
+      if not var_value or var_value == '' then
+        utils.notify('hurl: variable value cannot be empty', vim.log.levels.INFO)
+        return
+      end
+
+      local line_position = -1
+      local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)
+      if first_line[1] == 'No global variables set. Please use :HurlSetVariable to set one.' then
+        -- Clear the buffer if it's empty
+        line_position = 0
+      end
+
+      vim.cmd('HurlSetVariable ' .. var_name .. ' ' .. var_value)
+      -- Append to the last line
+      vim.api.nvim_buf_set_lines(0, line_position, -1, false, { var_name .. ' = ' .. var_value })
     end)
   end, {
     nargs = '*',
