@@ -518,11 +518,17 @@ function M.setup()
       vim.cmd('HurlSetVariable ' .. var_name .. ' ' .. var_value)
       -- Append to the last line
       vim.api.nvim_buf_set_lines(0, line_position, -1, false, { var_name .. ' = ' .. var_value })
-      
+
       -- Refresh the buffer display
-      vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.tbl_map(function(key)
-        return key .. ' = ' .. _HURL_GLOBAL_CONFIG.global_vars[key]
-      end, vim.tbl_keys(_HURL_GLOBAL_CONFIG.global_vars)))
+      vim.api.nvim_buf_set_lines(
+        0,
+        0,
+        -1,
+        false,
+        vim.tbl_map(function(key)
+          return key .. ' = ' .. _HURL_GLOBAL_CONFIG.global_vars[key]
+        end, vim.tbl_keys(_HURL_GLOBAL_CONFIG.global_vars))
+      )
     end)
   end, {
     nargs = '*',
