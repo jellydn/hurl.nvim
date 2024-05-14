@@ -485,14 +485,12 @@ function M.setup()
       "Press 'q' to close, 'e' to edit, or 'n' to create a variable."
     )
 
-    -- Add e key binding to edit the variable
+    -- Add e key binding to edit the variable inline in the buffer
     text_popup:map('n', 'e', function()
       local line = vim.api.nvim_get_current_line()
       local var_name = line:match('^(.-) =')
       if var_name then
-        local new_value = vim.fn.input('Enter new value for ' .. var_name .. ': ')
-        _HURL_GLOBAL_CONFIG.global_vars[var_name] = new_value
-        vim.api.nvim_set_current_line(var_name .. ' = ' .. new_value)
+        vim.api.nvim_input('A')
       end
     end)
 
@@ -520,10 +518,24 @@ function M.setup()
       vim.cmd('HurlSetVariable ' .. var_name .. ' ' .. var_value)
       -- Append to the last line
       vim.api.nvim_buf_set_lines(0, line_position, -1, false, { var_name .. ' = ' .. var_value })
+      
+      -- Refresh the buffer display
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.tbl_map(function(key)
+        return key .. ' = ' .. _HURL_GLOBAL_CONFIG.global_vars[key]
+      end, vim.tbl_keys(_HURL_GLOBAL_CONFIG.global_vars)))
     end)
   end, {
     nargs = '*',
     range = true,
+    on_write = function()
+      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+      for _, line in ipairs(lines) do
+        local var_name, var_value = line:match('^(.-) = (.+)$')
+        if var_name and var_value then
+          _HURL_GLOBAL_CONFIG.global_vars[var_name] = var_value
+        end
+      end
+    end,
   })
 
   -- Show debug info
@@ -536,6 +548,15 @@ function M.setup()
   end, {
     nargs = '*',
     range = true,
+    on_write = function()
+      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+      for _, line in ipairs(lines) do
+        local var_name, var_value = line:match('^(.-) = (.+)$')
+        if var_name and var_value then
+          _HURL_GLOBAL_CONFIG.global_vars[var_name] = var_value
+        end
+      end
+    end,
   })
 
   -- TODO: Keep last 10 requests and add key binding to navigate through them
@@ -546,6 +567,15 @@ function M.setup()
   end, {
     nargs = '*',
     range = true,
+    on_write = function()
+      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+      for _, line in ipairs(lines) do
+        local var_name, var_value = line:match('^(.-) = (.+)$')
+        if var_name and var_value then
+          _HURL_GLOBAL_CONFIG.global_vars[var_name] = var_value
+        end
+      end
+    end,
   })
 end
 
