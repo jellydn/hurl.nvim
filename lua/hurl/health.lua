@@ -31,6 +31,8 @@ M.check = function()
     )
   end
 
+  -- TODO: Add check for hurl version, e.g: > 4.3.0 to use new features
+
   ok('hurl.nvim: All good!')
 end
 
