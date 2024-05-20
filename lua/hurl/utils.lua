@@ -173,7 +173,7 @@ end
 ---@return boolean
 util.is_nightly = function()
   local is_stable_version = false
-  if vim.fn.has('nvim-0.10.0') == 1 then
+  if vim.fn.has('nvim-0.11.0') == 1 then
     is_stable_version = true
   end
 
