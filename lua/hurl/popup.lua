@@ -18,17 +18,16 @@ local popups = {
 }
 
 local layout = Layout(
-  {
-    relative = 'editor',
-    position = _HURL_GLOBAL_CONFIG.popup_position,
-    size = _HURL_GLOBAL_CONFIG.popup_size,
-  },
+  'center',
   Layout.Box({
     Layout.Box(popups.top, { size = {
       height = '20%',
     } }),
     Layout.Box(popups.bottom, { grow = 1 }),
-  }, { dir = 'col' })
+  }, { dir = 'col' }),
+  {
+    size = _HURL_GLOBAL_CONFIG.popup_size,
+  }
 )
 
 -- Show content in a popup

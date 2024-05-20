@@ -9,7 +9,6 @@ local default_config = {
   split_position = 'right',
   split_size = '50%',
   -- Default popup options
-  popup_position = '50%',
   popup_size = {
     width = 80,
     height = 40,
