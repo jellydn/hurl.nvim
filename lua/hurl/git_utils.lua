@@ -3,9 +3,9 @@ local M = {}
 --- Check if the current directory is a git repo
 ---@return boolean
 local function is_git_repo()
-  vim.fn.system('git rev-parse --is-inside-work-tree')
+  local result = vim.fn.system('git rev-parse --is-inside-work-tree')
 
-  return vim.v.shell_error == 0
+  return vim.v.shell_error == 0 and result == 'true'
 end
 
 --- Get the git root directory
