@@ -1,5 +1,4 @@
 local utils = require('hurl.utils')
-local git = require('hurl.git_utils')
 local http = require('hurl.http_utils')
 local spinner = require('hurl.spinner')
 
@@ -8,94 +7,6 @@ local M = {}
 local response = {}
 local head_state = ''
 local is_running = false
-
--- Looking for vars.env file base on the current file buffer
----@return table
-local function find_env_files(file, root_dir, cache_dir, current_file_dir, scan_dir)
-  local files = {
-    {
-      path = root_dir .. '/' .. file,
-      dest = cache_dir .. '/' .. file,
-    },
-  }
-
-  -- Scan git root directory and all sub directories with the current file buffer
-  if git.is_git_repo() then
-    local git_root = git.get_git_root()
-
-    table.insert(files, {
-      path = git_root .. '/' .. file,
-      dest = cache_dir .. '/' .. file,
-    })
-
-    local git_root_parts = git.split_path(git_root)
-    local current_dir_parts = git.split_path(current_file_dir)
-    local sub_path = git_root
-
-    for i = #git_root_parts + 1, #current_dir_parts do
-      sub_path = sub_path .. '/' .. current_dir_parts[i]
-
-      table.insert(files, {
-        path = sub_path .. '/' .. file,
-        dest = cache_dir .. '/' .. file,
-      })
-    end
-  end
-
-  for _, s in ipairs(scan_dir) do
-    local dir = root_dir .. s.dir
-    if vim.fn.isdirectory(dir) == 1 then
-      table.insert(files, {
-        path = dir .. '/' .. file,
-        dest = cache_dir .. '/' .. file,
-      })
-    end
-  end
-
-  -- sort by path length, the current buffer file path will be the first
-  table.sort(files, function(a, b)
-    return #a.path > #b.path
-  end)
-  return files
-end
-
--- Looking for vars.env file base on the current file buffer
----@return table
-local function find_env_files_in_folders()
-  local root_dir = vim.fn.expand('%:p:h')
-  local cache_dir = vim.fn.stdpath('cache')
-  local current_file_dir = vim.fn.expand('%:p:h:h')
-  local env_files = {}
-
-  -- NOTE: it may be better to use a user config to define the scan directories
-  local scan_dir = {
-    {
-      dir = '/src',
-    },
-    {
-      dir = '/test',
-    },
-    {
-      dir = '/tests',
-    },
-    {
-      dir = '/server',
-    },
-    {
-      dir = '/src/tests',
-    },
-    {
-      dir = '/server/tests',
-    },
-  }
-
-  for _, file in ipairs(_HURL_GLOBAL_CONFIG.env_file) do
-    local temp_file = find_env_files(file, root_dir, cache_dir, current_file_dir, scan_dir)
-    vim.list_extend(env_files, temp_file)
-  end
-
-  return env_files
-end
 
 --- Output handler
 ---@class Output
@@ -179,7 +90,13 @@ local function execute_hurl_cmd(opts, callback)
   utils.notify('hurl: running request', vim.log.levels.INFO)
 
   local is_verbose_mode = vim.tbl_contains(opts, '--verbose')
-  if not _HURL_GLOBAL_CONFIG.auto_close and not is_verbose_mode and response.body then
+  local is_json_mode = vim.tbl_contains(opts, '--json')
+  if
+    not _HURL_GLOBAL_CONFIG.auto_close
+    and not is_verbose_mode
+    and not is_json_mode
+    and response.body
+  then
     local container = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
     utils.log_info('hurl: clear previous response if this is not auto close')
     container.clear()
@@ -187,7 +104,7 @@ local function execute_hurl_cmd(opts, callback)
 
   -- Check vars.env exist on the current file buffer
   -- Then inject the command with --variables-file vars.env
-  local env_files = find_env_files_in_folders()
+  local env_files = utils.find_env_files_in_folders()
   for _, env in ipairs(env_files) do
     utils.log_info(
       'hurl: looking for ' .. vim.inspect(_HURL_GLOBAL_CONFIG.env_file) .. ' in ' .. env.path
@@ -207,6 +124,7 @@ local function execute_hurl_cmd(opts, callback)
     end
   end
 
+  -- Include the HTTP headers in the output and do not colorize output.
   local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
   response = {}
 
@@ -437,6 +355,44 @@ function M.setup()
           title = 'hurl - event',
           lines = event,
         })
+        vim.cmd('copen')
+      end)
+    else
+      if result then
+        utils.log_info('hurl: not HTTP method found in the current line' .. result.start_line)
+        utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+      end
+    end
+  end, { nargs = '*', range = true })
+
+  -- NOTE: Get output from --json output
+  -- Run Hurl in JSON mode and send output to quickfix
+  utils.create_cmd('HurlJson', function(opts)
+    local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
+    local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
+      or http.find_http_verb_positions_in_buffer()
+    if result.current > 0 and result.start_line and result.end_line then
+      utils.log_info(
+        'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
+      )
+      opts.fargs = opts.fargs or {}
+      opts.fargs = vim.list_extend(opts.fargs, { '--json' })
+
+      -- Clear quickfix list
+      vim.fn.setqflist({}, 'r', {
+        title = 'hurl',
+        lines = {},
+      })
+      run_at_lines(1, result.end_line, opts.fargs, function(code, data, event)
+        utils.log_info('hurl: verbose callback ' .. vim.inspect(code) .. vim.inspect(data))
+        -- Only send to output if the data is json format
+        if #data > 1 and data ~= nil then
+          vim.fn.setqflist({}, 'a', {
+            title = 'hurl - data',
+            lines = data,
+          })
+        end
+
         vim.cmd('copen')
       end)
     else
