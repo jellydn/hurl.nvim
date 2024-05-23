@@ -104,7 +104,7 @@ local function execute_hurl_cmd(opts, callback)
 
   -- Check vars.env exist on the current file buffer
   -- Then inject the command with --variables-file vars.env
-  local env_files = utils.find_env_files_in_folders()
+  local env_files = _HURL_GLOBAL_CONFIG.find_env_files_in_folders()
   for _, env in ipairs(env_files) do
     utils.log_info(
       'hurl: looking for ' .. vim.inspect(_HURL_GLOBAL_CONFIG.env_file) .. ' in ' .. env.path

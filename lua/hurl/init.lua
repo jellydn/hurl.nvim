@@ -15,6 +15,7 @@ local default_config = {
     height = 40,
   },
   env_file = { 'vars.env' },
+  find_env_files_in_folders = utils.find_env_files_in_folders,
   formatters = {
     json = { 'jq' },
     html = {
