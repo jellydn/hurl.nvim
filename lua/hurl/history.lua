@@ -5,6 +5,11 @@ local M = {}
 ---@param response table
 M.show = function(response)
   local container = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
+  if not response.headers then
+    -- Do not show anything if there is no response
+    return
+  end
+
   local content_type = response.headers['content-type']
     or response.headers['Content-Type']
     or response.headers['Content-type']
