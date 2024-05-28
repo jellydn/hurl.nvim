@@ -2,16 +2,14 @@
 
 ## [1.5.0](https://github.com/jellydn/hurl.nvim/compare/v1.4.0...v1.5.0) (2024-05-28)
 
-
 ### Features
 
-* **hurl:** add buffer name for split response window ([#163](https://github.com/jellydn/hurl.nvim/issues/163)) ([fbc1377](https://github.com/jellydn/hurl.nvim/commit/fbc1377ace478936bb4c425e48cd34af3ffc81c0))
-* **hurl:** use global config for finding environment files ([6d40061](https://github.com/jellydn/hurl.nvim/commit/6d400613c92c2395471ca7f3de7991d7e8c488d9))
-
+- **hurl:** add buffer name for split response window ([#163](https://github.com/jellydn/hurl.nvim/issues/163)) ([fbc1377](https://github.com/jellydn/hurl.nvim/commit/fbc1377ace478936bb4c425e48cd34af3ffc81c0))
+- **hurl:** use global config for finding environment files ([6d40061](https://github.com/jellydn/hurl.nvim/commit/6d400613c92c2395471ca7f3de7991d7e8c488d9))
 
 ### Bug Fixes
 
-* **history:** add early return for missing response headers ([29af39b](https://github.com/jellydn/hurl.nvim/commit/29af39ba93a5f56b706991a081480b5738b53eb3))
+- **history:** add early return for missing response headers ([29af39b](https://github.com/jellydn/hurl.nvim/commit/29af39ba93a5f56b706991a081480b5738b53eb3))
 
 ## [1.4.0](https://github.com/jellydn/hurl.nvim/compare/v1.3.1...v1.4.0) (2024-05-02)
 
