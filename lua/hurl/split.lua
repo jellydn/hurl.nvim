@@ -23,6 +23,8 @@ M.show = function(data, type)
   -- mount/open the component
   split:mount()
 
+  vim.api.nvim_buf_set_name(split.bufnr, 'hurl-response')
+
   if _HURL_GLOBAL_CONFIG.auto_close then
     -- unmount component when buffer is closed
     split:on(event.BufLeave, function()
@@ -51,6 +53,8 @@ M.show = function(data, type)
   vim.api.nvim_buf_set_lines(split.bufnr, headers_table.line, -1, false, content)
 
   local function quit()
+    -- set buffer name to empty string so it wouldn't conflict when next time buffer opened
+    vim.api.nvim_buf_set_name(split.bufnr, '')
     vim.cmd('q')
     split:unmount()
   end
