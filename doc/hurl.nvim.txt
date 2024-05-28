@@ -3,6 +3,7 @@
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
 
+  - Prerequisites                                    |hurl.nvim-prerequisites|
   - Features                                              |hurl.nvim-features|
   - Usage                                                    |hurl.nvim-usage|
   - Env File Support: vars.env          |hurl.nvim-env-file-support:-vars.env|
@@ -21,6 +22,11 @@ Table of Contents                                *hurl.nvim-table-of-contents*
 Welcome to hurl.nvim 👋Hurl.nvim is a Neovim plugin designed to run HTTP requests directly from `.hurl` files. Elevate your API development workflow by executing and viewing responses without leaving your editor.|hurl.nvim-|
 
 <https://www.youtube.com/watch?v=nr_RbHvnnwk>
+
+
+PREREQUISITES                                        *hurl.nvim-prerequisites*
+
+- Neovim stable (0.10.0) or nightly. It might not work with older versions of Neovim.
 
 
 FEATURES                                                  *hurl.nvim-features*
