@@ -5,9 +5,6 @@ local split = Split({
   relative = 'editor',
   position = _HURL_GLOBAL_CONFIG.split_position,
   size = _HURL_GLOBAL_CONFIG.split_size,
-  -- Create a custom filetype so that we can use https://github.com/folke/edgy.nvim to manage the window
-  -- E.g: { title = "Hurl Nvim", ft = "hurl-nvim" },
-  buf_options = { filetype = 'hurl-nvim' },
 })
 
 local utils = require('hurl.utils')
@@ -22,6 +19,15 @@ local M = {}
 M.show = function(data, type)
   -- mount/open the component
   split:mount()
+  -- If have edgy.nvim
+  if pcall(require, 'edgy') then
+    -- Create a custom filetype so that we can use https://github.com/folke/edgy.nvim to manage the window
+    -- E.g: { title = "Hurl Nvim", ft = "hurl-nvim" },
+    vim.api.nvim_buf_set_option(split.bufnr, 'filetype', 'hurl-nvim')
+  end
+
+  -- Set content to highlight, refer https://github.com/MunifTanjim/nui.nvim/issues/76#issuecomment-1001358770
+  vim.api.nvim_buf_set_option(split.bufnr, 'filetype', type)
 
   vim.api.nvim_buf_set_name(split.bufnr, 'hurl-response')
 
@@ -61,9 +67,6 @@ M.show = function(data, type)
   split:map('n', 'q', function()
     quit()
   end)
-
-  -- Set content to highlight, refer https://github.com/MunifTanjim/nui.nvim/issues/76#issuecomment-1001358770
-  vim.api.nvim_buf_set_option(split.bufnr, 'filetype', type)
 end
 
 M.clear = function()
