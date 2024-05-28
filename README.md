@@ -11,6 +11,10 @@
 
 [![IT Man - Effortless APIs with Hurl.nvim: A Developer's Guide to Neovim Tooling [Vietnamese]](https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg)](https://www.youtube.com/watch?v=nr_RbHvnnwk)
 
+## Prerequisites
+
+- Neovim stable (0.10.0) or nightly. It might not work with older versions of Neovim.
+
 ## Features
 
 - 🚀 Execute HTTP requests directly from `.hurl` files.
