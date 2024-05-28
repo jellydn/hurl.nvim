@@ -56,6 +56,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/4506063?v=4",
       "profile": "https://github.com/bytedaring",
       "contributions": ["code", "doc"]
+    },
+    {
+      "login": "wenjinnn",
+      "name": "wenjin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30885216?v=4",
+      "profile": "https://github.com/wenjinnn",
+      "contributions": ["code"]
     }
   ],
   "contributorsPerLine": 7,
