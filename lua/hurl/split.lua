@@ -57,6 +57,8 @@ M.show = function(data, type)
   -- After 200ms, the highlight will be applied
   vim.defer_fn(function()
     vim.bo[split.bufnr].filetype = type
+    -- recomputing foldlevel, this is needed if we setup foldexpr
+    vim.api.nvim_feedkeys('zx', 'n', true)
   end, 200)
 
   local function quit()
