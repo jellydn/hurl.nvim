@@ -1,4 +1,4 @@
-*hurl.nvim.txt*            For NVIM v0.8.0            Last change: 2024 May 31
+*hurl.nvim.txt*            For NVIM v0.8.0           Last change: 2024 June 02
 
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
@@ -404,7 +404,7 @@ AUTHOR                                                      *hurl.nvim-author*
 
 SHOW YOUR SUPPORT                                *hurl.nvim-show-your-support*
 
-If this guide has been helpful, please give it a ⭐️.
+If this plugin has been helpful, please give it a ⭐️.
 
 <https://ko-fi.com/dunghd> <https://paypal.me/dunghd>
 <https://www.buymeacoffee.com/dunghd>
