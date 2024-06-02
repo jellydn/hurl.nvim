@@ -4,6 +4,7 @@ local spinner = require('hurl.spinner')
 
 local M = {}
 
+-- TODO: Refactor to use --json to run the hurl command
 local response = {}
 local head_state = ''
 local is_running = false
