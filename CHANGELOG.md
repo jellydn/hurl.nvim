@@ -2,10 +2,9 @@
 
 ## [1.5.1](https://github.com/jellydn/hurl.nvim/compare/v1.5.0...v1.5.1) (2024-06-10)
 
-
 ### Bug Fixes
 
-* **split:** no fold find if foldexpr setup ([#166](https://github.com/jellydn/hurl.nvim/issues/166)) ([42df991](https://github.com/jellydn/hurl.nvim/commit/42df991fc28f0099e1965f2fedbfa96f8d00a73b))
+- **split:** no fold find if foldexpr setup ([#166](https://github.com/jellydn/hurl.nvim/issues/166)) ([42df991](https://github.com/jellydn/hurl.nvim/commit/42df991fc28f0099e1965f2fedbfa96f8d00a73b))
 
 ## [1.5.0](https://github.com/jellydn/hurl.nvim/compare/v1.4.0...v1.5.0) (2024-05-28)
 
