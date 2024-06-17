@@ -86,26 +86,18 @@ M.show = function(data, type)
 
   -- Add headers to the top
   local headers_table = utils.render_header_table(data.headers)
-  -- Hide header block if empty headers
-  if headers_table.line == 0 then
-    vim.api.nvim_win_close(popups.top.winid, true)
-  else
-    if headers_table.line > 0 then
-      vim.api.nvim_buf_set_lines(popups.top.bufnr, 0, 1, false, headers_table.headers)
-    end
+  if headers_table.line > 0 then
+    vim.api.nvim_buf_set_lines(popups.top.bufnr, 0, 1, false, headers_table.headers)
   end
 
   local content = utils.format(data.body, type)
-  if not content then
-    utils.log_info('No content')
-    return
+  if content then
+    -- Add content to the bottom
+    vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, content)
+
+    -- Set content to highlight
+    vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'filetype', type)
   end
-
-  -- Add content to the bottom
-  vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, content)
-
-  -- Set content to highlight, refer https://github.com/MunifTanjim/nui.nvim/issues/76#issuecomment-1001358770
-  vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'filetype', type)
 end
 
 M.clear = function()
