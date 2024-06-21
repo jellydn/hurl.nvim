@@ -1,6 +1,6 @@
 {
   "name": "hurl.nvim",
-  "packageManager": "yarn@4.2.2",
+  "packageManager": "yarn@4.3.1",
   "devDependencies": {
     "all-contributors-cli": "^6.26.1"
   }
