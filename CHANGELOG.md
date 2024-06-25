@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.2](https://github.com/jellydn/hurl.nvim/compare/v1.5.1...v1.5.2) (2024-06-25)
+
+### Bug Fixes
+
+- **spinner:** use global config for show_notification ([#175](https://github.com/jellydn/hurl.nvim/issues/175)) ([e54b5a4](https://github.com/jellydn/hurl.nvim/commit/e54b5a421fa91d5c30c8d2238360fbce765d4af2))
+
 ## [1.5.1](https://github.com/jellydn/hurl.nvim/compare/v1.5.0...v1.5.1) (2024-06-10)
 
 ### Bug Fixes
