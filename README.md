@@ -5,7 +5,7 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
 
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
@@ -354,6 +354,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/wenjinnn"><img src="https://avatars.githubusercontent.com/u/30885216?v=4?s=100" width="100px;" alt="wenjin"/><br /><sub><b>wenjin</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=wenjinnn" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://arongriffis.com"><img src="https://avatars.githubusercontent.com/u/50637?v=4?s=100" width="100px;" alt="Aron Griffis"/><br /><sub><b>Aron Griffis</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=agriffis" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
