@@ -7,9 +7,6 @@ local M = {}
 
 -- User configuration section
 local config = {
-  -- Show notification when done.
-  -- Set to false to disable.
-  show_notification = true,
   -- Name of the plugin.
   plugin = 'hurl.nvim',
   -- Spinner frames.
@@ -84,7 +81,7 @@ function M.hide(show_msg)
       vim.api.nvim_buf_delete(spinner_buf, { force = true })
     end
 
-    if config.show_notification or show_msg then
+    if show_msg or _HURL_GLOBAL_CONFIG.show_notification then
       vim.notify('Done!', vim.log.levels.INFO, { title = config.plugin })
     end
   end
