@@ -15,7 +15,7 @@ local M = {}
 ---@param data table
 ---   - body string
 ---   - headers table
----@param type 'json' | 'html' | 'text'
+---@param type 'json' | 'html' | 'xml' | 'text'
 M.show = function(data, type)
   -- mount/open the component
   split:mount()

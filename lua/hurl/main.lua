@@ -183,7 +183,11 @@ local function execute_hurl_cmd(opts, callback)
           if utils.is_html_response(content_type) then
             container.show(response, 'html')
           else
-            container.show(response, 'text')
+            if utils.is_xml_response(content_type) then
+              container.show(response, 'xml')
+            else
+              container.show(response, 'text')
+            end
           end
         end
       end
