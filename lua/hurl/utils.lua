@@ -172,6 +172,7 @@ end
 
 util.is_xml_response = function(content_type)
   return string.find(content_type, 'text/xml') ~= nil
+      or string.find(content_type, 'application/xml') ~= nil
 end
 
 --- Check if nvim is running in nightly or stable version
