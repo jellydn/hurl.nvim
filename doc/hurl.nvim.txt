@@ -66,7 +66,7 @@ Add the following configuration to your Neovim setup with lazy.nvim
             'html',
           },
           xml = {
-            'tidy', -- Make sure you have install prettier in your system, e.g: npm install -g prettier
+            'tidy', -- Make sure you have installed tidy in your system, e.g: brew install tidy-html5
             '-xml',
             '-i',
             '-q',
