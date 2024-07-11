@@ -23,6 +23,12 @@ local default_config = {
       '--parser',
       'html',
     },
+    xml = {
+      'tidy',
+      '-xml',
+      '-i',
+      '-q',
+    },
   },
 }
 --- Global configuration for entire plugin, easy to access from anywhere

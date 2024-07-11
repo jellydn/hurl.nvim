@@ -49,6 +49,12 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
         '--parser',
         'html',
       },
+      xml = {
+        'tidy', -- Make sure you have installed tidy in your system, e.g: brew install tidy-html5
+        '-xml',
+        '-i',
+        '-q',
+      },
     },
   },
   keys = {
@@ -251,6 +257,12 @@ local default_config = {
       '--parser',
       'html',
     },
+    xml = {
+      'tidy',         -- Uses tidy to format XML responses
+      '-xml',
+      '-i',
+      '-q',
+    },
   },
 }
 ```
@@ -268,6 +280,12 @@ require('hurl').setup({
       'prettier',       -- Customize the HTML formatter command
       '--parser',
       'html',
+    },
+    xml = {
+      'tidy',           -- Customize the XML formatter command
+      '-xml',
+      '-i',
+      '-q',
     },
   },
 })

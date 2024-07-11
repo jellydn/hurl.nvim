@@ -101,11 +101,15 @@ end
 
 --- Format the body of the request
 ---@param body string
----@param type 'json' | 'html' | 'text'
+---@param type 'json' | 'html' | 'xml' | 'text'
 ---@return string[] | nil
 util.format = function(body, type)
   local formatters = _HURL_GLOBAL_CONFIG.formatters
-    or { json = { 'jq' }, html = { 'prettier', '--parser', 'html' } }
+    or {
+      json = { 'jq' },
+      html = { 'prettier', '--parser', 'html' },
+      xml = { 'tidy', '-xml', '-i', '-q' },
+    }
 
   -- If no formatter is defined, return the body
   if not formatters[type] then
@@ -168,6 +172,11 @@ end
 
 util.is_html_response = function(content_type)
   return string.find(content_type, 'text/html') ~= nil
+end
+
+util.is_xml_response = function(content_type)
+  return string.find(content_type, 'text/xml') ~= nil
+    or string.find(content_type, 'application/xml') ~= nil
 end
 
 --- Check if nvim is running in nightly or stable version
