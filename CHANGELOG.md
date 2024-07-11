@@ -2,10 +2,9 @@
 
 ## [1.6.0](https://github.com/jellydn/hurl.nvim/compare/v1.5.2...v1.6.0) (2024-07-11)
 
-
 ### Features
 
-* add xml type for response formatting and highlight ([#181](https://github.com/jellydn/hurl.nvim/issues/181)) ([f9edcfb](https://github.com/jellydn/hurl.nvim/commit/f9edcfbe80b45866528124c11e5ff0ed8586facc))
+- add xml type for response formatting and highlight ([#181](https://github.com/jellydn/hurl.nvim/issues/181)) ([f9edcfb](https://github.com/jellydn/hurl.nvim/commit/f9edcfbe80b45866528124c11e5ff0ed8586facc))
 
 ## [1.5.2](https://github.com/jellydn/hurl.nvim/compare/v1.5.1...v1.5.2) (2024-06-25)
 
