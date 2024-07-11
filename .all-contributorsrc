@@ -70,6 +70,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/50637?v=4",
       "profile": "https://arongriffis.com",
       "contributions": ["code"]
+    },
+    {
+      "login": "javoscript",
+      "name": "Javier Ugarte",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11479916?v=4",
+      "profile": "https://javoscript.com/",
+      "contributions": ["code"]
     }
   ],
   "contributorsPerLine": 7,
