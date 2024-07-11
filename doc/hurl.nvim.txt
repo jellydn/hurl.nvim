@@ -1,4 +1,4 @@
-*hurl.nvim.txt*            For NVIM v0.8.0           Last change: 2024 June 25
+*hurl.nvim.txt*            For NVIM v0.8.0           Last change: 2024 July 11
 
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
@@ -357,7 +357,7 @@ To apply these configurations, include them in your Neovim setup like this:
           'html',
         },
         xml = {
-          'tidy',       -- Customize the XML formatter command
+          'tidy',           -- Customize the XML formatter command
           '-xml',
           '-i',
           '-q',
