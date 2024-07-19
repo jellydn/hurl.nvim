@@ -20,6 +20,10 @@
 - 🚀 Execute HTTP requests directly from `.hurl` files.
 - 👁‍🗨 Multiple display modes for API response: popup or split.
 - 🌈 Highly customizable through settings.
+- 📦 Environment file support for managing environment variables.
+- 🛠 Set environment variables with `HurlSetVariable` command.
+- 📝 View and manage environment variables with `HurlManageVariable` command.
+- 📜 View the response of your last HTTP request with `HurlShowLastResponse` command.
 
 ## Usage
 
@@ -126,6 +130,45 @@ To change the environment file name, use the `HurlSetEnvFile` command followed b
 - Ensure that the new environment file exists in the directories where the plugin searches for it, as outlined in the [File Location](#file-location) section.
 - This change will apply globally for the current session of Neovim. If you restart Neovim, it will revert to the default `vars.env` unless you change it again.
 
+## Test fixtures
+
+This is a feature that allows you to define custom variables in your `.hurl` files. You can define a list of custom variables with a name and a callback function that returns the value of the variable. The callback function is executed every time the variable is used in the `.hurl` file.
+
+> [!NOTE]
+> This is a workaround to inject dynamic variables into the hurl command, refer https://github.com/Orange-OpenSource/hurl/issues?q=sort:updated-desc+is:open+label:%22topic:+generators%22
+
+```lua
+  -- Custom below to add your own fixture variables
+  fixture_vars = {
+    {
+      name = 'random_int_number',
+      callback = function()
+        return math.random(1, 1000)
+      end,
+    },
+    {
+      name = 'random_float_number',
+      callback = function()
+        local result = math.random() * 10
+        return string.format('%.2f', result)
+      end,
+    },
+  }
+```
+
+Then you can use `{{random_int_number}}` and `{{random_float_number}}` in your `.hurl` files.
+
+```hurl
+POST https://api.example.com
+Content-Type: application/json
+
+{
+  "name": "Product ID {{random_int_number}}",
+  "price": {{random_float_number}}
+}
+
+```
+
 ## Demo
 
 Check out the following demos to see `hurl.nvim` in action:
@@ -226,39 +269,47 @@ These key mappings are active within the popup windows that `hurl.nvim` displays
 `hurl.nvim` can be customized with the following default configurations:
 
 ```lua
+--- Default configuration for hurl.nvim
 local default_config = {
-  -- Toggle debugging information
-  debug = false, -- If true, logs will be saved at ~/.local/state/nvim/hurl.nvim.log
-
-  -- Set the display mode for the response: 'split' or 'popup'
+  debug = false,
   mode = 'split',
-
-  -- Split settings
-  split_position = "right",
-  split_size = "50%",
-
-  -- Popup settings
+  show_notification = false,
+  auto_close = true,
+  -- Default split options
+  split_position = 'right',
+  split_size = '50%',
+  -- Default popup options
   popup_position = '50%',
   popup_size = {
     width = 80,
     height = 40,
   },
-
-  -- Default environment file name
-  env_file = {
-      'vars.env',
+  env_file = { 'vars.env' },
+  fixture_vars = {
+    {
+      name = 'random_int_number',
+      callback = function()
+        return math.random(1, 1000)
+      end,
+    },
+    {
+      name = 'random_float_number',
+      callback = function()
+        local result = math.random() * 10
+        return string.format('%.2f', result)
+      end,
+    },
   },
-
-  -- Specify formatters for different response types
+  find_env_files_in_folders = utils.find_env_files_in_folders,
   formatters = {
-    json = { 'jq' },  -- Uses jq to format JSON responses
+    json = { 'jq' },
     html = {
-      'prettier',     -- Uses prettier to format HTML responses
+      'prettier',
       '--parser',
       'html',
     },
     xml = {
-      'tidy',         -- Uses tidy to format XML responses
+      'tidy',
       '-xml',
       '-i',
       '-q',
@@ -289,7 +340,7 @@ require('hurl').setup({
     },
   },
 })
-```
+````
 
 Adjust the settings as per your needs to enhance your development experience with `hurl.nvim`.
 

@@ -125,6 +125,15 @@ local function execute_hurl_cmd(opts, callback)
     end
   end
 
+  -- Inject fixture variables into the command
+  -- This is a workaround to inject dynamic variables into the hurl command, refer https://github.com/Orange-OpenSource/hurl/issues?q=sort:updated-desc+is:open+label:%22topic:+generators%22
+  if _HURL_GLOBAL_CONFIG.fixture_vars then
+    for _, fixture in pairs(_HURL_GLOBAL_CONFIG.fixture_vars) do
+      table.insert(opts, '--variable')
+      table.insert(opts, fixture.name .. '=' .. fixture.callback())
+    end
+  end
+
   -- Include the HTTP headers in the output and do not colorize output.
   local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
   response = {}
