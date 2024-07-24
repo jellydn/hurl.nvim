@@ -106,6 +106,9 @@ M.show = function(data, type)
 
   -- Set content to highlight, refer https://github.com/MunifTanjim/nui.nvim/issues/76#issuecomment-1001358770
   vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'filetype', type)
+
+  -- Show the popup after populating the content for alignment
+  layout:show()
 end
 
 M.clear = function()
