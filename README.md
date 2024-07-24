@@ -340,7 +340,7 @@ require('hurl').setup({
     },
   },
 })
-````
+```
 
 Adjust the settings as per your needs to enhance your development experience with `hurl.nvim`.
 
