@@ -1,4 +1,4 @@
-*hurl.nvim.txt*            For NVIM v0.8.0           Last change: 2024 July 24
+*hurl.nvim.txt*            For NVIM v0.8.0           Last change: 2024 July 30
 
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
