@@ -7,6 +7,7 @@ local M = {}
 local response = {}
 local head_state = ''
 local is_running = false
+local start_time = nil
 
 --- Convert from --json flag to same format with other command
 local function convert_headers(headers)
@@ -35,7 +36,7 @@ local on_json_output = function(code, data, event)
 
   local result = vim.json.decode(data[1])
   utils.log_info('hurl: json result ' .. vim.inspect(result))
-  response.time = result.time
+  response.response_time = result.time
 
   -- TODO: It might have more than 1 entry, so we need to handle it
   if
@@ -137,6 +138,7 @@ local function execute_hurl_cmd(opts, callback)
   end
 
   is_running = true
+  start_time = vim.loop.hrtime() -- Capture the start time
   spinner.show()
   head_state = ''
   utils.log_info('hurl: running request')
@@ -216,6 +218,10 @@ local function execute_hurl_cmd(opts, callback)
 
       utils.log_info('hurl: request finished')
       utils.notify('hurl: request finished', vim.log.levels.INFO)
+
+      -- Calculate the response time
+      local end_time = vim.loop.hrtime()
+      response.response_time = (end_time - start_time) / 1e6 -- Convert to milliseconds
 
       if callback then
         return callback(response)
