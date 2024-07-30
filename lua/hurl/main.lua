@@ -4,10 +4,62 @@ local spinner = require('hurl.spinner')
 
 local M = {}
 
--- TODO: Refactor to use --json to run the hurl command
 local response = {}
 local head_state = ''
 local is_running = false
+
+--- Convert from --json flag to same format with other command
+local function convert_headers(headers)
+  local converted_headers = {}
+
+  for _, header in ipairs(headers) do
+    converted_headers[header.name] = header.value
+  end
+
+  return converted_headers
+end
+
+-- NOTE: Check the output with below command
+-- hurl example/dogs.hurl --json | jq
+local on_json_output = function(code, data, event)
+  utils.log_info('hurl: on_output ' .. vim.inspect(code) .. vim.inspect(data) .. vim.inspect(event))
+
+  -- Remove the first element if it is an empty string
+  if data[1] == '' then
+    table.remove(data, 1)
+  end
+  -- If there is no data, return early
+  if not data[1] then
+    return
+  end
+
+  local result = vim.json.decode(data[1])
+  utils.log_info('hurl: json result ' .. vim.inspect(result))
+  response.time = result.time
+
+  -- TODO: It might have more than 1 entry, so we need to handle it
+  if
+    result
+    and result.entries
+    and result.entries[1]
+    and result.entries[1].calls
+    and result.entries[1].calls[1]
+    and result.entries[1].calls[1].response
+  then
+    local converted_headers = convert_headers(result.entries[1].calls[1].response.headers)
+    -- Add the status code and time to the headers
+    converted_headers.status = result.entries[1].calls[1].response.status
+
+    response.headers = converted_headers
+    response.status = result.entries[1].calls[1].response.status
+  end
+
+  response.body = {
+    vim.json.encode({
+      msg = 'The flag --json does not contain the body yet. Refer to https://github.com/Orange-OpenSource/hurl/issues/1907',
+    }),
+  }
+end
 
 --- Output handler
 ---@class Output
@@ -141,8 +193,8 @@ local function execute_hurl_cmd(opts, callback)
   utils.log_info('hurl: running command' .. vim.inspect(cmd))
 
   vim.fn.jobstart(cmd, {
-    on_stdout = callback or on_output,
-    on_stderr = callback or on_output,
+    on_stdout = callback or (is_json_mode and on_json_output or on_output),
+    on_stderr = callback or (is_json_mode and on_json_output or on_output),
     on_exit = function(i, code)
       utils.log_info('exit at ' .. i .. ' , code ' .. code)
       is_running = false
