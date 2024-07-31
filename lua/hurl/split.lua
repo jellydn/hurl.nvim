@@ -44,6 +44,20 @@ M.show = function(data, type)
     end
   end
 
+  -- Add response time as virtual text
+  vim.api.nvim_buf_set_extmark(
+    split.bufnr,
+    vim.api.nvim_create_namespace('response_time_ns'),
+    0,
+    0,
+    {
+      end_line = 1,
+      id = 1,
+      virt_text = { { 'Response: ' .. data.response_time .. ' ms', 'Comment' } },
+      virt_text_pos = 'eol',
+    }
+  )
+
   local content = utils.format(data.body, type)
   if not content then
     utils.log_info('No content')
