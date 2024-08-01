@@ -1,4 +1,4 @@
-*hurl.nvim.txt*            For NVIM v0.8.0           Last change: 2024 July 31
+*hurl.nvim.txt*           For NVIM v0.8.0          Last change: 2024 August 01
 
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
@@ -78,7 +78,7 @@ Add the following configuration to your Neovim setup with lazy.nvim
           },
         },
         -- Default mappings for the response popup or split views
-          mappings = {
+        mappings = {
           close = 'q', -- Close the response popup or split view
           next_panel = '<C-n>', -- Move to the next response popup window
           prev_panel = '<C-p>', -- Move to the previous response popup window
@@ -343,15 +343,12 @@ DEFAULT KEY MAPPINGS                          *hurl.nvim-default-key-mappings*
 
 `hurl.nvim` comes with some default key mappings to streamline your workflow:
 
-- `q`: Close the current popup window or split.
+- `q`: Close the current popup window.
 - `<C-n>`: Switch to the next popup window.
 - `<C-p>`: Switch to the previous popup window.
 
 These key mappings are active within the popup windows that `hurl.nvim`
 displays.
-
-The mappings can be customized in the configuration table passed to the setup
-function.
 
 
 CONFIGURATION                                        *hurl.nvim-configuration*
@@ -405,11 +402,6 @@ CONFIGURATION                                        *hurl.nvim-configuration*
           '-q',
         },
       },
-      mappings = {
-        close = 'q',
-        next_panel = '<C-n>',
-        prev_panel = '<C-p>',
-      },
     }
 <
 
@@ -433,9 +425,6 @@ To apply these configurations, include them in your Neovim setup like this:
           '-i',
           '-q',
         },
-      },
-      mappings = {
-        close = '<C-c>',
       },
     })
 <
