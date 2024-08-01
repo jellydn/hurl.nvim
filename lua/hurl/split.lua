@@ -81,7 +81,7 @@ M.show = function(data, type)
     vim.cmd('q')
     split:unmount()
   end
-  split:map('n', 'q', function()
+  split:map('n', _HURL_GLOBAL_CONFIG.mappings.close, function()
     quit()
   end)
 end

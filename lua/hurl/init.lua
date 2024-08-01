@@ -45,6 +45,12 @@ local default_config = {
       '-q',
     },
   },
+  -- Default mappings for the response popup or split views
+  mappings = {
+    close = 'q', -- Close the response popup or split view
+    next_panel = '<C-n>', -- Move to the next response popup window
+    prev_panel = '<C-p>', -- Move to the previous response popup window
+  },
 }
 --- Global configuration for entire plugin, easy to access from anywhere
 _HURL_GLOBAL_CONFIG = default_config
@@ -60,7 +66,7 @@ function M.setup(options)
     options.env_file = { options.env_file }
   end
 
-  _HURL_GLOBAL_CONFIG = vim.tbl_extend('force', _HURL_GLOBAL_CONFIG, options or default_config)
+  _HURL_GLOBAL_CONFIG = vim.tbl_deep_extend('force', _HURL_GLOBAL_CONFIG, options or default_config)
 
   require('hurl.main').setup()
 end

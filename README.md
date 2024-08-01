@@ -60,6 +60,12 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
         '-q',
       },
     },
+    -- Default mappings for the response popup or split views
+    mappings = {
+      close = 'q', -- Close the response popup or split view
+      next_panel = '<C-n>', -- Move to the next response popup window
+      prev_panel = '<C-p>', -- Move to the previous response popup window
+    },
   },
   keys = {
     -- Run API request
