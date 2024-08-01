@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.7.0](https://github.com/jellydn/hurl.nvim/compare/v1.6.0...v1.7.0) (2024-08-01)
+
+### Features
+
+- add response time calculation to hurl requests ([9cd1fd0](https://github.com/jellydn/hurl.nvim/commit/9cd1fd09c0619df91cd65c71f866fcc2a9050d6e))
+- **hurl.nvim:** add support for fixture variables ([993c640](https://github.com/jellydn/hurl.nvim/commit/993c640f3282686699e8fc50d6aef2b5a45531aa))
+- show response time on virtual text ([043a7de](https://github.com/jellydn/hurl.nvim/commit/043a7de69afe698d37795e7c9f157cf0630f6d20)), closes [#153](https://github.com/jellydn/hurl.nvim/issues/153)
+- support --json flag for display response time ([f5874ea](https://github.com/jellydn/hurl.nvim/commit/f5874ea4cd7d6a40d4f97bedab0f84ac770e7b51))
+
+### Bug Fixes
+
+- **popup:** show popup after content population for proper alignment ([809891e](https://github.com/jellydn/hurl.nvim/commit/809891ee248fea594699e1dfdf195c7a23ab9259))
+
 ## [1.6.0](https://github.com/jellydn/hurl.nvim/compare/v1.5.2...v1.6.0) (2024-07-11)
 
 ### Features
