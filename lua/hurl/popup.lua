@@ -62,25 +62,25 @@ M.show = function(data, type)
   end
 
   -- Map q to quit
-  popups.top:map('n', 'q', function()
+  popups.top:map('n', _HURL_GLOBAL_CONFIG.mappings.close, function()
     quit()
   end)
-  popups.bottom:map('n', 'q', function()
+  popups.bottom:map('n', _HURL_GLOBAL_CONFIG.mappings.close, function()
     quit()
   end)
 
   -- Map <Ctr-n> to next popup
-  popups.top:map('n', '<C-n>', function()
+  popups.top:map('n', _HURL_GLOBAL_CONFIG.mappings.next_panel, function()
     vim.api.nvim_set_current_win(popups.bottom.winid)
   end)
-  popups.bottom:map('n', '<C-n>', function()
+  popups.bottom:map('n', _HURL_GLOBAL_CONFIG.mappings.next_panel, function()
     vim.api.nvim_set_current_win(popups.top.winid)
   end)
   -- Map <Ctr-p> to previous popup
-  popups.top:map('n', '<C-p>', function()
+  popups.top:map('n', _HURL_GLOBAL_CONFIG.mappings.prev_panel, function()
     vim.api.nvim_set_current_win(popups.bottom.winid)
   end)
-  popups.bottom:map('n', '<C-p>', function()
+  popups.bottom:map('n', _HURL_GLOBAL_CONFIG.mappings.prev_panel, function()
     vim.api.nvim_set_current_win(popups.top.winid)
   end)
 
