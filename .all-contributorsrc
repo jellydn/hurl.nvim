@@ -77,6 +77,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/11479916?v=4",
       "profile": "https://javoscript.com/",
       "contributions": ["code"]
+    },
+    {
+      "login": "yngwi",
+      "name": "Daniel Jeller",
+      "avatar_url": "https://avatars.githubusercontent.com/u/963440?v=4",
+      "profile": "https://gitlab.nettek.at/explore",
+      "contributions": ["code", "doc"]
     }
   ],
   "contributorsPerLine": 7,
