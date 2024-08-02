@@ -36,7 +36,6 @@ M.show = function(data, type)
     -- unmount component when buffer is closed
     split:on(event.BufLeave, function()
       quit()
-      -- split:unmount()
     end)
   end
 
