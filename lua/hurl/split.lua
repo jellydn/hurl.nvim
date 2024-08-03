@@ -17,6 +17,12 @@ local M = {}
 ---   - headers table
 ---@param type 'json' | 'html' | 'xml' | 'text'
 M.show = function(data, type)
+  local function quit()
+    -- set buffer name to empty string so it wouldn't conflict when next time buffer opened
+    vim.api.nvim_buf_set_name(split.bufnr, '')
+    vim.cmd('q')
+    split:unmount()
+  end
   -- mount/open the component
   split:mount()
 
@@ -29,7 +35,7 @@ M.show = function(data, type)
   if _HURL_GLOBAL_CONFIG.auto_close then
     -- unmount component when buffer is closed
     split:on(event.BufLeave, function()
-      split:unmount()
+      quit()
     end)
   end
 
@@ -75,12 +81,6 @@ M.show = function(data, type)
     vim.api.nvim_feedkeys('zx', 'n', true)
   end, 200)
 
-  local function quit()
-    -- set buffer name to empty string so it wouldn't conflict when next time buffer opened
-    vim.api.nvim_buf_set_name(split.bufnr, '')
-    vim.cmd('q')
-    split:unmount()
-  end
   split:map('n', _HURL_GLOBAL_CONFIG.mappings.close, function()
     quit()
   end)
