@@ -18,8 +18,6 @@ local M = {}
 ---@param type 'json' | 'html' | 'xml' | 'text'
 M.show = function(data, type)
   local function quit()
-    -- set buffer name to empty string so it wouldn't conflict when next time buffer opened
-    vim.api.nvim_buf_set_name(split.bufnr, '')
     vim.cmd('q')
     split:unmount()
   end
@@ -29,8 +27,6 @@ M.show = function(data, type)
   -- Create a custom filetype so that we can use https://github.com/folke/edgy.nvim to manage the window
   -- E.g: { title = "Hurl Nvim", ft = "hurl-nvim" },
   vim.bo[split.bufnr].filetype = 'hurl-nvim'
-
-  vim.api.nvim_buf_set_name(split.bufnr, 'hurl-response')
 
   if _HURL_GLOBAL_CONFIG.auto_close then
     -- unmount component when buffer is closed
