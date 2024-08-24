@@ -2,11 +2,10 @@
 
 ## [1.7.1](https://github.com/jellydn/hurl.nvim/compare/v1.7.0...v1.7.1) (2024-08-24)
 
-
 ### Bug Fixes
 
-* error when closing the result buffer and trying to reopen it ([#188](https://github.com/jellydn/hurl.nvim/issues/188)) ([ddce6f8](https://github.com/jellydn/hurl.nvim/commit/ddce6f8496cc01465cf2ce2b17733e38e422d2d8))
-* **split:** remove redundant buffer name setting ([88dd2ff](https://github.com/jellydn/hurl.nvim/commit/88dd2ffdf40e2778e9277dcb167224bf1447a5da))
+- error when closing the result buffer and trying to reopen it ([#188](https://github.com/jellydn/hurl.nvim/issues/188)) ([ddce6f8](https://github.com/jellydn/hurl.nvim/commit/ddce6f8496cc01465cf2ce2b17733e38e422d2d8))
+- **split:** remove redundant buffer name setting ([88dd2ff](https://github.com/jellydn/hurl.nvim/commit/88dd2ffdf40e2778e9277dcb167224bf1447a5da))
 
 ## [1.7.0](https://github.com/jellydn/hurl.nvim/compare/v1.6.0...v1.7.0) (2024-08-01)
 
