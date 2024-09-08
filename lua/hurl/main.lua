@@ -146,6 +146,8 @@ local function execute_hurl_cmd(opts, callback)
 
   local is_verbose_mode = vim.tbl_contains(opts, '--verbose')
   local is_json_mode = vim.tbl_contains(opts, '--json')
+  local is_file_mode = utils.has_file_in_opts(opts)
+
   if
     not _HURL_GLOBAL_CONFIG.auto_close
     and not is_verbose_mode
@@ -190,6 +192,10 @@ local function execute_hurl_cmd(opts, callback)
 
   -- Include the HTTP headers in the output and do not colorize output.
   local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
+  if is_file_mode then
+    local cwd = vim.fn.getcwd()
+    vim.list_extend(cmd, { '--file-root', cwd })
+  end
   response = {}
 
   utils.log_info('hurl: running command' .. vim.inspect(cmd))
