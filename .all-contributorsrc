@@ -84,6 +84,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/963440?v=4",
       "profile": "https://gitlab.nettek.at/explore",
       "contributions": ["code", "doc"]
+    },
+    {
+      "login": "Xouzoura",
+      "name": "Xouzoura",
+      "avatar_url": "https://avatars.githubusercontent.com/u/74069598?v=4",
+      "profile": "https://github.com/Xouzoura",
+      "contributions": ["code"]
     }
   ],
   "contributorsPerLine": 7,
