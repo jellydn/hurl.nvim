@@ -193,8 +193,8 @@ local function execute_hurl_cmd(opts, callback)
   -- Include the HTTP headers in the output and do not colorize output.
   local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
   if is_file_mode then
-    local cwd = vim.fn.getcwd()
-    vim.list_extend(cmd, { '--file-root', cwd })
+    local file_root = _HURL_GLOBAL_CONFIG.file_root or vim.fn.getcwd()
+    vim.list_extend(cmd, { '--file-root', file_root })
   end
   response = {}
 

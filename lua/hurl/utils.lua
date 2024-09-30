@@ -288,7 +288,7 @@ util.find_env_files_in_folders = function()
 end
 util.has_file_in_opts = function(opts)
   if #opts == 0 then
-    print('Error: No file path provided in opts.')
+    vim.notify('Error: No file path provided in opts.', vim.log.levels.ERROR)
     return false
   end
 
