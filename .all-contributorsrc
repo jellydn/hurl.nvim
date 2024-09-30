@@ -3,7 +3,9 @@
   "projectOwner": "jellydn",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "files": ["README.md"],
+  "files": [
+    "README.md"
+  ],
   "imageSize": 100,
   "commit": true,
   "commitConvention": "angular",
@@ -13,77 +15,114 @@
       "name": "Dung Duc Huynh (Kaka)",
       "avatar_url": "https://avatars.githubusercontent.com/u/870029?v=4",
       "profile": "https://productsway.com/",
-      "contributions": ["code", "doc"]
+      "contributions": [
+        "code",
+        "doc"
+      ]
     },
     {
       "login": "cenk1cenk2",
       "name": "Cenk Kılıç",
       "avatar_url": "https://avatars.githubusercontent.com/u/26881592?v=4",
       "profile": "https://cenk.kilic.dev/",
-      "contributions": ["code", "doc"]
+      "contributions": [
+        "code",
+        "doc"
+      ]
     },
     {
       "login": "andrevdm",
       "name": "Andre Van Der Merwe",
       "avatar_url": "https://avatars.githubusercontent.com/u/74154?v=4",
       "profile": "http://www.andrevdm.com",
-      "contributions": ["code"]
+      "contributions": [
+        "code"
+      ]
     },
     {
       "login": "skoch13",
       "name": "Sergey Kochetkov",
       "avatar_url": "https://avatars.githubusercontent.com/u/29177689?v=4",
       "profile": "https://github.com/skoch13",
-      "contributions": ["doc", "code"]
+      "contributions": [
+        "doc",
+        "code"
+      ]
     },
     {
       "login": "rbingham",
       "name": "rbingham",
       "avatar_url": "https://avatars.githubusercontent.com/u/7032804?v=4",
       "profile": "https://github.com/rbingham",
-      "contributions": ["code"]
+      "contributions": [
+        "code"
+      ]
     },
     {
       "login": "hsanson",
       "name": "Horacio Sanson",
       "avatar_url": "https://avatars.githubusercontent.com/u/900716?v=4",
       "profile": "http://www.allm.net",
-      "contributions": ["code", "doc"]
+      "contributions": [
+        "code",
+        "doc"
+      ]
     },
     {
       "login": "bytedaring",
       "name": "xiwang",
       "avatar_url": "https://avatars.githubusercontent.com/u/4506063?v=4",
       "profile": "https://github.com/bytedaring",
-      "contributions": ["code", "doc"]
+      "contributions": [
+        "code",
+        "doc"
+      ]
     },
     {
       "login": "wenjinnn",
       "name": "wenjin",
       "avatar_url": "https://avatars.githubusercontent.com/u/30885216?v=4",
       "profile": "https://github.com/wenjinnn",
-      "contributions": ["code"]
+      "contributions": [
+        "code"
+      ]
     },
     {
       "login": "agriffis",
       "name": "Aron Griffis",
       "avatar_url": "https://avatars.githubusercontent.com/u/50637?v=4",
       "profile": "https://arongriffis.com",
-      "contributions": ["code"]
+      "contributions": [
+        "code"
+      ]
     },
     {
       "login": "javoscript",
       "name": "Javier Ugarte",
       "avatar_url": "https://avatars.githubusercontent.com/u/11479916?v=4",
       "profile": "https://javoscript.com/",
-      "contributions": ["code"]
+      "contributions": [
+        "code"
+      ]
     },
     {
       "login": "yngwi",
       "name": "Daniel Jeller",
       "avatar_url": "https://avatars.githubusercontent.com/u/963440?v=4",
       "profile": "https://gitlab.nettek.at/explore",
-      "contributions": ["code", "doc"]
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "Xouzoura",
+      "name": "Xouzoura",
+      "avatar_url": "https://avatars.githubusercontent.com/u/74069598?v=4",
+      "profile": "https://github.com/Xouzoura",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
