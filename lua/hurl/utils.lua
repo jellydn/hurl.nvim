@@ -286,5 +286,30 @@ util.find_env_files_in_folders = function()
 
   return env_files
 end
+util.has_file_in_opts = function(opts)
+  if #opts == 0 then
+    vim.notify('No file path provided in opts.', vim.log.levels.DEBUG)
+    return false
+  end
+
+  local file_path = opts[1]
+
+  local file = io.open(file_path, 'r')
+  if not file then
+    print('Error: Failed to open file: ' .. file_path)
+    return false
+  end
+
+  for line in file:lines() do
+    if line:lower():find('file') or line:lower():find('multipart') then
+      file:close() -- Close the file before returning
+      return true -- Return true if any line contains the keyword
+    end
+  end
+
+  file:close()
+
+  return false
+end
 
 return util
