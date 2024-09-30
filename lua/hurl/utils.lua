@@ -288,7 +288,7 @@ util.find_env_files_in_folders = function()
 end
 util.has_file_in_opts = function(opts)
   if #opts == 0 then
-    vim.notify('No file path provided in opts.', vim.log.levels.DEBUG)
+    util.log_error('No file path provided in opts.')
     return false
   end
 
@@ -296,7 +296,8 @@ util.has_file_in_opts = function(opts)
 
   local file = io.open(file_path, 'r')
   if not file then
-    print('Error: Failed to open file: ' .. file_path)
+    util.log_error('Error: Failed to open file: ' .. file_path)
+    vim.notify('Error: Failed to open file: ' .. file_path, vim.log.levels.ERROR)
     return false
   end
 
