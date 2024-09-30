@@ -501,7 +501,7 @@ CONTRIBUTORS ✨                                  *hurl.nvim-contributors-✨*
 Thanks goes to these wonderful people (emoji key
 <https://allcontributors.org/docs/en/emoji-key>):
 
-Dung Duc Huynh (Kaka)💻 📖Cenk Kılıç💻 📖Andre Van Der Merwe💻Sergey Kochetkov📖 💻rbingham💻Horacio Sanson💻 📖xiwang💻 📖wenjin💻Aron Griffis💻Javier Ugarte💻Daniel Jeller💻 📖
+Dung Duc Huynh (Kaka)💻 📖Cenk Kılıç💻 📖Andre Van Der Merwe💻Sergey Kochetkov📖 💻rbingham💻Horacio Sanson💻 📖xiwang💻 📖wenjin💻Aron Griffis💻Javier Ugarte💻Daniel Jeller💻 📖Xouzoura💻
 Add your contributions
 This project follows the all-contributors
 <https://github.com/all-contributors/all-contributors> specification.
@@ -510,7 +510,7 @@ Contributions of any kind welcome!
 ==============================================================================
 1. Links                                                     *hurl.nvim-links*
 
-1. *All Contributors*: https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square
+1. *All Contributors*: https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square
 2. *IT Man - Effortless APIs with Hurl.nvim: A Developer’s Guide to Neovim Tooling [Vietnamese]*: https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg
 3. *Show in split mode*: https://i.gyazo.com/19492e8b5366cec3f22d5fd97a63f37a.gif
 4. *Run a file in popup mode*: https://i.gyazo.com/e554e81788aad910848ff991c9369d7b.gif
