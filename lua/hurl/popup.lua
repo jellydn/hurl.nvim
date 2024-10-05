@@ -83,7 +83,9 @@ M.show = function(data, type)
   popups.bottom:map('n', _HURL_GLOBAL_CONFIG.mappings.prev_panel, function()
     vim.api.nvim_set_current_win(popups.top.winid)
   end)
-
+  if data.url then
+    data.headers['url'] = data.url
+  end
   -- Add headers to the top
   local headers_table = utils.render_header_table(data.headers)
   -- Hide header block if empty headers
@@ -95,7 +97,6 @@ M.show = function(data, type)
     end
   end
 
-  -- Add response time as virtual text
   vim.api.nvim_buf_set_extmark(
     popups.top.bufnr,
     vim.api.nvim_create_namespace('response_time_ns'),
@@ -104,7 +105,7 @@ M.show = function(data, type)
     {
       end_line = 1,
       id = 1,
-      virt_text = { { 'Response: ' .. data.response_time .. ' ms', 'Comment' } },
+      virt_text = { { 'Responsezz: ' .. data.response_time .. ' ms', 'Comment' } },
       virt_text_pos = 'eol',
     }
   )

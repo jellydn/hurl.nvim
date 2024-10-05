@@ -126,11 +126,15 @@ local on_output = function(code, data, event)
   end
 end
 
+local last_request_opts = nil
 --- Call hurl command
 ---@param opts table The options
 ---@param callback? function The callback function
 local function execute_hurl_cmd(opts, callback)
   -- Check if a request is currently running
+
+  last_request_opts = opts
+
   if is_running then
     utils.log_info('hurl: request is already running')
     utils.notify('hurl: request is running. Please try again later.', vim.log.levels.INFO)
@@ -200,6 +204,10 @@ local function execute_hurl_cmd(opts, callback)
 
   utils.log_info('hurl: running command' .. vim.inspect(cmd))
 
+  local url = utils.get_url_from_hurl_file(opts[1])
+  url = utils.convert_url_to_proper_format(opts, url)
+
+  response.url = url
   vim.fn.jobstart(cmd, {
     on_stdout = callback or (is_json_mode and on_json_output or on_output),
     on_stderr = callback or (is_json_mode and on_json_output or on_output),
@@ -297,6 +305,7 @@ local function run_lines(lines, opts, callback)
   -- Clean up the temporary file after a delay
   local timeout = 1000
   vim.defer_fn(function()
+    last_request_opts = vim.deepcopy(lines)
     local success = os.remove(fname)
     if not success then
       utils.log_info('hurl: remove file failed ' .. fname)
@@ -577,6 +586,17 @@ function M.setup()
   utils.create_cmd('HurlShowLastResponse', function()
     local history = require('hurl.history')
     history.show(response)
+  end, {
+    nargs = '*',
+    range = true,
+  })
+
+  utils.create_cmd('HurlRerun', function()
+    if last_request_opts then
+      run_lines(last_request_opts, {})
+    else
+      utils.log_info('No last request to re-run')
+    end
   end, {
     nargs = '*',
     range = true,

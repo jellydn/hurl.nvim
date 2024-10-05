@@ -312,5 +312,80 @@ util.has_file_in_opts = function(opts)
 
   return false
 end
+-- Function to extract the URL from the .hurl file
+util.get_url_from_hurl_file = function(file_path)
+  local url = nil
+  local file = io.open(file_path, 'r')
 
+  if file then
+    for line in file:lines() do
+      line = line:gsub('^%s*(.-)%s*$', '%1')
+      line = line:gsub('%s+', ' ')
+      -- NOTE: somehow i can not make regex work here
+      local matchcase = string.find(line, 'GET ')
+        or string.find(line, 'POST ')
+        or string.find(line, 'PUT ')
+        or string.find(line, 'DELETE ')
+        or string.find(line, 'PATCH ')
+      if matchcase then
+        return line
+      end
+    end
+    file:close()
+  else
+    util.log_info('Could not open file: ' .. file_path)
+  end
+
+  return url
+end
+
+util.convert_url_to_proper_format = function(opts, url)
+  -- Assuming `url` is defined earlier in the code
+  if url and url:find('{{') then -- Check if url contains '{{'
+    local env_file
+
+    -- Find the environment file in the opts that ends with .env
+    for _, opt in ipairs(opts) do
+      if opt:match('%.env$') then -- Check if the option ends with .env
+        env_file = opt
+        break -- Exit the loop once the first .env file is found
+      end
+    end
+    if env_file then
+      -- Read the environment file and get the variables
+      local env_vars = {}
+      local file = io.open(env_file, 'r')
+
+      if not file then
+        util.log_error('Could not open environment file: ' .. env_file)
+      else
+        -- Read each line of the file
+        for line in file:lines() do
+          -- Skip empty lines and comments
+          line = line:match('^%s*(.-)%s*$') -- Trim whitespace
+          if line ~= '' and not line:match('^#') then
+            local key, value = line:match('^(%S+)%s*=%s*(.+)$') -- Match key=value
+            if key and value then
+              -- Trim quotes from value, if present
+              value = value:gsub('^"%s*', ''):gsub('"%s*$', ''):gsub("^'%s*", ''):gsub("'%s*$", '')
+              env_vars[key] = value
+            end
+          end
+        end
+        file:close()
+      end
+
+      for key, value in pairs(env_vars) do
+        if url:find('{{' .. key .. '}}') then
+          url = url:gsub('{{' .. key .. '}}', value)
+        end
+      end
+    else
+      util.log_error('No environment file found in opts.')
+    end
+    -- Load environment variables from the found env_file
+  end
+
+  return url
+end
 return util
