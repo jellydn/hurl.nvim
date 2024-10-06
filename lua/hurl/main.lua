@@ -204,10 +204,14 @@ local function execute_hurl_cmd(opts, callback)
 
   utils.log_info('hurl: running command' .. vim.inspect(cmd))
 
-  local url = utils.get_url_from_hurl_file(opts[1])
-  url = utils.convert_url_to_proper_format(opts, url)
+  if _HURL_GLOBAL_CONFIG.url.show then
+    local url = utils.get_url_from_hurl_file(opts[1])
+    if _HURL_GLOBAL_CONFIG.url.format_without_params then
+      url = utils.convert_url_to_proper_format(opts, url)
+    end
+    response.url = url
+  end
 
-  response.url = url
   vim.fn.jobstart(cmd, {
     on_stdout = callback or (is_json_mode and on_json_output or on_output),
     on_stderr = callback or (is_json_mode and on_json_output or on_output),

@@ -5,6 +5,10 @@ local default_config = {
   mode = 'split',
   show_notification = false,
   auto_close = true,
+  url = {
+    show = true,
+    format_without_params = true,
+  },
   -- Default split options
   split_position = 'right',
   split_size = '50%',
