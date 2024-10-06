@@ -105,7 +105,7 @@ M.show = function(data, type)
     {
       end_line = 1,
       id = 1,
-      virt_text = { { 'Responsezz: ' .. data.response_time .. ' ms', 'Comment' } },
+      virt_text = { { 'Response: ' .. data.response_time .. ' ms', 'Comment' } },
       virt_text_pos = 'eol',
     }
   )
