@@ -34,7 +34,9 @@ M.show = function(data, type)
       quit()
     end)
   end
-
+  if data.url then
+    data.headers['url'] = data.url
+  end
   -- Add headers to the top
   local headers_table = utils.render_header_table(data.headers)
   -- Hide header block if empty headers
