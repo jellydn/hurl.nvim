@@ -328,6 +328,7 @@ util.get_url_from_hurl_file = function(file_path)
         or string.find(line, 'DELETE ')
         or string.find(line, 'PATCH ')
       if matchcase then
+        file:close()
         return line
       end
     end
