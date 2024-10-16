@@ -321,13 +321,8 @@ util.get_url_from_hurl_file = function(file_path)
     for line in file:lines() do
       line = line:gsub('^%s*(.-)%s*$', '%1')
       line = line:gsub('%s+', ' ')
-      -- NOTE: somehow i can not make regex work here
-      local matchcase = string.find(line, 'GET ')
-        or string.find(line, 'POST ')
-        or string.find(line, 'PUT ')
-        or string.find(line, 'DELETE ')
-        or string.find(line, 'PATCH ')
-      if matchcase then
+      local method = line:match('^(%u+)%s')
+      if method and method:match('^(GET|POST|PUT|DELETE|PATCH)$') then
         file:close()
         return line
       end
