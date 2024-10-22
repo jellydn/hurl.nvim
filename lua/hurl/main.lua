@@ -581,6 +581,24 @@ function M.setup()
     nargs = '*',
     range = true,
   })
+
+  -- Run from current line/entry to end of file
+  utils.create_cmd('HurlRunnerToEnd', function(opts)
+    local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
+    local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
+      or http.find_http_verb_positions_in_buffer()
+    if result.current > 0 and result.start_line and result.end_line then
+      utils.log_info(
+        'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
+      )
+      opts.fargs = opts.fargs or {}
+      local end_line = vim.api.nvim_buf_line_count(0)
+      run_at_lines(result.start_line, end_line, opts.fargs)
+    else
+      utils.log_info('hurl: no HTTP method found in the current line')
+      utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+    end
+  end, { nargs = '*', range = true })
 end
 
 return M
