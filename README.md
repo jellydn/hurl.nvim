@@ -72,6 +72,7 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
     { "<leader>A", "<cmd>HurlRunner<CR>", desc = "Run All requests" },
     { "<leader>a", "<cmd>HurlRunnerAt<CR>", desc = "Run Api request" },
     { "<leader>te", "<cmd>HurlRunnerToEntry<CR>", desc = "Run Api request to entry" },
+    { "<leader>tE", "<cmd>HurlRunnerToEnd<CR>", desc = "Run Api request from current entry to end" },
     { "<leader>tm", "<cmd>HurlToggleMode<CR>", desc = "Hurl Toggle Mode" },
     { "<leader>tv", "<cmd>HurlVerbose<CR>", desc = "Run Api in verbose mode" },
     -- Run Hurl request in visual mode
@@ -209,6 +210,10 @@ Place your cursor on the line you want to run to that entry and press `<leader>t
 [![Run to entry in split mode](https://i.gyazo.com/14d47adbfcab9e945f89e020b83328a9.gif)](https://gyazo.com/14d47adbfcab9e945f89e020b83328a9)
 
 Note: it's running from start of file to the selected entry and ignore the remaining of the file. It is useful for debugging purposes.
+
+### Run from current entry to end
+
+Similar to `HurlRunnerToEntry`, we could run from current entry to end of file with `HurlRunnerToEnd` command.
 
 ### Toggle Mode
 
