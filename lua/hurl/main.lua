@@ -1,6 +1,7 @@
 local utils = require('hurl.utils')
 local http = require('hurl.http_utils')
 local spinner = require('hurl.spinner')
+local codelens = require('hurl.codelens')
 
 local M = {}
 
@@ -338,6 +339,14 @@ local function run_at_lines(start_line, end_line, opts, callback)
 end
 
 function M.setup()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local filetype = vim.api.nvim_buf_get_option(bufnr, 'filetype')
+  -- Only setup codelens if the filetype is 'hurl'
+  if filetype == 'hurl' then
+    -- Add virtual text for Hurl entries
+    codelens.add_virtual_text_for_hurl_entries()
+  end
+
   -- Run request for a range of lines or the entire file
   utils.create_cmd('HurlRunner', function(opts)
     if opts.range ~= 0 then
