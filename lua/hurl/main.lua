@@ -1,6 +1,7 @@
 local utils = require('hurl.utils')
 local http = require('hurl.http_utils')
 local spinner = require('hurl.spinner')
+local hurl_runner = require('hurl.lib.hurl_runner')
 local codelens = require('hurl.codelens')
 
 local M = {}
@@ -607,6 +608,30 @@ function M.setup()
       utils.log_info('hurl: no HTTP method found in the current line')
       utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
     end
+  end, { nargs = '*', range = true })
+
+  -- Run Hurl in very verbose mode
+  utils.create_cmd('HurlVeryVerbose', function(opts)
+    local filePath = vim.fn.expand('%:p') -- Get the current file path
+    local fromEntry = opts.fargs[1] and tonumber(opts.fargs[1]) or nil
+    local toEntry = opts.fargs[2] and tonumber(opts.fargs[2]) or nil
+
+    -- Detect the current entry if fromEntry and toEntry are not provided
+    if not fromEntry or not toEntry then
+      local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
+      local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
+        or http.find_http_verb_positions_in_buffer()
+      if result.current > 0 then
+        fromEntry = result.current
+        toEntry = result.current
+      else
+        utils.log_info('hurl: no HTTP method found in the current line')
+        utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+        return
+      end
+    end
+
+    hurl_runner.run_hurl_in_very_verbose(filePath, fromEntry, toEntry)
   end, { nargs = '*', range = true })
 end
 
