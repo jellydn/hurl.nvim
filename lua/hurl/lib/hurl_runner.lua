@@ -74,7 +74,13 @@ function M.run_hurl_verbose(filePath, fromEntry, toEntry, isVeryVerbose)
   vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
 
   -- Set a buffer-local keymap to close the buffer with 'q'
-  vim.api.nvim_buf_set_keymap(buf, 'n', 'q', ':bd<CR>', { noremap = true, silent = true })
+  vim.api.nvim_buf_set_keymap(
+    buf,
+    'n',
+    _HURL_GLOBAL_CONFIG.mappings.close,
+    ':bd<CR>',
+    { noremap = true, silent = true }
+  )
 
   -- Function to append lines to the buffer
   local function append_to_buffer(lines)
