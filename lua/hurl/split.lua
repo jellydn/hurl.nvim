@@ -11,14 +11,14 @@ local utils = require('hurl.utils')
 
 local M = {}
 
--- Show content in a popup
+-- Show content in a split
 ---@param data table
 ---   - body string
 ---   - headers table
 ---@param type 'json' | 'html' | 'xml' | 'text'
 M.show = function(data, type)
   local function quit()
-    vim.cmd('q')
+    vim.cmd(_HURL_GLOBAL_CONFIG.mappings.close)
     split:unmount()
   end
   -- mount/open the component
@@ -35,44 +35,42 @@ M.show = function(data, type)
     end)
   end
 
-  -- Add headers to the top
-  local headers_table = utils.render_header_table(data.headers)
-  -- Hide header block if empty headers
-  if headers_table.line == 0 then
-    utils.log_info('no headers')
-  else
-    if headers_table.line > 0 then
-      vim.api.nvim_buf_set_lines(split.bufnr, 0, 1, false, headers_table.headers)
-    end
+  local output_lines = {}
+
+  -- Add headers
+  table.insert(output_lines, '# Headers')
+  table.insert(output_lines, '')
+  for key, value in pairs(data.headers) do
+    table.insert(output_lines, '- **' .. key .. '**: ' .. value)
   end
 
-  -- Add response time as virtual text
-  vim.api.nvim_buf_set_extmark(
-    split.bufnr,
-    vim.api.nvim_create_namespace('response_time_ns'),
-    0,
-    0,
-    {
-      end_line = 1,
-      id = 1,
-      virt_text = { { 'Response: ' .. data.response_time .. ' ms', 'Comment' } },
-      virt_text_pos = 'eol',
-    }
-  )
+  -- Add response time
+  table.insert(output_lines, '')
+  table.insert(output_lines, '**Response Time**: ' .. data.response_time .. ' ms')
+  table.insert(output_lines, '')
 
+  -- Add body
+  table.insert(output_lines, '# Body')
+  table.insert(output_lines, '')
+  table.insert(output_lines, '```' .. type)
   local content = utils.format(data.body, type)
-  if not content then
-    utils.log_info('No content')
-    return
+  if content then
+    for _, line in ipairs(content) do
+      table.insert(output_lines, line)
+    end
+  else
+    table.insert(output_lines, 'No content')
   end
+  table.insert(output_lines, '```')
 
-  -- Add content to the bottom
-  vim.api.nvim_buf_set_lines(split.bufnr, headers_table.line, -1, false, content)
+  -- Set content
+  vim.api.nvim_buf_set_lines(split.bufnr, 0, -1, false, output_lines)
 
   -- Set content to highlight, refer https://github.com/MunifTanjim/nui.nvim/issues/76#issuecomment-1001358770
   -- After 200ms, the highlight will be applied
   vim.defer_fn(function()
-    vim.bo[split.bufnr].filetype = type
+    -- Set filetype to markdown
+    vim.api.nvim_buf_set_option(split.bufnr, 'filetype', 'markdown')
     -- recomputing foldlevel, this is needed if we setup foldexpr
     vim.api.nvim_feedkeys('zx', 'n', true)
   end, 200)

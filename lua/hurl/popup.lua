@@ -5,15 +5,17 @@ local Layout = require('nui.layout')
 local utils = require('hurl.utils')
 
 local M = {}
+
 local popups = {
-  bottom = Popup({
+  body = Popup({
     border = 'single',
     enter = true,
-    buf_options = { filetype = 'json' },
+    buf_options = { filetype = 'markdown' },
   }),
-  top = Popup({
-    border = { style = 'rounded' },
-    buf_options = { filetype = 'bash' },
+  info = Popup({
+    border = 'single',
+    enter = true,
+    buf_options = { filetype = 'markdown' },
   }),
 }
 
@@ -24,10 +26,8 @@ local layout = Layout(
     size = _HURL_GLOBAL_CONFIG.popup_size,
   },
   Layout.Box({
-    Layout.Box(popups.top, { size = {
-      height = '20%',
-    } }),
-    Layout.Box(popups.bottom, { grow = 1 }),
+    Layout.Box(popups.info, { size = '30%' }),
+    Layout.Box(popups.body, { grow = 1 }),
   }, { dir = 'col' })
 )
 
@@ -43,96 +43,90 @@ M.show = function(data, type)
   if _HURL_GLOBAL_CONFIG.auto_close then
     for _, popup in pairs(popups) do
       popup:on(event.BufLeave, function()
-        vim.schedule(function()
-          local current_buffer = vim.api.nvim_get_current_buf()
-          for _, p in pairs(popups) do
-            if p.bufnr == current_buffer then
-              return
-            end
-          end
-          layout:unmount()
-        end)
+        layout:unmount()
       end)
     end
   end
 
   local function quit()
-    vim.cmd('q')
+    vim.cmd(_HURL_GLOBAL_CONFIG.mappings.close)
     layout:unmount()
   end
 
-  -- Map q to quit
-  popups.top:map('n', _HURL_GLOBAL_CONFIG.mappings.close, function()
-    quit()
-  end)
-  popups.bottom:map('n', _HURL_GLOBAL_CONFIG.mappings.close, function()
-    quit()
-  end)
+  -- Map q to quit for both popups
+  for _, popup in pairs(popups) do
+    popup:map('n', _HURL_GLOBAL_CONFIG.mappings.close, function()
+      quit()
+    end)
+  end
 
   -- Map <Ctr-n> to next popup
-  popups.top:map('n', _HURL_GLOBAL_CONFIG.mappings.next_panel, function()
-    vim.api.nvim_set_current_win(popups.bottom.winid)
+  popups.body:map('n', _HURL_GLOBAL_CONFIG.mappings.next_panel, function()
+    vim.api.nvim_set_current_win(popups.info.winid)
   end)
-  popups.bottom:map('n', _HURL_GLOBAL_CONFIG.mappings.next_panel, function()
-    vim.api.nvim_set_current_win(popups.top.winid)
+  popups.info:map('n', _HURL_GLOBAL_CONFIG.mappings.next_panel, function()
+    vim.api.nvim_set_current_win(popups.body.winid)
   end)
   -- Map <Ctr-p> to previous popup
-  popups.top:map('n', _HURL_GLOBAL_CONFIG.mappings.prev_panel, function()
-    vim.api.nvim_set_current_win(popups.bottom.winid)
+  popups.body:map('n', _HURL_GLOBAL_CONFIG.mappings.prev_panel, function()
+    vim.api.nvim_set_current_win(popups.info.winid)
   end)
-  popups.bottom:map('n', _HURL_GLOBAL_CONFIG.mappings.prev_panel, function()
-    vim.api.nvim_set_current_win(popups.top.winid)
+  popups.info:map('n', _HURL_GLOBAL_CONFIG.mappings.prev_panel, function()
+    vim.api.nvim_set_current_win(popups.body.winid)
   end)
+  -- Info popup content
+  local info_lines = {}
 
-  -- Add headers to the top
-  local headers_table = utils.render_header_table(data.headers)
-  -- Hide header block if empty headers
-  if headers_table.line == 0 then
-    vim.api.nvim_win_close(popups.top.winid, true)
-  else
-    if headers_table.line > 0 then
-      vim.api.nvim_buf_set_lines(popups.top.bufnr, 0, 1, false, headers_table.headers)
-    end
+  -- Add headers
+  table.insert(info_lines, '# Headers')
+  table.insert(info_lines, '')
+  for key, value in pairs(data.headers) do
+    table.insert(info_lines, '- **' .. key .. '**: ' .. value)
   end
 
-  -- Add response time as virtual text
-  vim.api.nvim_buf_set_extmark(
-    popups.top.bufnr,
-    vim.api.nvim_create_namespace('response_time_ns'),
-    0,
-    0,
-    {
-      end_line = 1,
-      id = 1,
-      virt_text = { { 'Response: ' .. data.response_time .. ' ms', 'Comment' } },
-      virt_text_pos = 'eol',
-    }
-  )
+  -- Add response time
+  table.insert(info_lines, '')
+  table.insert(info_lines, '**Response Time**: ' .. data.response_time .. ' ms')
 
+  -- Set info content
+  vim.api.nvim_buf_set_lines(popups.info.bufnr, 0, -1, false, info_lines)
+
+  -- Body popup content
+  local body_lines = {}
+
+  -- Add body
+  table.insert(body_lines, '# Body')
+  table.insert(body_lines, '')
+  table.insert(body_lines, '```' .. type)
   local content = utils.format(data.body, type)
-  if not content then
-    utils.log_info('No content')
-    return
+  if content then
+    for _, line in ipairs(content) do
+      table.insert(body_lines, line)
+    end
+  else
+    table.insert(body_lines, 'No content')
   end
+  table.insert(body_lines, '```')
 
-  -- Add content to the bottom
-  vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, content)
-
-  -- Set content to highlight, refer https://github.com/MunifTanjim/nui.nvim/issues/76#issuecomment-1001358770
-  vim.api.nvim_buf_set_option(popups.bottom.bufnr, 'filetype', type)
+  -- Set body content
+  vim.api.nvim_buf_set_lines(popups.body.bufnr, 0, -1, false, body_lines)
 
   -- Show the popup after populating the content for alignment
   layout:show()
+
+  -- Set cursor to the body popup
+  vim.api.nvim_set_current_win(popups.body.winid)
 end
 
 M.clear = function()
   -- Check if popup is open
-  if not popups.bottom.winid then
+  if not layout.winid then
     return
   end
   -- Clear the buffer and adding `Processing...` message
-  vim.api.nvim_buf_set_lines(popups.top.bufnr, 0, -1, false, { 'Processing...' })
-  vim.api.nvim_buf_set_lines(popups.bottom.bufnr, 0, -1, false, { 'Processing...' })
+  for _, popup in pairs(popups) do
+    vim.api.nvim_buf_set_lines(popup.bufnr, 0, -1, false, { 'Processing...' })
+  end
 end
 
 --- Show text in a popup
@@ -156,8 +150,8 @@ M.show_text = function(title, lines, bottom)
     },
     position = '50%',
     size = {
-      width = '50%',
-      height = '50%',
+      width = '90%',
+      height = '90%',
     },
   })
 
