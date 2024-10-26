@@ -64,6 +64,19 @@ function M.run_hurl_verbose(filePath, fromEntry, toEntry, isVeryVerbose)
     end
   end
 
+  -- Inject fixture variables into the command
+  if _HURL_GLOBAL_CONFIG.fixture_vars then
+    for _, fixture in pairs(_HURL_GLOBAL_CONFIG.fixture_vars) do
+      table.insert(args, '--variable')
+      table.insert(args, fixture.name .. '=' .. fixture.callback())
+    end
+  end
+
+  -- Add file root for uploads
+  local file_root = _HURL_GLOBAL_CONFIG.file_root or vim.fn.getcwd()
+  table.insert(args, '--file-root')
+  table.insert(args, file_root)
+
   local stdout_data = ''
   local stderr_data = ''
 
