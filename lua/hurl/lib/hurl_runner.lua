@@ -26,13 +26,14 @@ local function pretty_print_body(body, content_type)
   end
 end
 
---- Run the hurl command in very verbose mode
+--- Run the hurl command in verbose or very verbose mode
 ---@param filePath string
 ---@param fromEntry integer
 ---@param toEntry integer
-function M.run_hurl_in_very_verbose(filePath, fromEntry, toEntry)
+---@param isVeryVerbose boolean
+function M.run_hurl_verbose(filePath, fromEntry, toEntry, isVeryVerbose)
   local args = { filePath }
-  table.insert(args, '--very-verbose')
+  table.insert(args, isVeryVerbose and '--very-verbose' or '--verbose')
   if fromEntry then
     table.insert(args, '--from-entry')
     table.insert(args, tostring(fromEntry))
@@ -82,7 +83,6 @@ function M.run_hurl_in_very_verbose(filePath, fromEntry, toEntry)
 
   -- Show the command being run in the buffer
   local command_str = 'hurl ' .. table.concat(args, ' ')
-  -- Show in shell command in the buffer
   append_to_buffer({ '```sh', command_str, '```' })
 
   -- Show the spinner
@@ -110,12 +110,10 @@ function M.run_hurl_in_very_verbose(filePath, fromEntry, toEntry)
 
       if code ~= 0 then
         utils.log_info('Hurl command failed with code ' .. code)
-        -- Show only the error message
         append_to_buffer({ '# Error', stderr_data })
         return
       end
 
-      -- Log the success message
       utils.log_info('Hurl command executed successfully')
 
       -- Reset the buffer
@@ -200,8 +198,6 @@ function M.run_hurl_in_very_verbose(filePath, fromEntry, toEntry)
 
       -- Append the formatted output to the buffer
       append_to_buffer(output_lines)
-
-      -- TODO: Toggle folding when clicking on a section or use keybindings
     end,
   })
 end
