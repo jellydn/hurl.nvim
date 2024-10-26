@@ -173,7 +173,7 @@ function M.run_hurl_in_very_verbose(filePath, fromEntry, toEntry)
         end
 
         -- Only show captures if there are any
-        if #entry.captures > 0 then
+        if entry.captures then
           table.insert(output_lines, '')
           table.insert(output_lines, '### Captures:')
           for key, value in pairs(entry.captures) do

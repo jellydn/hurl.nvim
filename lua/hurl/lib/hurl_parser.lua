@@ -76,25 +76,24 @@ function M.parse_hurl_output(stderr, stdout)
           currentEntry.response.headers[trim(key)] = trim(value)
         end
       end
+    elseif line:find('^%* Response body:') then
+      -- Skip the response body section
     elseif line:find('^%* Timings:') then
       isTimings = true
-    elseif isTimings and trim(line) ~= '' then
-      local cleanedLine = line:find('^%* ') and line:sub(3) or line
-      local key, value = cleanedLine:match('([^:]+):%s*(.+)')
+      isCaptures = false
+    elseif line:find('^%* Captures:') then
+      isTimings = false
+      isCaptures = true
+    elseif isTimings and line:find('^%* ') then
+      local key, value = line:sub(3):match('([^:]+):%s*(.+)')
       if currentEntry and key and value then
         currentEntry.timings[key] = value
       end
-    elseif isTimings and trim(line) == '' then
-      isTimings = false
-    elseif line:find('^%* Captures:') then
-      isCaptures = true
-    elseif isCaptures and trim(line) ~= '' then
-      local key, value = line:match('^%* ([^:]+):%s*(.+)')
+    elseif isCaptures and line:find('^%* ') then
+      local key, value = line:sub(3):match('([^:]+):%s*(.+)')
       if currentEntry and key and value then
         currentEntry.captures[key] = value
       end
-    elseif isCaptures and trim(line) == '' then
-      isCaptures = false
     end
   end
 
