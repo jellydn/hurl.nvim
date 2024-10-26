@@ -75,6 +75,7 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
     { "<leader>tE", "<cmd>HurlRunnerToEnd<CR>", desc = "Run Api request from current entry to end" },
     { "<leader>tm", "<cmd>HurlToggleMode<CR>", desc = "Hurl Toggle Mode" },
     { "<leader>tv", "<cmd>HurlVerbose<CR>", desc = "Run Api in verbose mode" },
+    { "<leader>tV", "<cmd>HurlVeryVerbose<CR>", desc = "Run Api in very verbose mode" },
     -- Run Hurl request in visual mode
     { "<leader>h", ":HurlRunner<CR>", desc = "Hurl Runner", mode = "v" },
   },
@@ -200,9 +201,9 @@ Place your cursor on a HURL entry and press `<leader>a` or run `HurlRunnerAt` co
 
 #### Verbose mode
 
-Run `HurlVerbose` command to execute the request in verbose mode. The response will be displayed in QuickFix window. This is useful for debugging purposes or getting the curl command from hurl file.
+Run `HurlVerbose` command to execute the request in verbose mode.
 
-[![Run at current line in verbose mode](https://i.gyazo.com/7d0f709e2db53f8c9e05655347f11bc9.gif)](https://gyazo.com/7d0f709e2db53f8c9e05655347f11bc9)
+[![Run in verbose mode](https://i.gyazo.com/6136ea63c0a3d0e1293e1fd2c724973a.gif)](https://gyazo.com/6136ea63c0a3d0e1293e1fd2c724973a)
 
 ### Run to entry
 
