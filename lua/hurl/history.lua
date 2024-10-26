@@ -1,38 +1,56 @@
 local utils = require('hurl.utils')
 local M = {}
 
---- Show the last request in the history
----@param response table
-M.show = function(response)
-  local container = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
-  if not response.headers then
-    -- Do not show anything if there is no response
+-- Store the last 10 responses
+local response_history = {}
+local max_history_size = 10
+
+-- Add a response to the history
+local function add_to_history(response)
+  table.insert(response_history, 1, response)
+  if #response_history > max_history_size then
+    table.remove(response_history)
+  end
+end
+
+-- Show the last response
+function M.show_last_response()
+  if #response_history == 0 then
+    utils.notify('No response history available', vim.log.levels.INFO)
     return
   end
 
-  local content_type = response.headers['content-type']
-    or response.headers['Content-Type']
-    or response.headers['Content-type']
-    or 'unknown'
+  local last_response = response_history[1]
+  local display = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
 
-  utils.log_info('Detected content type: ' .. content_type)
-  if response.headers['content-length'] == '0' then
-    utils.log_info('hurl: empty response')
-    utils.notify('hurl: empty response', vim.log.levels.INFO)
-  end
-  if utils.is_json_response(content_type) then
-    container.show(response, 'json')
+  display.show(last_response, last_response.display_type or 'text')
+end
+
+-- Function to be called after each successful request
+function M.update_history(response)
+  -- Ensure response_time is a number
+  response.response_time = tonumber(response.response_time) or '-'
+
+  -- Determine the content type and set display_type
+  local content_type = response.headers['Content-Type']
+    or response.headers['content-type']
+    or 'text/plain'
+
+  if content_type:find('json') then
+    response.display_type = 'json'
+  elseif content_type:find('html') then
+    response.display_type = 'html'
+  elseif content_type:find('xml') then
+    response.display_type = 'xml'
   else
-    if utils.is_html_response(content_type) then
-      container.show(response, 'html')
-    else
-      if utils.is_xml_response(content_type) then
-        container.show(response, 'xml')
-      else
-        container.show(response, 'text')
-      end
-    end
+    response.display_type = 'text'
   end
+
+  add_to_history(response)
+end
+
+function M.get_last_response()
+  return response_history[1]
 end
 
 return M

@@ -8,6 +8,7 @@ local split = Split({
 })
 
 local utils = require('hurl.utils')
+local spinner = require('hurl.spinner')
 
 local M = {}
 
@@ -15,7 +16,7 @@ local M = {}
 ---@param data table
 ---   - body string
 ---   - headers table
----@param type 'json' | 'html' | 'xml' | 'text'
+---@param type 'json' | 'html' | 'xml' | 'text' | 'markdown'
 M.show = function(data, type)
   local function quit()
     vim.cmd(_HURL_GLOBAL_CONFIG.mappings.close)
@@ -24,9 +25,9 @@ M.show = function(data, type)
   -- mount/open the component
   split:mount()
 
-  -- Create a custom filetype so that we can use https://github.com/folke/edgy.nvim to manage the window
-  -- E.g: { title = "Hurl Nvim", ft = "hurl-nvim" },
-  vim.bo[split.bufnr].filetype = 'hurl-nvim'
+  -- Set a custom filetype for window management, but use markdown for syntax highlighting
+  vim.api.nvim_buf_set_option(split.bufnr, 'filetype', 'markdown')
+  vim.api.nvim_buf_set_var(split.bufnr, 'hurl_nvim_buffer', true)
 
   if _HURL_GLOBAL_CONFIG.auto_close then
     -- unmount component when buffer is closed
@@ -37,43 +38,72 @@ M.show = function(data, type)
 
   local output_lines = {}
 
-  -- Add headers
-  table.insert(output_lines, '# Headers')
-  table.insert(output_lines, '')
-  for key, value in pairs(data.headers) do
-    table.insert(output_lines, '- **' .. key .. '**: ' .. value)
-  end
-
-  -- Add response time
-  table.insert(output_lines, '')
-  table.insert(output_lines, '**Response Time**: ' .. data.response_time .. ' ms')
-  table.insert(output_lines, '')
-
-  -- Add body
-  table.insert(output_lines, '# Body')
-  table.insert(output_lines, '')
-  table.insert(output_lines, '```' .. type)
-  local content = utils.format(data.body, type)
-  if content then
-    for _, line in ipairs(content) do
-      table.insert(output_lines, line)
-    end
+  if type == 'markdown' then
+    -- For markdown, we just use the body as-is
+    output_lines = vim.split(data.body, '\n')
   else
-    table.insert(output_lines, 'No content')
+    -- Add request information
+    table.insert(output_lines, '# Request')
+    table.insert(output_lines, '')
+    table.insert(output_lines, string.format('**Method**: %s', data.method or 'N/A'))
+    table.insert(output_lines, string.format('**URL**: %s', data.url or 'N/A'))
+    table.insert(output_lines, string.format('**Status**: %s', data.status or 'N/A'))
+    table.insert(output_lines, '')
+
+    -- Add curl command
+    table.insert(output_lines, '# Curl Command')
+    table.insert(output_lines, '')
+    table.insert(output_lines, '```bash')
+    table.insert(output_lines, data.curl_command or 'N/A')
+    table.insert(output_lines, '```')
+    table.insert(output_lines, '')
+
+    -- Add headers
+    table.insert(output_lines, '# Headers')
+    table.insert(output_lines, '')
+    if data.headers then
+      for key, value in pairs(data.headers) do
+        table.insert(output_lines, string.format('- **%s**: %s', key, value))
+      end
+    else
+      table.insert(output_lines, 'No headers available')
+    end
+
+    -- Add response time
+    table.insert(output_lines, '')
+    local response_time = tonumber(data.response_time) or 0
+    table.insert(output_lines, string.format('**Response Time**: %.2f ms', response_time))
+    table.insert(output_lines, '')
+
+    -- Add body
+    table.insert(output_lines, '# Body')
+    table.insert(output_lines, '')
+    table.insert(output_lines, '```' .. type)
+    local content = utils.format(data.body, type)
+    if content then
+      for _, line in ipairs(content) do
+        table.insert(output_lines, line)
+      end
+    else
+      table.insert(output_lines, 'No content')
+    end
+    table.insert(output_lines, '```')
   end
-  table.insert(output_lines, '```')
 
   -- Set content
   vim.api.nvim_buf_set_lines(split.bufnr, 0, -1, false, output_lines)
 
-  -- Set content to highlight, refer https://github.com/MunifTanjim/nui.nvim/issues/76#issuecomment-1001358770
-  -- After 200ms, the highlight will be applied
+  -- Set content to highlight and configure folding
   vim.defer_fn(function()
-    -- Set filetype to markdown
+    -- Disable TreeSitter-based folding for this buffer
+    vim.api.nvim_buf_set_option(split.bufnr, 'foldmethod', 'manual')
+
+    -- Set filetype to markdown for syntax highlighting
     vim.api.nvim_buf_set_option(split.bufnr, 'filetype', 'markdown')
-    -- recomputing foldlevel, this is needed if we setup foldexpr
-    vim.api.nvim_feedkeys('zx', 'n', true)
-  end, 200)
+
+    -- Refresh folding
+    vim.cmd('normal! zx')
+  end, 0)
 
   split:map('n', _HURL_GLOBAL_CONFIG.mappings.close, function()
     quit()
@@ -86,8 +116,16 @@ M.clear = function()
     return
   end
 
-  -- Clear the buffer and adding `Processing...` message
-  vim.api.nvim_buf_set_lines(split.bufnr, 0, -1, false, { 'Processing...' })
+  -- Clear the buffer and add `Processing...` message with the current Hurl command
+  vim.api.nvim_buf_set_lines(split.bufnr, 0, -1, false, {
+    'Processing...',
+    '',
+    '# Hurl Command',
+    '',
+    '```sh',
+    _HURL_GLOBAL_CONFIG.last_hurl_command or 'N/A',
+    '```',
+  })
 end
 
 return M

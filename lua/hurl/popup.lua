@@ -3,6 +3,7 @@ local event = require('nui.utils.autocmd').event
 local Layout = require('nui.layout')
 
 local utils = require('hurl.utils')
+local spinner = require('hurl.spinner')
 
 local M = {}
 
@@ -77,16 +78,32 @@ M.show = function(data, type)
   -- Info popup content
   local info_lines = {}
 
+  -- Add request information
+  table.insert(info_lines, '# Request')
+  table.insert(info_lines, '')
+  table.insert(info_lines, string.format('**Method**: %s', data.method))
+  table.insert(info_lines, string.format('**URL**: %s', data.url))
+  table.insert(info_lines, string.format('**Status**: %s', data.status))
+  table.insert(info_lines, '')
+
+  -- Add curl command
+  table.insert(info_lines, '# Curl Command')
+  table.insert(info_lines, '')
+  table.insert(info_lines, '```bash')
+  table.insert(info_lines, data.curl_command or 'N/A')
+  table.insert(info_lines, '```')
+  table.insert(info_lines, '')
+
   -- Add headers
   table.insert(info_lines, '# Headers')
   table.insert(info_lines, '')
   for key, value in pairs(data.headers) do
-    table.insert(info_lines, '- **' .. key .. '**: ' .. value)
+    table.insert(info_lines, string.format('- **%s**: %s', key, value))
   end
 
   -- Add response time
   table.insert(info_lines, '')
-  table.insert(info_lines, '**Response Time**: ' .. data.response_time .. ' ms')
+  table.insert(info_lines, string.format('**Response Time**: %.2f ms', data.response_time))
 
   -- Set info content
   vim.api.nvim_buf_set_lines(popups.info.bufnr, 0, -1, false, info_lines)
@@ -123,9 +140,12 @@ M.clear = function()
   if not layout.winid then
     return
   end
-  -- Clear the buffer and adding `Processing...` message
+  -- Clear the buffer and add `Processing...` message with spinner and Hurl command
   for _, popup in pairs(popups) do
-    vim.api.nvim_buf_set_lines(popup.bufnr, 0, -1, false, { 'Processing...' })
+    vim.api.nvim_buf_set_lines(popup.bufnr, 0, -1, false, {
+      'Processing... ' .. spinner.get_spinner(),
+      _HURL_GLOBAL_CONFIG.last_hurl_command or 'N/A',
+    })
   end
 end
 
