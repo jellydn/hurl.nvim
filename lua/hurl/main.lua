@@ -15,11 +15,15 @@ local function run_current_file(opts)
   hurl_runner.execute_hurl_cmd(opts)
 end
 
--- Create a temporary file with the lines to run
----@param lines string[]
+-- Run selection
 ---@param opts table The options
----@param callback? function The callback function
-local function run_lines(lines, opts, callback)
+local function run_selection(opts)
+  opts = opts or {}
+  local lines = utils.get_visual_selection()
+  if not lines then
+    return
+  end
+
   -- Create a temporary file with the lines to run
   local fname = utils.create_tmp_file(lines)
   if not fname then
@@ -30,7 +34,7 @@ local function run_lines(lines, opts, callback)
 
   -- Add the temporary file to the arguments
   table.insert(opts, fname)
-  hurl_runner.execute_hurl_cmd(opts, callback)
+  hurl_runner.execute_hurl_cmd(opts)
 
   -- Clean up the temporary file after a delay
   local timeout = 1000
@@ -45,34 +49,27 @@ local function run_lines(lines, opts, callback)
   end, timeout)
 end
 
--- Run selection
----@param opts table The options
-local function run_selection(opts)
-  opts = opts or {}
-  local lines = utils.get_visual_selection()
-  if not lines then
-    return
-  end
-
-  run_lines(lines, opts)
-end
-
 -- Run at current line
 ---@param start_line number
----@param end_line number
+---@param end_line number|nil
 ---@param opts table
 ---@param callback? function
 local function run_at_lines(start_line, end_line, opts, callback)
   opts = opts or {}
-  -- Get the lines from the buffer
-  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+  local file_path = vim.fn.expand('%:p')
 
-  if not lines or vim.tbl_isempty(lines) then
-    utils.notify('hurl: no lines to run', vim.log.levels.WARN)
-    return
+  -- Insert the file path first
+  table.insert(opts, file_path)
+
+  -- Then add the --from-entry and --to-entry options
+  table.insert(opts, '--from-entry')
+  table.insert(opts, tostring(start_line))
+  if end_line then
+    table.insert(opts, '--to-entry')
+    table.insert(opts, tostring(end_line))
   end
 
-  run_lines(lines, opts, callback)
+  hurl_runner.execute_hurl_cmd(opts, callback)
 end
 
 -- Helper function to run verbose commands in split mode
@@ -115,7 +112,7 @@ function M.setup()
       utils.log_info(
         'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
       )
-      run_at_lines(result.start_line, result.end_line, opts.fargs)
+      run_at_lines(result.current, result.current, opts.fargs)
     else
       utils.log_info('hurl: not HTTP method found in the current line' .. result.start_line)
       utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
@@ -129,7 +126,7 @@ function M.setup()
       or http.find_http_verb_positions_in_buffer()
     utils.log_info('hurl: running request to entry #' .. vim.inspect(result))
     if result.current > 0 then
-      run_at_lines(1, result.end_line, opts.fargs)
+      run_at_lines(1, result.current, opts.fargs)
     else
       utils.log_info('hurl: not HTTP method found in the current line' .. result.end_line)
       utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
@@ -336,13 +333,10 @@ function M.setup()
     local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
     local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
       or http.find_http_verb_positions_in_buffer()
-    if result.current > 0 and result.start_line and result.end_line then
-      utils.log_info(
-        'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
-      )
+    if result.current > 0 then
+      utils.log_info('hurl: running request from entry ' .. result.current .. ' to end')
       opts.fargs = opts.fargs or {}
-      local end_line = vim.api.nvim_buf_line_count(0)
-      run_at_lines(result.start_line, end_line, opts.fargs)
+      run_at_lines(result.current, nil, opts.fargs)
     else
       utils.log_info('hurl: no HTTP method found in the current line')
       utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)

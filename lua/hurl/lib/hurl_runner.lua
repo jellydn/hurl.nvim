@@ -7,11 +7,10 @@ local M = {}
 M.is_running = false
 M.start_time = nil
 M.response = {}
-M.head_state = ''
 
 --- Log the Hurl command
 ---@param cmd table
-local function log_hurl_command(cmd)
+local function save_last_hurl_command(cmd)
   local command_str = table.concat(cmd, ' ')
   _HURL_GLOBAL_CONFIG.last_hurl_command = command_str
   utils.log_info('hurl: running command: ' .. command_str)
@@ -91,7 +90,7 @@ function M.run_hurl_verbose(filePath, fromEntry, toEntry, isVeryVerbose, additio
 
   -- Log the Hurl command
   local hurl_command = 'hurl ' .. table.concat(args, ' ')
-  log_hurl_command({ 'hurl', unpack(args) })
+  save_last_hurl_command({ 'hurl', unpack(args) })
 
   -- Always use split mode for verbose commands
   local display = require('hurl.split')
@@ -237,7 +236,6 @@ function M.execute_hurl_cmd(opts, callback)
   M.is_running = true
   M.start_time = vim.loop.hrtime() -- Capture the start time
   spinner.show()
-  M.head_state = ''
   utils.log_info('hurl: running request')
   utils.notify('hurl: running request', vim.log.levels.INFO)
 
@@ -245,7 +243,7 @@ function M.execute_hurl_cmd(opts, callback)
   local is_file_mode = utils.has_file_in_opts(opts)
 
   -- Add verbose mode by default if not in JSON mode
-  if not is_json_mode then
+  if not is_json_mode and not vim.tbl_contains(opts, '--verbose') then
     table.insert(opts, '--verbose')
   end
 
@@ -286,7 +284,7 @@ function M.execute_hurl_cmd(opts, callback)
   end
   M.response = {}
 
-  log_hurl_command(cmd)
+  save_last_hurl_command(cmd)
 
   -- Clear the display and show processing message with Hurl command
   local display = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
@@ -317,7 +315,7 @@ function M.execute_hurl_cmd(opts, callback)
         utils.notify('Hurl command failed. Check the split view for details.', vim.log.levels.ERROR)
 
         -- Show error in split view
-        local display = require('hurl.split')
+        local split = require('hurl.split')
         local error_data = {
           body = '# Hurl Error\n\n```sh\n' .. stderr_data .. '\n```',
           headers = {},
@@ -327,7 +325,7 @@ function M.execute_hurl_cmd(opts, callback)
           response_time = 0,
           curl_command = 'N/A',
         }
-        display.show(error_data, 'markdown')
+        split.show(error_data, 'markdown')
         return
       end
 
@@ -349,7 +347,7 @@ function M.execute_hurl_cmd(opts, callback)
         local result = hurl_parser.parse_hurl_output(stderr_data, stdout_data)
 
         -- Display the result using popup or split based on the configuration
-        local display = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
+        local container = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
 
         -- Prepare the data for display
         local last_entry = result.entries[#result.entries]
@@ -394,7 +392,7 @@ function M.execute_hurl_cmd(opts, callback)
 
         display_data.display_type = display_type
 
-        display.show(display_data, display_type)
+        container.show(display_data, display_type)
 
         history.update_history(display_data)
 
