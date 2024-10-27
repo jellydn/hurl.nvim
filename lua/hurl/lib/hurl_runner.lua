@@ -22,8 +22,12 @@ local function save_captures_as_globals(captures)
   if _HURL_GLOBAL_CONFIG.save_captures_as_globals and captures then
     for key, value in pairs(captures) do
       _HURL_GLOBAL_CONFIG.global_vars = _HURL_GLOBAL_CONFIG.global_vars or {}
-      _HURL_GLOBAL_CONFIG.global_vars[key] = value
-      utils.log_info(string.format('hurl: saved capture %s = %s as global variable', key, value))
+      -- Wrap the value in quotes if it contains spaces
+      local formatted_value = value:find('%s') and ('"' .. value .. '"') or value
+      _HURL_GLOBAL_CONFIG.global_vars[key] = formatted_value
+      utils.log_info(
+        string.format('hurl: saved capture %s = %s as global variable', key, formatted_value)
+      )
     end
   end
 end
@@ -265,7 +269,12 @@ function M.execute_hurl_cmd(opts, callback)
   if _HURL_GLOBAL_CONFIG.global_vars then
     for var_name, var_value in pairs(_HURL_GLOBAL_CONFIG.global_vars) do
       table.insert(opts, '--variable')
-      table.insert(opts, var_name .. '=' .. var_value)
+      -- If the value is wrapped in quotes, we need to escape it properly
+      if var_value:sub(1, 1) == '"' and var_value:sub(-1) == '"' then
+        table.insert(opts, var_name .. '=' .. var_value:gsub('"', '\\"'))
+      else
+        table.insert(opts, var_name .. '=' .. var_value)
+      end
     end
   end
 
