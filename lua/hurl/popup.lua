@@ -43,7 +43,15 @@ M.show = function(data, type)
   if _HURL_GLOBAL_CONFIG.auto_close then
     for _, popup in pairs(popups) do
       popup:on(event.BufLeave, function()
-        layout:unmount()
+        vim.schedule(function()
+          local current_buffer = vim.api.nvim_get_current_buf()
+          for _, p in pairs(popups) do
+            if p.bufnr == current_buffer then
+              return
+            end
+          end
+          layout:unmount()
+        end)
       end)
     end
   end
