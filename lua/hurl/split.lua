@@ -5,10 +5,10 @@ local split = Split({
   relative = 'editor',
   position = _HURL_GLOBAL_CONFIG.split_position,
   size = _HURL_GLOBAL_CONFIG.split_size,
+  buf_options = { filetype = 'markdown' },
 })
 
 local utils = require('hurl.utils')
-local spinner = require('hurl.spinner')
 
 local M = {}
 
@@ -24,10 +24,6 @@ M.show = function(data, type)
   end
   -- mount/open the component
   split:mount()
-
-  -- Set a custom filetype for window management, but use markdown for syntax highlighting
-  vim.api.nvim_buf_set_option(split.bufnr, 'filetype', 'markdown')
-  vim.api.nvim_buf_set_var(split.bufnr, 'hurl_nvim_buffer', true)
 
   if _HURL_GLOBAL_CONFIG.auto_close then
     -- unmount component when buffer is closed
@@ -92,18 +88,6 @@ M.show = function(data, type)
 
   -- Set content
   vim.api.nvim_buf_set_lines(split.bufnr, 0, -1, false, output_lines)
-
-  -- Set content to highlight and configure folding
-  vim.defer_fn(function()
-    -- Disable TreeSitter-based folding for this buffer
-    vim.api.nvim_buf_set_option(split.bufnr, 'foldmethod', 'manual')
-
-    -- Set filetype to markdown for syntax highlighting
-    vim.api.nvim_buf_set_option(split.bufnr, 'filetype', 'markdown')
-
-    -- Refresh folding
-    vim.cmd('normal! zx')
-  end, 0)
 
   split:map('n', _HURL_GLOBAL_CONFIG.mappings.close, function()
     quit()

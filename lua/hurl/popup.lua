@@ -3,7 +3,6 @@ local event = require('nui.utils.autocmd').event
 local Layout = require('nui.layout')
 
 local utils = require('hurl.utils')
-local spinner = require('hurl.spinner')
 
 local M = {}
 
@@ -143,7 +142,7 @@ M.clear = function()
   -- Clear the buffer and add `Processing...` message with spinner and Hurl command
   for _, popup in pairs(popups) do
     vim.api.nvim_buf_set_lines(popup.bufnr, 0, -1, false, {
-      'Processing... ' .. spinner.get_spinner(),
+      'Processing... ',
       _HURL_GLOBAL_CONFIG.last_hurl_command or 'N/A',
     })
   end
