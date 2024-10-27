@@ -49,6 +49,10 @@ local function run_selection(opts)
   end, timeout)
 end
 
+-- Store the last used from_entry and to_entry
+local last_from_entry
+local last_to_entry
+
 -- Run at current line
 ---@param start_line number
 ---@param end_line number|nil
@@ -68,6 +72,10 @@ local function run_at_lines(start_line, end_line, opts, callback)
     table.insert(opts, '--to-entry')
     table.insert(opts, tostring(end_line))
   end
+
+  -- Store the last used from_entry and to_entry
+  last_from_entry = start_line
+  last_to_entry = end_line
 
   hurl_runner.execute_hurl_cmd(opts, callback)
 end
@@ -342,6 +350,38 @@ function M.setup()
       utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
     end
   end, { nargs = '*', range = true })
+
+  -- Re-run last Hurl command
+  utils.create_cmd('HurlRerun', function()
+    if last_from_entry then
+      utils.log_info(
+        string.format(
+          'hurl: re-running last command from entry %d to %s',
+          last_from_entry,
+          last_to_entry or 'end'
+        )
+      )
+      utils.notify('hurl: re-running last command', vim.log.levels.INFO)
+
+      local opts = {}
+      local file_path = vim.fn.expand('%:p')
+
+      -- Reconstruct the command with the stored from_entry and to_entry
+      table.insert(opts, file_path)
+      table.insert(opts, '--from-entry')
+      table.insert(opts, tostring(last_from_entry))
+      if last_to_entry then
+        table.insert(opts, '--to-entry')
+        table.insert(opts, tostring(last_to_entry))
+      end
+
+      -- Execute the command
+      hurl_runner.execute_hurl_cmd(opts)
+    else
+      utils.log_info('hurl: no previous command to re-run')
+      utils.notify('hurl: no previous command to re-run', vim.log.levels.WARN)
+    end
+  end, { nargs = 0 })
 end
 
 return M
