@@ -31,7 +31,22 @@ M.check = function()
     )
   end
 
-  -- TODO: Add check for hurl version, e.g: > 4.3.0 to use new features
+  -- Check for hurl version > 4.3.0
+  local hurl_version_output = vim.fn.system('hurl --version')
+  local hurl_version = hurl_version_output:match('%d+%.%d+%.%d+')
+
+  if hurl_version then
+    local major, minor, patch = hurl_version:match('(%d+)%.(%d+)%.(%d+)')
+    major, minor, patch = tonumber(major), tonumber(minor), tonumber(patch)
+
+    if major > 4 or (major == 4 and (minor > 3 or (minor == 3 and patch > 0))) then
+      ok('hurl version > 4.3.0 found')
+    else
+      error('hurl version <= 4.3.0 found')
+    end
+  else
+    error('Unable to determine hurl version')
+  end
 
   ok('hurl.nvim: All good!')
 end

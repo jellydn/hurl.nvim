@@ -1,6 +1,5 @@
 local utils = require('hurl.utils')
 local http = require('hurl.http_utils')
-local spinner = require('hurl.spinner')
 local hurl_runner = require('hurl.lib.hurl_runner')
 local codelens = require('hurl.codelens')
 
