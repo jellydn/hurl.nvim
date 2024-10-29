@@ -2,16 +2,14 @@
 
 ## [1.8.0](https://github.com/jellydn/hurl.nvim/compare/v1.7.1...v1.8.0) (2024-10-29)
 
-
 ### Features
 
-* add new command to from current entry to end ([3b81a31](https://github.com/jellydn/hurl.nvim/commit/3b81a317516e683213c1e1eb7c14b4b1b6deb0b8))
-* **config:** add file_root directory configuration option ([c502953](https://github.com/jellydn/hurl.nvim/commit/c502953b531de04c19fcb8003d8eb18718b6a61e)), closes [#195](https://github.com/jellydn/hurl.nvim/issues/195)
-
+- add new command to from current entry to end ([3b81a31](https://github.com/jellydn/hurl.nvim/commit/3b81a317516e683213c1e1eb7c14b4b1b6deb0b8))
+- **config:** add file_root directory configuration option ([c502953](https://github.com/jellydn/hurl.nvim/commit/c502953b531de04c19fcb8003d8eb18718b6a61e)), closes [#195](https://github.com/jellydn/hurl.nvim/issues/195)
 
 ### Bug Fixes
 
-* **utils:** improve error logging and notifications ([807b6ff](https://github.com/jellydn/hurl.nvim/commit/807b6ff480626d91ec46ca86092b530082c7400c))
+- **utils:** improve error logging and notifications ([807b6ff](https://github.com/jellydn/hurl.nvim/commit/807b6ff480626d91ec46ca86092b530082c7400c))
 
 ## [1.7.1](https://github.com/jellydn/hurl.nvim/compare/v1.7.0...v1.7.1) (2024-08-24)
 
