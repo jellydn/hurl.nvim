@@ -86,7 +86,7 @@ end
 
 function M.setup()
   -- Show virtual text for Hurl entries
-  codelens.add_virtual_text_for_hurl_entries()
+  codelens.setup()
 
   -- Run request for a range of lines or the entire file
   utils.create_cmd('HurlRunner', function(opts)
