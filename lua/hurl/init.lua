@@ -53,6 +53,8 @@ local default_config = {
   },
   -- File root directory for uploading files
   -- file_root = vim.fn.getcwd(),
+  -- Save capture as global variable
+  save_captures_as_globals = true,
 }
 --- Global configuration for entire plugin, easy to access from anywhere
 _HURL_GLOBAL_CONFIG = default_config

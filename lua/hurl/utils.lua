@@ -1,17 +1,17 @@
 local log = require('hurl.vlog')
 local git = require('hurl.git_utils')
 
-local util = {}
+local M = {}
 
 --- Get the log file path
 ---@return string
-util.get_log_file_path = function()
+M.get_log_file_path = function()
   return log.get_log_file()
 end
 
 --- Log info
 ---@vararg any
-util.log_info = function(...)
+M.log_info = function(...)
   -- Only save log when debug is on
   if not _HURL_GLOBAL_CONFIG.debug then
     return
@@ -22,7 +22,7 @@ end
 
 --- Log error
 ---@vararg any
-util.log_error = function(...)
+M.log_error = function(...)
   -- Only save log when debug is on
   if not _HURL_GLOBAL_CONFIG.debug then
     return
@@ -33,7 +33,7 @@ end
 
 --- Show info notification
 ---@vararg any
-util.notify = function(...)
+M.notify = function(...)
   --  Ignore if the flag is off
   if not _HURL_GLOBAL_CONFIG.show_notification then
     return
@@ -44,7 +44,7 @@ end
 
 --- Get visual selection
 ---@return string[]
-util.get_visual_selection = function()
+M.get_visual_selection = function()
   local s_start = vim.fn.getpos("'<")
   local s_end = vim.fn.getpos("'>")
   local n_lines = math.abs(s_end[2] - s_start[2]) + 1
@@ -61,7 +61,7 @@ end
 --- Create tmp file
 ---@param content any
 ---@return string|nil
-util.create_tmp_file = function(content)
+M.create_tmp_file = function(content)
   -- create temp file base on pid and datetime
   local tmp_file = string.format(
     '%s/%s.hurl',
@@ -70,8 +70,8 @@ util.create_tmp_file = function(content)
   )
 
   if not tmp_file then
-    util.lor_error('hurl: failed to create tmp file')
-    util.notify('hurl: failed to create tmp file', vim.log.levels.ERROR)
+    M.lor_error('hurl: failed to create tmp file')
+    M.notify('hurl: failed to create tmp file', vim.log.levels.ERROR)
     return
   end
 
@@ -94,7 +94,7 @@ end
 ---@param cmd string The command name
 ---@param func function The function to execute
 ---@param opt table The options
-util.create_cmd = function(cmd, func, opt)
+M.create_cmd = function(cmd, func, opt)
   opt = vim.tbl_extend('force', { desc = 'hurl.nvim ' .. cmd }, opt or {})
   vim.api.nvim_create_user_command(cmd, func, opt)
 end
@@ -103,7 +103,7 @@ end
 ---@param body string
 ---@param type 'json' | 'html' | 'xml' | 'text'
 ---@return string[] | nil
-util.format = function(body, type)
+M.format = function(body, type)
   local formatters = _HURL_GLOBAL_CONFIG.formatters
     or {
       json = { 'jq' },
@@ -116,72 +116,26 @@ util.format = function(body, type)
     return vim.split(body, '\n')
   end
 
-  util.log_info('formatting body with ' .. type)
+  M.log_info('formatting body with ' .. type)
   local stdout = vim.fn.systemlist(formatters[type], body)
   if vim.v.shell_error ~= 0 then
-    util.log_error('formatter failed' .. vim.v.shell_error)
-    util.notify('formatter failed' .. vim.v.shell_error, vim.log.levels.ERROR)
+    M.log_error('formatter failed' .. vim.v.shell_error)
+    M.notify('formatter failed' .. vim.v.shell_error, vim.log.levels.ERROR)
     return vim.split(body, '\n')
   end
 
   if stdout == nil or #stdout == 0 then
-    util.log_info('formatter returned empty body')
+    M.log_info('formatter returned empty body')
     return vim.split(body, '\n')
   end
 
-  util.log_info('formatted body: ' .. table.concat(stdout, '\n'))
+  M.log_info('formatted body: ' .. table.concat(stdout, '\n'))
   return stdout
-end
-
---- Render header table
----@param headers table
-util.render_header_table = function(headers)
-  local result = {}
-  local maxKeyLength = 0
-  for k, _ in pairs(headers) do
-    maxKeyLength = math.max(maxKeyLength, #k)
-  end
-
-  local line = 0
-  for k, v in pairs(headers) do
-    line = line + 1
-    if line == 1 then
-      -- Add header for the table view
-      table.insert(
-        result,
-        string.format('%-' .. maxKeyLength .. 's | %s', 'Header Key', 'Header Value')
-      )
-
-      line = line + 1
-    end
-    table.insert(result, string.format('%-' .. maxKeyLength .. 's | %s', k, v))
-  end
-
-  return {
-    line = line,
-    headers = result,
-  }
-end
-
---- Check if the response is json
----@param content_type string
----@return boolean
-util.is_json_response = function(content_type)
-  return string.find(content_type, 'json') ~= nil
-end
-
-util.is_html_response = function(content_type)
-  return string.find(content_type, 'text/html') ~= nil
-end
-
-util.is_xml_response = function(content_type)
-  return string.find(content_type, 'text/xml') ~= nil
-    or string.find(content_type, 'application/xml') ~= nil
 end
 
 --- Check if nvim is running in nightly or stable version
 ---@return boolean
-util.is_nightly = function()
+M.is_nightly = function()
   local is_stable_version = false
   if vim.fn.has('nvim-0.11.0') == 1 then
     is_stable_version = true
@@ -198,7 +152,7 @@ local function treesitter_parser_available(ft)
   return res and parser ~= nil
 end
 
-util.is_hurl_parser_available = treesitter_parser_available('hurl')
+M.is_hurl_parser_available = treesitter_parser_available('hurl')
 
 -- Looking for vars.env file base on the current file buffer
 ---@return table
@@ -252,7 +206,7 @@ end
 
 -- Looking for vars.env file base on the current file buffer
 ---@return table
-util.find_env_files_in_folders = function()
+M.find_env_files_in_folders = function()
   local root_dir = vim.fn.expand('%:p:h')
   local cache_dir = vim.fn.stdpath('cache')
   local current_file_dir = vim.fn.expand('%:p:h:h')
@@ -286,9 +240,10 @@ util.find_env_files_in_folders = function()
 
   return env_files
 end
-util.has_file_in_opts = function(opts)
+
+M.has_file_in_opts = function(opts)
   if #opts == 0 then
-    util.log_error('No file path provided in opts.')
+    M.log_error('No file path provided in opts.')
     return false
   end
 
@@ -296,7 +251,7 @@ util.has_file_in_opts = function(opts)
 
   local file = io.open(file_path, 'r')
   if not file then
-    util.log_error('Error: Failed to open file: ' .. file_path)
+    M.log_error('Error: Failed to open file: ' .. file_path)
     vim.notify('Error: Failed to open file: ' .. file_path, vim.log.levels.ERROR)
     return false
   end
@@ -313,4 +268,4 @@ util.has_file_in_opts = function(opts)
   return false
 end
 
-return util
+return M
