@@ -17,8 +17,13 @@ function M.add_virtual_text_for_hurl_entries()
 
   -- Define all supported HTTP methods
   local http_methods = {
-    'GET', 'POST', 'PUT', 'DELETE',
-    'PATCH', 'HEAD', 'OPTIONS'
+    'GET',
+    'POST',
+    'PUT',
+    'DELETE',
+    'PATCH',
+    'HEAD',
+    'OPTIONS',
   }
 
   -- Clear existing virtual text
