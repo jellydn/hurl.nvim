@@ -5,6 +5,7 @@
 
 > [!IMPORTANT]
 > Version 2 is in development! We're working on making hurl.nvim even better. Try out the [canary branch](https://github.com/jellydn/hurl.nvim/pull/207) and share your feedback:
+>
 > ```bash
 > {
 >   "jellydn/hurl.nvim",
@@ -12,7 +13,6 @@
 >   -- ... rest of your configuration
 > }
 > ```
-
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
