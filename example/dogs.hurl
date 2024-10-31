@@ -5,6 +5,7 @@ HTTP 200
 
 [Captures]
 id: jsonpath "$.data[0].id"
+name: jsonpath "$.data[0].attributes.name"
 
 GET https://dogapi.dog/api/v2/breeds/{{id}}
 

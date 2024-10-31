@@ -8,9 +8,9 @@ header "server" contains "MangaDex"
 
 GET https://google.com
 
-HTTP 301
+HTTP 302
 [Asserts]
-xpath "string(//title)" == "301 Moved"
+xpath "string(//title)" == "302 Moved"
 
 GET https://www.google.com
 
