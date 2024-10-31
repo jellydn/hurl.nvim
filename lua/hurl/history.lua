@@ -21,7 +21,11 @@ function M.show_last_response()
   end
 
   local last_response = response_history[1]
-  local display = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
+  local ok, display = pcall(require, 'hurl.' .. (_HURL_GLOBAL_CONFIG.mode or 'split'))
+  if not ok then
+    utils.notify('Failed to load display module: ' .. display, vim.log.levels.ERROR)
+    return
+  end
 
   display.show(last_response, last_response.display_type or 'text')
 end

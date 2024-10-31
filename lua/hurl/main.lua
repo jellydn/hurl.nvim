@@ -325,7 +325,11 @@ function M.setup()
     if last_response then
       -- Ensure response_time is a number
       last_response.response_time = tonumber(last_response.response_time) or '-'
-      local display = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
+      local ok, display = pcall(require, 'hurl.' .. (_HURL_GLOBAL_CONFIG.mode or 'split'))
+      if not ok then
+        utils.notify('Failed to load display module: ' .. display, vim.log.levels.ERROR)
+        return
+      end
       display.show(last_response, 'json')
     else
       utils.notify('No response history available', vim.log.levels.INFO)

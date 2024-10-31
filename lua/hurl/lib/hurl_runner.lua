@@ -296,7 +296,11 @@ function M.execute_hurl_cmd(opts, callback)
   save_last_hurl_command(cmd)
 
   -- Clear the display and show processing message with Hurl command
-  local display = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
+  local ok, display = pcall(require, 'hurl.' .. (_HURL_GLOBAL_CONFIG.mode or 'split'))
+  if not ok then
+    utils.notify('Failed to load display module: ' .. display, vim.log.levels.ERROR)
+    return
+  end
   display.clear()
 
   local stdout_data = ''
