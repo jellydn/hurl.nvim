@@ -120,7 +120,6 @@ M.format = function(body, type)
   local stdout = vim.fn.systemlist(formatters[type], body)
   if vim.v.shell_error ~= 0 then
     M.log_error('formatter failed' .. vim.v.shell_error)
-    M.notify('formatter failed' .. vim.v.shell_error, vim.log.levels.ERROR)
     return vim.split(body, '\n')
   end
 
