@@ -43,10 +43,12 @@ function M.parse_hurl_output(stderr, stdout)
       -- Check the next line for the actual request details
       if i < #lines then
         local nextLine = lines[i + 1]
-        local method, url = nextLine:match('^%* (%w+)%s+(.+)')
+        local method, url = nextLine:match('^%* (%w+)%s+([^%s].*)$')
         if method and url and currentEntry then
           currentEntry.requestMethod = method
-          currentEntry.requestUrl = url
+          currentEntry.requestUrl = url:gsub('%%20', ' '):gsub('%%(%x%x)', function(h)
+            return string.char(tonumber(h, 16))
+          end)
         end
       end
     elseif line:find('^error:') then
