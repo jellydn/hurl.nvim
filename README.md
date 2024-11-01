@@ -55,7 +55,7 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
         },
         ft = { "markdown" },
       },
-  },
+  }
   ft = "hurl",
   opts = {
     -- Show debugging info
