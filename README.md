@@ -46,7 +46,15 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
   dependencies = {
       "MunifTanjim/nui.nvim",
       "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter"
+      "nvim-treesitter/nvim-treesitter",
+      -- Optional, for markdown rendering with render-markdown.nvim
+      {
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = {
+          file_types = { "markdown" },
+        },
+        ft = { "markdown" },
+      },
   },
   ft = "hurl",
   opts = {
