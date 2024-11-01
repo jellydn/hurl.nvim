@@ -70,7 +70,7 @@ M.create_tmp_file = function(content)
   )
 
   if not tmp_file then
-    M.lor_error('hurl: failed to create tmp file')
+    M.log_error('hurl: failed to create tmp file')
     M.notify('hurl: failed to create tmp file', vim.log.levels.ERROR)
     return
   end
