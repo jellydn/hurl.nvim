@@ -124,8 +124,8 @@ function M.parse_hurl_output(stderr, stdout)
     metadata = {
       total = #entries,
       successful = successful,
-      failed = failed
-    }
+      failed = failed,
+    },
   }
 end
 
