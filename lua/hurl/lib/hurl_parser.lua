@@ -109,7 +109,24 @@ function M.parse_hurl_output(stderr, stdout)
     end
   end
 
-  return { entries = entries }
+  local successful = 0
+  local failed = 0
+  for _, entry in ipairs(entries) do
+    if entry.error then
+      failed = failed + 1
+    else
+      successful = successful + 1
+    end
+  end
+
+  return {
+    entries = entries,
+    metadata = {
+      total = #entries,
+      successful = successful,
+      failed = failed
+    }
+  }
 end
 
 return M
