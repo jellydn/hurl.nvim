@@ -3,17 +3,6 @@
   <strong>Hurl.nvim</strong> is a Neovim plugin designed to run HTTP requests directly from `.hurl` files. Elevate your API development workflow by executing and viewing responses without leaving your editor.
 </p>
 
-> [!IMPORTANT]
-> Version 2 is in development! We're working on making hurl.nvim even better. Try out the [canary branch](https://github.com/jellydn/hurl.nvim/pull/207) and share your feedback:
->
-> ```bash
-> {
->   "jellydn/hurl.nvim",
->   branch = "canary",
->   -- ... rest of your configuration
-> }
-> ```
-
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors-)
@@ -24,7 +13,7 @@
 
 ## Prerequisites
 
-- Neovim stable (0.10.0) or nightly. It might not work with older versions of Neovim.
+- Neovim stable (0.10.2) or nightly. It might not work with older versions of Neovim.
 
 ## Features
 
