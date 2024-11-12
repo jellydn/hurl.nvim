@@ -1,272 +1,9 @@
 local utils = require('hurl.utils')
 local http = require('hurl.http_utils')
-local spinner = require('hurl.spinner')
+local hurl_runner = require('hurl.lib.hurl_runner')
+local codelens = require('hurl.codelens')
 
 local M = {}
-
-local response = {}
-local head_state = ''
-local is_running = false
-local start_time = nil
-
---- Convert from --json flag to same format with other command
-local function convert_headers(headers)
-  local converted_headers = {}
-
-  for _, header in ipairs(headers) do
-    converted_headers[header.name] = header.value
-  end
-
-  return converted_headers
-end
-
--- NOTE: Check the output with below command
--- hurl example/dogs.hurl --json | jq
-local on_json_output = function(code, data, event)
-  utils.log_info('hurl: on_output ' .. vim.inspect(code) .. vim.inspect(data) .. vim.inspect(event))
-
-  -- Remove the first element if it is an empty string
-  if data[1] == '' then
-    table.remove(data, 1)
-  end
-  -- If there is no data, return early
-  if not data[1] then
-    return
-  end
-
-  local result = vim.json.decode(data[1])
-  utils.log_info('hurl: json result ' .. vim.inspect(result))
-  response.response_time = result.time
-
-  -- TODO: It might have more than 1 entry, so we need to handle it
-  if
-    result
-    and result.entries
-    and result.entries[1]
-    and result.entries[1].calls
-    and result.entries[1].calls[1]
-    and result.entries[1].calls[1].response
-  then
-    local converted_headers = convert_headers(result.entries[1].calls[1].response.headers)
-    -- Add the status code and time to the headers
-    converted_headers.status = result.entries[1].calls[1].response.status
-
-    response.headers = converted_headers
-    response.status = result.entries[1].calls[1].response.status
-  end
-
-  response.body = {
-    vim.json.encode({
-      msg = 'The flag --json does not contain the body yet. Refer to https://github.com/Orange-OpenSource/hurl/issues/1907',
-    }),
-  }
-end
-
---- Output handler
----@class Output
-local on_output = function(code, data, event)
-  utils.log_info('hurl: on_output ' .. vim.inspect(code) .. vim.inspect(data))
-
-  if data[1] == '' then
-    table.remove(data, 1)
-  end
-  if not data[1] then
-    return
-  end
-
-  if event == 'stderr' and #data > 1 then
-    response.body = data
-    utils.log_error(vim.inspect(data))
-    response.raw = data
-    response.headers = {}
-    return
-  end
-
-  if head_state == 'body' then
-    -- Append the data to the body if we are in the body state
-    utils.log_info('hurl: append data to body' .. vim.inspect(data))
-    response.body = response.body or ''
-    response.body = response.body .. table.concat(data, '\n')
-    return
-  end
-
-  -- TODO: The header parser sometime not working properly, e.g: https://google.com
-  local status = tonumber(string.match(data[1], '([%w+]%d+)'))
-  head_state = 'start'
-  if status then
-    response.status = status
-    response.headers = { status = data[1] }
-    response.headers_str = data[1] .. '\r\n'
-  end
-
-  for i = 2, #data do
-    local line = data[i]
-    if line == '' or line == nil then
-      head_state = 'body'
-    elseif head_state == 'start' then
-      local key, value = string.match(line, '([%w-]+):%s*(.+)')
-      if key and value then
-        response.headers[key] = value
-        response.headers_str = response.headers_str .. line .. '\r\n'
-      end
-    elseif head_state == 'body' then
-      response.body = response.body or ''
-      response.body = response.body .. line
-    end
-  end
-  response.raw = data
-
-  utils.log_info('hurl: response status ' .. response.status)
-  utils.log_info('hurl: response headers ' .. vim.inspect(response.headers))
-  if response.body then
-    utils.log_info('hurl: response body ' .. response.body)
-  else
-    -- Fall back to empty string for non-body responses
-    response.body = ''
-  end
-end
-
---- Call hurl command
----@param opts table The options
----@param callback? function The callback function
-local function execute_hurl_cmd(opts, callback)
-  -- Check if a request is currently running
-  if is_running then
-    utils.log_info('hurl: request is already running')
-    utils.notify('hurl: request is running. Please try again later.', vim.log.levels.INFO)
-    return
-  end
-
-  is_running = true
-  start_time = vim.loop.hrtime() -- Capture the start time
-  spinner.show()
-  head_state = ''
-  utils.log_info('hurl: running request')
-  utils.notify('hurl: running request', vim.log.levels.INFO)
-
-  local is_verbose_mode = vim.tbl_contains(opts, '--verbose')
-  local is_json_mode = vim.tbl_contains(opts, '--json')
-  local is_file_mode = utils.has_file_in_opts(opts)
-
-  if
-    not _HURL_GLOBAL_CONFIG.auto_close
-    and not is_verbose_mode
-    and not is_json_mode
-    and response.body
-  then
-    local container = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
-    utils.log_info('hurl: clear previous response if this is not auto close')
-    container.clear()
-  end
-
-  -- Check vars.env exist on the current file buffer
-  -- Then inject the command with --variables-file vars.env
-  local env_files = _HURL_GLOBAL_CONFIG.find_env_files_in_folders()
-  for _, env in ipairs(env_files) do
-    utils.log_info(
-      'hurl: looking for ' .. vim.inspect(_HURL_GLOBAL_CONFIG.env_file) .. ' in ' .. env.path
-    )
-    if vim.fn.filereadable(env.path) == 1 then
-      utils.log_info('hurl: found env file in ' .. env.path)
-      table.insert(opts, '--variables-file')
-      table.insert(opts, env.path)
-    end
-  end
-
-  -- Inject global variables into the command
-  if _HURL_GLOBAL_CONFIG.global_vars then
-    for var_name, var_value in pairs(_HURL_GLOBAL_CONFIG.global_vars) do
-      table.insert(opts, '--variable')
-      table.insert(opts, var_name .. '=' .. var_value)
-    end
-  end
-
-  -- Inject fixture variables into the command
-  -- This is a workaround to inject dynamic variables into the hurl command, refer https://github.com/Orange-OpenSource/hurl/issues?q=sort:updated-desc+is:open+label:%22topic:+generators%22
-  if _HURL_GLOBAL_CONFIG.fixture_vars then
-    for _, fixture in pairs(_HURL_GLOBAL_CONFIG.fixture_vars) do
-      table.insert(opts, '--variable')
-      table.insert(opts, fixture.name .. '=' .. fixture.callback())
-    end
-  end
-
-  -- Include the HTTP headers in the output and do not colorize output.
-  local cmd = vim.list_extend({ 'hurl', '-i', '--no-color' }, opts)
-  if is_file_mode then
-    local file_root = _HURL_GLOBAL_CONFIG.file_root or vim.fn.getcwd()
-    vim.list_extend(cmd, { '--file-root', file_root })
-  end
-  response = {}
-
-  utils.log_info('hurl: running command' .. vim.inspect(cmd))
-
-  vim.fn.jobstart(cmd, {
-    on_stdout = callback or (is_json_mode and on_json_output or on_output),
-    on_stderr = callback or (is_json_mode and on_json_output or on_output),
-    on_exit = function(i, code)
-      utils.log_info('exit at ' .. i .. ' , code ' .. code)
-      is_running = false
-      spinner.hide()
-      if code ~= 0 then
-        -- Send error code and response to quickfix and open it
-        -- It should display the error message
-        vim.fn.setqflist({}, 'r', {
-          title = 'hurl',
-          lines = response.raw or response.body,
-        })
-        vim.fn.setqflist({}, 'a', {
-          title = 'hurl',
-          lines = { response.headers_str },
-        })
-        vim.cmd('copen')
-        return
-      end
-
-      utils.log_info('hurl: request finished')
-      utils.notify('hurl: request finished', vim.log.levels.INFO)
-
-      -- Calculate the response time
-      local end_time = vim.loop.hrtime()
-      response.response_time = (end_time - start_time) / 1e6 -- Convert to milliseconds
-
-      if callback then
-        return callback(response)
-      else
-        -- show messages
-        local lines = response.raw or response.body
-        if #lines == 0 then
-          return
-        end
-
-        local content_type = response.headers['content-type']
-          or response.headers['Content-Type']
-          or response.headers['Content-type']
-          or 'unknown'
-
-        utils.log_info('Detected content type: ' .. content_type)
-        if response.headers['content-length'] == '0' then
-          utils.log_info('hurl: empty response')
-          utils.notify('hurl: empty response', vim.log.levels.INFO)
-        end
-
-        local container = require('hurl.' .. _HURL_GLOBAL_CONFIG.mode)
-        if utils.is_json_response(content_type) then
-          container.show(response, 'json')
-        else
-          if utils.is_html_response(content_type) then
-            container.show(response, 'html')
-          else
-            if utils.is_xml_response(content_type) then
-              container.show(response, 'xml')
-            else
-              container.show(response, 'text')
-            end
-          end
-        end
-      end
-    end,
-  })
-end
 
 --- Run current file
 --- It will throw an error if that is not valid hurl file
@@ -274,14 +11,18 @@ end
 local function run_current_file(opts)
   opts = opts or {}
   table.insert(opts, vim.fn.expand('%:p'))
-  execute_hurl_cmd(opts)
+  hurl_runner.execute_hurl_cmd(opts)
 end
 
---- Create a temporary file with the lines to run
----@param lines string[]
+-- Run selection
 ---@param opts table The options
----@param callback? function The callback function
-local function run_lines(lines, opts, callback)
+local function run_selection(opts)
+  opts = opts or {}
+  local lines = utils.get_visual_selection()
+  if not lines then
+    return
+  end
+
   -- Create a temporary file with the lines to run
   local fname = utils.create_tmp_file(lines)
   if not fname then
@@ -292,7 +33,7 @@ local function run_lines(lines, opts, callback)
 
   -- Add the temporary file to the arguments
   table.insert(opts, fname)
-  execute_hurl_cmd(opts, callback)
+  hurl_runner.execute_hurl_cmd(opts)
 
   -- Clean up the temporary file after a delay
   local timeout = 1000
@@ -307,37 +48,46 @@ local function run_lines(lines, opts, callback)
   end, timeout)
 end
 
---- Run selection
----@param opts table The options
-local function run_selection(opts)
-  opts = opts or {}
-  local lines = utils.get_visual_selection()
-  if not lines then
-    return
-  end
+-- Store the last used from_entry and to_entry
+local last_from_entry
+local last_to_entry
 
-  run_lines(lines, opts)
-end
-
---- Run at current line
+-- Run at current line
 ---@param start_line number
----@param end_line number
+---@param end_line number|nil
 ---@param opts table
 ---@param callback? function
 local function run_at_lines(start_line, end_line, opts, callback)
   opts = opts or {}
-  -- Get the lines from the buffer
-  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+  local file_path = vim.fn.expand('%:p')
 
-  if not lines or vim.tbl_isempty(lines) then
-    utils.notify('hurl: no lines to run', vim.log.levels.WARN)
-    return
+  -- Insert the file path first
+  table.insert(opts, file_path)
+
+  -- Then add the --from-entry and --to-entry options
+  table.insert(opts, '--from-entry')
+  table.insert(opts, tostring(start_line))
+  if end_line then
+    table.insert(opts, '--to-entry')
+    table.insert(opts, tostring(end_line))
   end
 
-  run_lines(lines, opts, callback)
+  -- Store the last used from_entry and to_entry
+  last_from_entry = start_line
+  last_to_entry = end_line
+
+  hurl_runner.execute_hurl_cmd(opts, callback)
+end
+
+-- Helper function to run verbose commands in split mode
+local function run_verbose_command(filePath, fromEntry, toEntry, isVeryVerbose, additionalArgs)
+  hurl_runner.run_hurl_verbose(filePath, fromEntry, toEntry, isVeryVerbose, additionalArgs)
 end
 
 function M.setup()
+  -- Show virtual text for Hurl entries
+  codelens.setup()
+
   -- Run request for a range of lines or the entire file
   utils.create_cmd('HurlRunner', function(opts)
     if opts.range ~= 0 then
@@ -369,7 +119,7 @@ function M.setup()
       utils.log_info(
         'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
       )
-      run_at_lines(result.start_line, result.end_line, opts.fargs)
+      run_at_lines(result.current, result.current, opts.fargs)
     else
       utils.log_info('hurl: not HTTP method found in the current line' .. result.start_line)
       utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
@@ -383,14 +133,14 @@ function M.setup()
       or http.find_http_verb_positions_in_buffer()
     utils.log_info('hurl: running request to entry #' .. vim.inspect(result))
     if result.current > 0 then
-      run_at_lines(1, result.end_line, opts.fargs)
+      run_at_lines(1, result.current, opts.fargs)
     else
       utils.log_info('hurl: not HTTP method found in the current line' .. result.end_line)
       utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
     end
   end, { nargs = '*', range = true })
 
-  -- Add new command to change env file with input
+  -- Set the env file
   utils.create_cmd('HurlSetEnvFile', function(opts)
     local env_file = opts.fargs[1]
     if not env_file then
@@ -404,81 +154,76 @@ function M.setup()
     utils.notify('hurl: env file changed to ' .. updated_env, vim.log.levels.INFO)
   end, { nargs = '*', range = true })
 
-  -- Run Hurl in verbose mode and send output to quickfix
+  -- Run Hurl in verbose mode
   utils.create_cmd('HurlVerbose', function(opts)
-    -- It should be the same logic with run at current line but with verbose flag
-    -- The response will be sent to quickfix
-    local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
-    local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
-      or http.find_http_verb_positions_in_buffer()
-    if result.current > 0 and result.start_line and result.end_line then
-      utils.log_info(
-        'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
-      )
-      opts.fargs = opts.fargs or {}
-      opts.fargs = vim.list_extend(opts.fargs, { '--verbose' })
+    local filePath = vim.fn.expand('%:p')
+    local fromEntry = opts.fargs[1] and tonumber(opts.fargs[1]) or nil
+    local toEntry = opts.fargs[2] and tonumber(opts.fargs[2]) or nil
 
-      -- Clear quickfix list
-      vim.fn.setqflist({}, 'r', {
-        title = 'hurl',
-        lines = {},
-      })
-      run_at_lines(1, result.end_line, opts.fargs, function(code, data, event)
-        utils.log_info('hurl: verbose callback ' .. vim.inspect(code) .. vim.inspect(data))
-        vim.fn.setqflist({}, 'a', {
-          title = 'hurl - data',
-          lines = data,
-        })
-        vim.fn.setqflist({}, 'a', {
-          title = 'hurl - event',
-          lines = event,
-        })
-        vim.cmd('copen')
-      end)
-    else
-      if result then
-        utils.log_info('hurl: not HTTP method found in the current line' .. result.start_line)
+    -- Detect the current entry if fromEntry and toEntry are not provided
+    if not fromEntry or not toEntry then
+      local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
+      local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
+        or http.find_http_verb_positions_in_buffer()
+      if result.current > 0 then
+        fromEntry = result.current
+        toEntry = result.current
+      else
+        utils.log_info('hurl: no HTTP method found in the current line')
         utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+        return
       end
     end
+
+    run_verbose_command(filePath, fromEntry, toEntry, false)
   end, { nargs = '*', range = true })
 
-  -- NOTE: Get output from --json output
-  -- Run Hurl in JSON mode and send output to quickfix
-  utils.create_cmd('HurlJson', function(opts)
-    local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
-    local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
-      or http.find_http_verb_positions_in_buffer()
-    if result.current > 0 and result.start_line and result.end_line then
-      utils.log_info(
-        'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
-      )
-      opts.fargs = opts.fargs or {}
-      opts.fargs = vim.list_extend(opts.fargs, { '--json' })
+  -- Run Hurl in very verbose mode
+  utils.create_cmd('HurlVeryVerbose', function(opts)
+    local filePath = vim.fn.expand('%:p')
+    local fromEntry = opts.fargs[1] and tonumber(opts.fargs[1]) or nil
+    local toEntry = opts.fargs[2] and tonumber(opts.fargs[2]) or nil
 
-      -- Clear quickfix list
-      vim.fn.setqflist({}, 'r', {
-        title = 'hurl',
-        lines = {},
-      })
-      run_at_lines(1, result.end_line, opts.fargs, function(code, data, event)
-        utils.log_info('hurl: verbose callback ' .. vim.inspect(code) .. vim.inspect(data))
-        -- Only send to output if the data is json format
-        if #data > 1 and data ~= nil then
-          vim.fn.setqflist({}, 'a', {
-            title = 'hurl - data',
-            lines = data,
-          })
-        end
-
-        vim.cmd('copen')
-      end)
-    else
-      if result then
-        utils.log_info('hurl: not HTTP method found in the current line' .. result.start_line)
+    -- Detect the current entry if fromEntry and toEntry are not provided
+    if not fromEntry or not toEntry then
+      local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
+      local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
+        or http.find_http_verb_positions_in_buffer()
+      if result.current > 0 then
+        fromEntry = result.current
+        toEntry = result.current
+      else
+        utils.log_info('hurl: no HTTP method found in the current line')
         utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+        return
       end
     end
+
+    run_verbose_command(filePath, fromEntry, toEntry, true)
+  end, { nargs = '*', range = true })
+
+  -- Run Hurl in JSON mode
+  utils.create_cmd('HurlJson', function(opts)
+    local filePath = vim.fn.expand('%:p')
+    local fromEntry = opts.fargs[1] and tonumber(opts.fargs[1]) or nil
+    local toEntry = opts.fargs[2] and tonumber(opts.fargs[2]) or nil
+
+    -- Detect the current entry if fromEntry and toEntry are not provided
+    if not fromEntry or not toEntry then
+      local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
+      local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
+        or http.find_http_verb_positions_in_buffer()
+      if result.current > 0 then
+        fromEntry = result.current
+        toEntry = result.current
+      else
+        utils.log_info('hurl: no HTTP method found in the current line')
+        utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
+        return
+      end
+    end
+
+    run_verbose_command(filePath, fromEntry, toEntry, false, { '--json' })
   end, { nargs = '*', range = true })
 
   utils.create_cmd('HurlSetVariable', function(opts)
@@ -576,7 +321,19 @@ function M.setup()
   -- Show last request response
   utils.create_cmd('HurlShowLastResponse', function()
     local history = require('hurl.history')
-    history.show(response)
+    local last_response = history.get_last_response()
+    if last_response then
+      -- Ensure response_time is a number
+      last_response.response_time = tonumber(last_response.response_time) or '-'
+      local ok, display = pcall(require, 'hurl.' .. (_HURL_GLOBAL_CONFIG.mode or 'split'))
+      if not ok then
+        utils.notify('Failed to load display module: ' .. display, vim.log.levels.ERROR)
+        return
+      end
+      display.show(last_response, 'json')
+    else
+      utils.notify('No response history available', vim.log.levels.INFO)
+    end
   end, {
     nargs = '*',
     range = true,
@@ -587,18 +344,47 @@ function M.setup()
     local is_support_hurl = utils.is_nightly() or utils.is_hurl_parser_available
     local result = is_support_hurl and http.find_hurl_entry_positions_in_buffer()
       or http.find_http_verb_positions_in_buffer()
-    if result.current > 0 and result.start_line and result.end_line then
-      utils.log_info(
-        'hurl: running request at line ' .. result.start_line .. ' to ' .. result.end_line
-      )
+    if result.current > 0 then
+      utils.log_info('hurl: running request from entry ' .. result.current .. ' to end')
       opts.fargs = opts.fargs or {}
-      local end_line = vim.api.nvim_buf_line_count(0)
-      run_at_lines(result.start_line, end_line, opts.fargs)
+      run_at_lines(result.current, nil, opts.fargs)
     else
       utils.log_info('hurl: no HTTP method found in the current line')
       utils.notify('hurl: no HTTP method found in the current line', vim.log.levels.INFO)
     end
   end, { nargs = '*', range = true })
+
+  -- Re-run last Hurl command
+  utils.create_cmd('HurlRerun', function()
+    if last_from_entry then
+      utils.log_info(
+        string.format(
+          'hurl: re-running last command from entry %d to %s',
+          last_from_entry,
+          last_to_entry or 'end'
+        )
+      )
+      utils.notify('hurl: re-running last command', vim.log.levels.INFO)
+
+      local opts = {}
+      local file_path = vim.fn.expand('%:p')
+
+      -- Reconstruct the command with the stored from_entry and to_entry
+      table.insert(opts, file_path)
+      table.insert(opts, '--from-entry')
+      table.insert(opts, tostring(last_from_entry))
+      if last_to_entry then
+        table.insert(opts, '--to-entry')
+        table.insert(opts, tostring(last_to_entry))
+      end
+
+      -- Execute the command
+      hurl_runner.execute_hurl_cmd(opts)
+    else
+      utils.log_info('hurl: no previous command to re-run')
+      utils.notify('hurl: no previous command to re-run', vim.log.levels.WARN)
+    end
+  end, { nargs = 0 })
 end
 
 return M
