@@ -20,25 +20,14 @@ Table of Contents                                *hurl.nvim-table-of-contents*
   - Show your support                            |hurl.nvim-show-your-support|
   - Contributors ✨                              |hurl.nvim-contributors-✨|
 1. Links                                                     |hurl.nvim-links|
-Welcome to hurl.nvim 👋Hurl.nvim is a Neovim plugin designed to run HTTP requests directly from `.hurl` files. Elevate your API development workflow by executing and viewing responses without leaving your editor.
-  [!IMPORTANT] Version 2 is in development! We’re working on making hurl.nvim
-  even better. Try out the canary branch
-  <https://github.com/jellydn/hurl.nvim/pull/207> and share your feedback:
-  >bash
-      {
-        "jellydn/hurl.nvim",
-        branch = "canary",
-        -- ... rest of your configuration
-      }
-  <
-|hurl.nvim-|
+Welcome to hurl.nvim 👋Hurl.nvim is a Neovim plugin designed to run HTTP requests directly from `.hurl` files. Elevate your API development workflow by executing and viewing responses without leaving your editor.|hurl.nvim-|
 
 <https://www.youtube.com/watch?v=nr_RbHvnnwk>
 
 
 PREREQUISITES                                        *hurl.nvim-prerequisites*
 
-- Neovim stable (0.10.0) or nightly. It might not work with older versions of Neovim.
+- Neovim stable (0.10.2) or nightly. It might not work with older versions of Neovim.
 
 
 FEATURES                                                  *hurl.nvim-features*
