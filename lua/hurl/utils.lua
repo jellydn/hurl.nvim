@@ -111,8 +111,16 @@ M.format = function(body, type)
       xml = { 'tidy', '-xml', '-i', '-q' },
     }
 
-  -- If no formatter is defined, return the body
-  if not formatters[type] then
+  -- If no formatter is defined or empty, return the body
+  if not formatters[type] or #formatters[type] == 0 then
+    M.log_info('no formatter defined for type ' .. type .. ', skipping formatting')
+    return vim.split(body, '\n')
+  end
+
+  -- Check if formatter executable exists
+  local formatter_cmd = formatters[type][1]
+  if vim.fn.executable(formatter_cmd) ~= 1 then
+    M.log_info('formatter ' .. formatter_cmd .. ' not found, skipping formatting')
     return vim.split(body, '\n')
   end
 
