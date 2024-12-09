@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/jellydn/hurl.nvim/compare/v2.0.0...v2.0.1) (2024-12-09)
+
+
+### Bug Fixes
+
+* **format:** enhance formatter check and logging for undefined formatters ([53fb537](https://github.com/jellydn/hurl.nvim/commit/53fb537e0c3b9b952950ffdc842509154049f626)), closes [#215](https://github.com/jellydn/hurl.nvim/issues/215)
+
 ## [1.8.0](https://github.com/jellydn/hurl.nvim/compare/v1.7.1...v1.8.0) (2024-10-29)
 
 ### Features
