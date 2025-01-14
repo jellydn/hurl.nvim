@@ -2,6 +2,7 @@ local utils = require('hurl.utils')
 local http = require('hurl.http_utils')
 local hurl_runner = require('hurl.lib.hurl_runner')
 local codelens = require('hurl.codelens')
+local variable_store = require('hurl.lib.variable_store')
 
 local M = {}
 
@@ -243,62 +244,121 @@ function M.setup()
     )
   end, { nargs = '*', range = true })
 
-  -- Show all global variables
   utils.create_cmd('HurlManageVariable', function()
-    -- Prepare the lines to display in the popup
+    -- Load variables from all sources
+    local all_vars = {}
+    
+    -- Load persisted variables
+    local persisted_vars = variable_store.load_persisted_vars()
+    for name, value in pairs(persisted_vars) do
+      all_vars[name] = {
+        value = value,
+        source = 'persisted'
+      }
+    end
+    
+    -- Load variables from env files
+    local env_files = _HURL_GLOBAL_CONFIG.find_env_files_in_folders()
+    for _, env_file in ipairs(env_files) do
+      if vim.fn.filereadable(env_file.path) == 1 then
+        local env_vars = variable_store.parse_env_file(env_file.path)
+        for name, value in pairs(env_vars) do
+          all_vars[name] = {
+            value = value,
+            source = 'env:' .. vim.fn.fnamemodify(env_file.path, ':t')
+          }
+        end
+      end
+    end
+    
+    -- Prepare lines for display
     local lines = {}
-    if not _HURL_GLOBAL_CONFIG.global_vars or vim.tbl_isempty(_HURL_GLOBAL_CONFIG.global_vars) then
-      utils.log_info('hurl: no global variables set')
-      utils.notify('hurl: no global variables set', vim.log.levels.INFO)
-      table.insert(lines, 'No global variables set. Please use :HurlSetVariable to set one.')
+    if vim.tbl_isempty(all_vars) then
+      table.insert(lines, 'No variables found. Use :HurlSetVariable to set one.')
     else
-      for var_name, var_value in pairs(_HURL_GLOBAL_CONFIG.global_vars) do
-        table.insert(lines, var_name .. ' = ' .. var_value)
+      table.insert(lines, '# Variables')
+      table.insert(lines, '')
+      for name, data in vim.spairs(all_vars) do
+        table.insert(lines, string.format('%s = %s [%s]', name, data.value, data.source))
       end
     end
 
     local popup = require('hurl.popup')
     local text_popup = popup.show_text(
-      'Hurl.nvim - Global variables',
+      'Hurl.nvim - Variables',
       lines,
-      "Press 'q' to close, 'e' to edit, or 'n' to create a variable."
+      "Press 'q' to close, 'e' to edit, 'n' to create, or 'd' to delete"
     )
 
-    -- Add e key binding to edit the variable
+    -- Add key bindings for variable management
     text_popup:map('n', 'e', function()
       local line = vim.api.nvim_get_current_line()
-      local var_name = line:match('^(.-) =')
+      local var_name = line:match('^([^=]+) =')
       if var_name then
         local new_value = vim.fn.input('Enter new value for ' .. var_name .. ': ')
-        _HURL_GLOBAL_CONFIG.global_vars[var_name] = new_value
-        vim.api.nvim_set_current_line(var_name .. ' = ' .. new_value)
+        if new_value and new_value ~= '' then
+          -- Update persisted variables
+          local vars = variable_store.load_persisted_vars()
+          vars[var_name] = new_value
+          variable_store.save_persisted_vars(vars)
+          
+          -- Update global vars
+          _HURL_GLOBAL_CONFIG.global_vars = _HURL_GLOBAL_CONFIG.global_vars or {}
+          _HURL_GLOBAL_CONFIG.global_vars[var_name] = new_value
+          
+          -- Update display
+          vim.api.nvim_set_current_line(string.format('%s = %s [persisted]', var_name, new_value))
+        end
       end
     end)
 
-    -- Add 'n' to create new variable
+    -- Add delete functionality
+    text_popup:map('n', 'd', function()
+      local line = vim.api.nvim_get_current_line()
+      local var_name = line:match('^([^=]+) =')
+      if var_name then
+        local vars = variable_store.load_persisted_vars()
+        vars[var_name] = nil
+        variable_store.save_persisted_vars(vars)
+        
+        -- Remove from global vars
+        if _HURL_GLOBAL_CONFIG.global_vars then
+          _HURL_GLOBAL_CONFIG.global_vars[var_name] = nil
+        end
+        
+        -- Remove line from display
+        local current_line = vim.api.nvim_win_get_cursor(0)[1]
+        vim.api.nvim_buf_set_lines(0, current_line - 1, current_line, false, {})
+      end
+    end)
+
+    -- Modify existing 'n' mapping to persist new variables
     text_popup:map('n', 'n', function()
       local var_name = vim.fn.input('Enter new variable name: ')
       if not var_name or var_name == '' then
-        utils.notify('hurl: variable name cannot be empty', vim.log.levels.INFO)
+        utils.notify('Variable name cannot be empty', vim.log.levels.INFO)
         return
       end
 
       local var_value = vim.fn.input('Enter new variable value: ')
       if not var_value or var_value == '' then
-        utils.notify('hurl: variable value cannot be empty', vim.log.levels.INFO)
+        utils.notify('Variable value cannot be empty', vim.log.levels.INFO)
         return
       end
 
-      local line_position = -1
-      local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)
-      if first_line[1] == 'No global variables set. Please use :HurlSetVariable to set one.' then
-        -- Clear the buffer if it's empty
-        line_position = 0
-      end
-
-      vim.cmd('HurlSetVariable ' .. var_name .. ' ' .. var_value)
-      -- Append to the last line
-      vim.api.nvim_buf_set_lines(0, line_position, -1, false, { var_name .. ' = ' .. var_value })
+      -- Update persisted variables
+      local vars = variable_store.load_persisted_vars()
+      vars[var_name] = var_value
+      variable_store.save_persisted_vars(vars)
+      
+      -- Update global vars
+      _HURL_GLOBAL_CONFIG.global_vars = _HURL_GLOBAL_CONFIG.global_vars or {}
+      _HURL_GLOBAL_CONFIG.global_vars[var_name] = var_value
+      
+      -- Add to display
+      vim.api.nvim_buf_set_lines(0, -1, -1, false, {
+        string.format('%s = %s [persisted]', var_name, var_value)
+      })
     end)
   end, {
     nargs = '*',
