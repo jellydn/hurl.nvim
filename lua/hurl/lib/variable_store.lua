@@ -1,5 +1,3 @@
-
-
 local M = {}
 local utils = require('hurl.utils')
 
@@ -15,16 +13,16 @@ function M.load_persisted_vars()
   if not file then
     return {}
   end
-  
+
   local content = file:read('*all')
   file:close()
-  
+
   local ok, data = pcall(vim.json.decode, content)
   if not ok then
     utils.log_error('Failed to parse persisted variables: ' .. data)
     return {}
   end
-  
+
   return data
 end
 
@@ -36,14 +34,14 @@ function M.save_persisted_vars(vars)
     utils.log_error('Failed to open variable store for writing: ' .. file_path)
     return false
   end
-  
+
   local ok, encoded = pcall(vim.json.encode, vars)
   if not ok then
     utils.log_error('Failed to encode variables: ' .. encoded)
     file:close()
     return false
   end
-  
+
   file:write(encoded)
   file:close()
   return true
@@ -55,7 +53,7 @@ function M.parse_env_file(file_path)
   if not file then
     return {}
   end
-  
+
   local vars = {}
   for line in file:lines() do
     local name, value = line:match('^([^=]+)=(.+)$')
@@ -64,7 +62,7 @@ function M.parse_env_file(file_path)
     end
   end
   file:close()
-  
+
   return vars
 end
 

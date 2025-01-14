@@ -247,16 +247,16 @@ function M.setup()
   utils.create_cmd('HurlManageVariable', function()
     -- Load variables from all sources
     local all_vars = {}
-    
+
     -- Load persisted variables
     local persisted_vars = variable_store.load_persisted_vars()
     for name, value in pairs(persisted_vars) do
       all_vars[name] = {
         value = value,
-        source = 'persisted'
+        source = 'persisted',
       }
     end
-    
+
     -- Load variables from env files
     local env_files = _HURL_GLOBAL_CONFIG.find_env_files_in_folders()
     for _, env_file in ipairs(env_files) do
@@ -265,12 +265,12 @@ function M.setup()
         for name, value in pairs(env_vars) do
           all_vars[name] = {
             value = value,
-            source = 'env:' .. vim.fn.fnamemodify(env_file.path, ':t')
+            source = 'env:' .. vim.fn.fnamemodify(env_file.path, ':t'),
           }
         end
       end
     end
-    
+
     -- Prepare lines for display
     local lines = {}
     if vim.tbl_isempty(all_vars) then
@@ -301,11 +301,11 @@ function M.setup()
           local vars = variable_store.load_persisted_vars()
           vars[var_name] = new_value
           variable_store.save_persisted_vars(vars)
-          
+
           -- Update global vars
           _HURL_GLOBAL_CONFIG.global_vars = _HURL_GLOBAL_CONFIG.global_vars or {}
           _HURL_GLOBAL_CONFIG.global_vars[var_name] = new_value
-          
+
           -- Update display
           vim.api.nvim_set_current_line(string.format('%s = %s [persisted]', var_name, new_value))
         end
@@ -320,12 +320,12 @@ function M.setup()
         local vars = variable_store.load_persisted_vars()
         vars[var_name] = nil
         variable_store.save_persisted_vars(vars)
-        
+
         -- Remove from global vars
         if _HURL_GLOBAL_CONFIG.global_vars then
           _HURL_GLOBAL_CONFIG.global_vars[var_name] = nil
         end
-        
+
         -- Remove line from display
         local current_line = vim.api.nvim_win_get_cursor(0)[1]
         vim.api.nvim_buf_set_lines(0, current_line - 1, current_line, false, {})
@@ -350,14 +350,14 @@ function M.setup()
       local vars = variable_store.load_persisted_vars()
       vars[var_name] = var_value
       variable_store.save_persisted_vars(vars)
-      
+
       -- Update global vars
       _HURL_GLOBAL_CONFIG.global_vars = _HURL_GLOBAL_CONFIG.global_vars or {}
       _HURL_GLOBAL_CONFIG.global_vars[var_name] = var_value
-      
+
       -- Add to display
       vim.api.nvim_buf_set_lines(0, -1, -1, false, {
-        string.format('%s = %s [persisted]', var_name, var_value)
+        string.format('%s = %s [persisted]', var_name, var_value),
       })
     end)
   end, {
