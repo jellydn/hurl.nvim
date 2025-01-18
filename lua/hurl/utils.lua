@@ -279,7 +279,7 @@ end
 ---@param file_path string The path to the env file
 ---@return table|nil
 function M.parse_env_file(file_path)
-  local file = io.open(file_path, "r")
+  local file = io.open(file_path, 'r')
   if not file then
     return nil
   end
@@ -287,8 +287,8 @@ function M.parse_env_file(file_path)
   local vars = {}
   for line in file:lines() do
     -- Skip comments and empty lines
-    if not line:match("^%s*#") and line:match("%S") then
-      local key, value = line:match("([^=]+)=(.+)")
+    if not line:match('^%s*#') and line:match('%S') then
+      local key, value = line:match('([^=]+)=(.+)')
       if key and value then
         vars[key:trim()] = value:trim()
       end
@@ -312,14 +312,14 @@ end
 ---@return table
 function M.load_persisted_vars()
   local file_path = M.get_persistence_file()
-  local file = io.open(file_path, "r")
+  local file = io.open(file_path, 'r')
   if not file then
     return {}
   end
-  
-  local content = file:read("*all")
+
+  local content = file:read('*all')
   file:close()
-  
+
   local ok, vars = pcall(vim.json.decode, content)
   return ok and vars or {}
 end
@@ -328,17 +328,17 @@ end
 ---@param vars table The variables to persist
 function M.save_persisted_vars(vars)
   local file_path = M.get_persistence_file()
-  local file = io.open(file_path, "w")
+  local file = io.open(file_path, 'w')
   if not file then
-    M.log_error("Failed to open persistence file for writing")
+    M.log_error('Failed to open persistence file for writing')
     return
   end
-  
+
   local ok, content = pcall(vim.json.encode, vars)
   if ok then
     file:write(content)
   else
-    M.log_error("Failed to encode variables for persistence")
+    M.log_error('Failed to encode variables for persistence')
   end
   file:close()
 end

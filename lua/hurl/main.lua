@@ -246,7 +246,7 @@ function M.setup()
   utils.create_cmd('HurlManageVariable', function()
     -- Load persisted variables
     local persisted_vars = utils.load_persisted_vars()
-    
+
     -- Load variables from env files
     local env_vars = {}
     local env_files = utils.find_env_files_in_folders()
@@ -255,7 +255,7 @@ function M.setup()
         local vars = utils.parse_env_file(env.path)
         if vars then
           for k, v in pairs(vars) do
-            env_vars[k] = {value = v, source = env.path}
+            env_vars[k] = { value = v, source = env.path }
           end
         end
       end
@@ -263,24 +263,24 @@ function M.setup()
 
     -- Prepare lines for display
     local lines = {}
-    
+
     -- Add env file variables
     if not vim.tbl_isempty(env_vars) then
-      table.insert(lines, "# Environment File Variables")
+      table.insert(lines, '# Environment File Variables')
       for var_name, data in pairs(env_vars) do
-        table.insert(lines, string.format("%s = %s  # from %s", var_name, data.value, data.source))
+        table.insert(lines, string.format('%s = %s  # from %s', var_name, data.value, data.source))
       end
-      table.insert(lines, "")
+      table.insert(lines, '')
     end
-    
+
     -- Add persisted variables
     if not vim.tbl_isempty(persisted_vars) then
-      table.insert(lines, "# Persisted Variables")
+      table.insert(lines, '# Persisted Variables')
       for var_name, value in pairs(persisted_vars) do
-        table.insert(lines, string.format("%s = %s", var_name, value))
+        table.insert(lines, string.format('%s = %s', var_name, value))
       end
     end
-    
+
     if #lines == 0 then
       table.insert(lines, 'No variables set. Press "n" to create a new variable.')
     end
@@ -303,7 +303,7 @@ function M.setup()
           utils.save_persisted_vars(persisted_vars)
           _HURL_GLOBAL_CONFIG.global_vars[var_name] = new_value
           -- Update the display
-          vim.api.nvim_set_current_line(string.format("%s = %s", var_name, new_value))
+          vim.api.nvim_set_current_line(string.format('%s = %s', var_name, new_value))
         end
       end
     end)
@@ -325,14 +325,14 @@ function M.setup()
       -- Save to persisted variables
       persisted_vars[var_name] = var_value
       utils.save_persisted_vars(persisted_vars)
-      
+
       -- Update global vars
       _HURL_GLOBAL_CONFIG.global_vars[var_name] = var_value
-      
+
       -- Update display
-      local new_line = string.format("%s = %s", var_name, var_value)
-      if #lines == 1 and lines[1]:match("No variables") then
-        lines = {"# Persisted Variables", new_line}
+      local new_line = string.format('%s = %s', var_name, var_value)
+      if #lines == 1 and lines[1]:match('No variables') then
+        lines = { '# Persisted Variables', new_line }
       else
         table.insert(lines, new_line)
       end
