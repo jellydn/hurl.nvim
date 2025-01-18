@@ -10,6 +10,7 @@ M.check = function()
   start('hurl.nvim health check')
   local jq = vim.fn.executable('jq')
   local prettier = vim.fn.executable('prettier')
+  local hurl = vim.fn.executable('hurl')
 
   if jq == 0 then
     error('jq not found')
@@ -21,6 +22,12 @@ M.check = function()
     error('prettier not found')
   else
     ok('prettier found')
+  end
+
+  if hurl == 0 then
+    error('hurl not found')
+  else
+    ok('hurl found')
   end
 
   if require('hurl.utils').is_hurl_parser_available then
