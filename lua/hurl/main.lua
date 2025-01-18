@@ -243,35 +243,68 @@ function M.setup()
     )
   end, { nargs = '*', range = true })
 
-  -- Show all global variables
   utils.create_cmd('HurlManageVariable', function()
-    -- Prepare the lines to display in the popup
-    local lines = {}
-    if not _HURL_GLOBAL_CONFIG.global_vars or vim.tbl_isempty(_HURL_GLOBAL_CONFIG.global_vars) then
-      utils.log_info('hurl: no global variables set')
-      utils.notify('hurl: no global variables set', vim.log.levels.INFO)
-      table.insert(lines, 'No global variables set. Please use :HurlSetVariable to set one.')
-    else
-      for var_name, var_value in pairs(_HURL_GLOBAL_CONFIG.global_vars) do
-        table.insert(lines, var_name .. ' = ' .. var_value)
+    -- Load persisted variables
+    local persisted_vars = utils.load_persisted_vars()
+    
+    -- Load variables from env files
+    local env_vars = {}
+    local env_files = utils.find_env_files_in_folders()
+    for _, env in ipairs(env_files) do
+      if vim.fn.filereadable(env.path) == 1 then
+        local vars = utils.parse_env_file(env.path)
+        if vars then
+          for k, v in pairs(vars) do
+            env_vars[k] = {value = v, source = env.path}
+          end
+        end
       end
+    end
+
+    -- Prepare lines for display
+    local lines = {}
+    
+    -- Add env file variables
+    if not vim.tbl_isempty(env_vars) then
+      table.insert(lines, "# Environment File Variables")
+      for var_name, data in pairs(env_vars) do
+        table.insert(lines, string.format("%s = %s  # from %s", var_name, data.value, data.source))
+      end
+      table.insert(lines, "")
+    end
+    
+    -- Add persisted variables
+    if not vim.tbl_isempty(persisted_vars) then
+      table.insert(lines, "# Persisted Variables")
+      for var_name, value in pairs(persisted_vars) do
+        table.insert(lines, string.format("%s = %s", var_name, value))
+      end
+    end
+    
+    if #lines == 0 then
+      table.insert(lines, 'No variables set. Press "n" to create a new variable.')
     end
 
     local popup = require('hurl.popup')
     local text_popup = popup.show_text(
-      'Hurl.nvim - Global variables',
+      'Hurl.nvim - Variable Management',
       lines,
-      "Press 'q' to close, 'e' to edit, or 'n' to create a variable."
+      "Press 'q' to close, 'e' to edit persisted variables, or 'n' to create a new variable."
     )
 
-    -- Add e key binding to edit the variable
+    -- Add e key binding to edit persisted variables
     text_popup:map('n', 'e', function()
       local line = vim.api.nvim_get_current_line()
-      local var_name = line:match('^(.-) =')
+      local var_name = line:match('^([^=]+) =')
       if var_name then
         local new_value = vim.fn.input('Enter new value for ' .. var_name .. ': ')
-        _HURL_GLOBAL_CONFIG.global_vars[var_name] = new_value
-        vim.api.nvim_set_current_line(var_name .. ' = ' .. new_value)
+        if new_value and new_value ~= '' then
+          persisted_vars[var_name] = new_value
+          utils.save_persisted_vars(persisted_vars)
+          _HURL_GLOBAL_CONFIG.global_vars[var_name] = new_value
+          -- Update the display
+          vim.api.nvim_set_current_line(string.format("%s = %s", var_name, new_value))
+        end
       end
     end)
 
@@ -279,26 +312,31 @@ function M.setup()
     text_popup:map('n', 'n', function()
       local var_name = vim.fn.input('Enter new variable name: ')
       if not var_name or var_name == '' then
-        utils.notify('hurl: variable name cannot be empty', vim.log.levels.INFO)
+        utils.notify('Variable name cannot be empty', vim.log.levels.INFO)
         return
       end
 
-      local var_value = vim.fn.input('Enter new variable value: ')
+      local var_value = vim.fn.input('Enter variable value: ')
       if not var_value or var_value == '' then
-        utils.notify('hurl: variable value cannot be empty', vim.log.levels.INFO)
+        utils.notify('Variable value cannot be empty', vim.log.levels.INFO)
         return
       end
 
-      local line_position = -1
-      local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)
-      if first_line[1] == 'No global variables set. Please use :HurlSetVariable to set one.' then
-        -- Clear the buffer if it's empty
-        line_position = 0
+      -- Save to persisted variables
+      persisted_vars[var_name] = var_value
+      utils.save_persisted_vars(persisted_vars)
+      
+      -- Update global vars
+      _HURL_GLOBAL_CONFIG.global_vars[var_name] = var_value
+      
+      -- Update display
+      local new_line = string.format("%s = %s", var_name, var_value)
+      if #lines == 1 and lines[1]:match("No variables") then
+        lines = {"# Persisted Variables", new_line}
+      else
+        table.insert(lines, new_line)
       end
-
-      vim.cmd('HurlSetVariable ' .. var_name .. ' ' .. var_value)
-      -- Append to the last line
-      vim.api.nvim_buf_set_lines(0, line_position, -1, false, { var_name .. ' = ' .. var_value })
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
     end)
   end, {
     nargs = '*',

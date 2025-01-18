@@ -275,4 +275,72 @@ M.has_file_in_opts = function(opts)
   return false
 end
 
+--- Parse env file content into key-value pairs
+---@param file_path string The path to the env file
+---@return table|nil
+function M.parse_env_file(file_path)
+  local file = io.open(file_path, "r")
+  if not file then
+    return nil
+  end
+
+  local vars = {}
+  for line in file:lines() do
+    -- Skip comments and empty lines
+    if not line:match("^%s*#") and line:match("%S") then
+      local key, value = line:match("([^=]+)=(.+)")
+      if key and value then
+        vars[key:trim()] = value:trim()
+      end
+    end
+  end
+  file:close()
+  return vars
+end
+
+--- Get the path for storing persisted variables
+---@return string
+function M.get_persistence_file()
+  local data_path = vim.fn.stdpath('data')
+  local hurl_dir = data_path .. '/hurl.nvim'
+  -- Create directory if it doesn't exist
+  vim.fn.mkdir(hurl_dir, 'p')
+  return hurl_dir .. '/variables.json'
+end
+
+--- Load persisted variables
+---@return table
+function M.load_persisted_vars()
+  local file_path = M.get_persistence_file()
+  local file = io.open(file_path, "r")
+  if not file then
+    return {}
+  end
+  
+  local content = file:read("*all")
+  file:close()
+  
+  local ok, vars = pcall(vim.json.decode, content)
+  return ok and vars or {}
+end
+
+--- Save variables to persistence file
+---@param vars table The variables to persist
+function M.save_persisted_vars(vars)
+  local file_path = M.get_persistence_file()
+  local file = io.open(file_path, "w")
+  if not file then
+    M.log_error("Failed to open persistence file for writing")
+    return
+  end
+  
+  local ok, content = pcall(vim.json.encode, vars)
+  if ok then
+    file:write(content)
+  else
+    M.log_error("Failed to encode variables for persistence")
+  end
+  file:close()
+end
+
 return M
