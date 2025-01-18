@@ -4,9 +4,7 @@
 </p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors-)
-
+[![All Contributors](https://img.shields.io/badge/all_contributors-13-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![IT Man - Effortless APIs with Hurl.nvim: A Developer's Guide to Neovim Tooling [Vietnamese]](https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg)](https://www.youtube.com/watch?v=nr_RbHvnnwk)
@@ -436,6 +434,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://javoscript.com/"><img src="https://avatars.githubusercontent.com/u/11479916?v=4?s=100" width="100px;" alt="Javier Ugarte"/><br /><sub><b>Javier Ugarte</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=javoscript" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://gitlab.nettek.at/explore"><img src="https://avatars.githubusercontent.com/u/963440?v=4?s=100" width="100px;" alt="Daniel Jeller"/><br /><sub><b>Daniel Jeller</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=yngwi" title="Code">💻</a> <a href="https://github.com/jellydn/hurl.nvim/commits?author=yngwi" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Xouzoura"><img src="https://avatars.githubusercontent.com/u/74069598?v=4?s=100" width="100px;" alt="Xouzoura"/><br /><sub><b>Xouzoura</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=Xouzoura" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/dtanphat9388"><img src="https://avatars.githubusercontent.com/u/14110325?v=4?s=100" width="100px;" alt="Duong Tan Phat"/><br /><sub><b>Duong Tan Phat</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=dtanphat9388" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
