@@ -248,10 +248,10 @@ function M.setup()
     -- Load both persistent and env variables
     local persistent_vars = variable_manager.load_persistent_vars()
     local env_vars = variable_manager.load_env_vars()
-    
+
     -- Combine variables with env vars taking precedence
     local all_vars = vim.tbl_extend('force', persistent_vars, env_vars)
-    
+
     -- Prepare the lines to display in the popup
     local lines = {}
     if vim.tbl_isempty(all_vars) then
@@ -261,7 +261,7 @@ function M.setup()
       for name, value in pairs(env_vars) do
         table.insert(lines, string.format('%s = %s [env]', name, value))
       end
-      
+
       table.insert(lines, '\n# Persistent Variables:')
       for name, value in pairs(persistent_vars) do
         table.insert(lines, string.format('%s = %s', name, value))
@@ -285,7 +285,7 @@ function M.setup()
           utils.notify('Cannot edit environment file variables', vim.log.levels.WARN)
           return
         end
-        
+
         local new_value = vim.fn.input('Enter new value for ' .. var_name .. ': ')
         if new_value and new_value ~= '' then
           persistent_vars[var_name] = new_value
@@ -305,7 +305,7 @@ function M.setup()
           utils.notify('Cannot delete environment file variables', vim.log.levels.WARN)
           return
         end
-        
+
         persistent_vars[var_name] = nil
         variable_manager.save_persistent_vars(persistent_vars)
         vim.api.nvim_del_current_line()
@@ -327,7 +327,7 @@ function M.setup()
 
       persistent_vars[var_name] = var_value
       variable_manager.save_persistent_vars(persistent_vars)
-      
+
       -- Add the new variable to the display
       local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
       table.insert(lines, string.format('%s = %s', var_name, var_value))

@@ -1,5 +1,3 @@
-
-
 local M = {}
 local utils = require('hurl.utils')
 local Path = require('plenary.path')
@@ -31,13 +29,13 @@ function M.save_persistent_vars(vars)
   local storage_path = get_storage_path()
   -- Create directory if it doesn't exist
   storage_path:parent():mkdir({ parents = true, exists_ok = true })
-  
+
   local ok, encoded = pcall(vim.json.encode, vars)
   if not ok then
     utils.log_error('Failed to encode variables: ' .. encoded)
     return false
   end
-  
+
   storage_path:write(encoded, 'w')
   return true
 end
@@ -46,7 +44,9 @@ end
 function M.parse_env_file(file_path)
   local vars = {}
   local file = io.open(file_path, 'r')
-  if not file then return vars end
+  if not file then
+    return vars
+  end
 
   for line in file:lines() do
     -- Skip comments and empty lines
@@ -57,7 +57,7 @@ function M.parse_env_file(file_path)
       end
     end
   end
-  
+
   file:close()
   return vars
 end
@@ -66,14 +66,14 @@ end
 function M.load_env_vars()
   local vars = {}
   local env_files = _HURL_GLOBAL_CONFIG.find_env_files_in_folders()
-  
+
   for _, env in ipairs(env_files) do
     if vim.fn.filereadable(env.path) == 1 then
       local env_vars = M.parse_env_file(env.path)
       vars = vim.tbl_extend('force', vars, env_vars)
     end
   end
-  
+
   return vars
 end
 
