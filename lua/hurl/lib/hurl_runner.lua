@@ -126,9 +126,23 @@ function M.run_hurl_verbose(filePath, fromEntry, toEntry, isVeryVerbose, additio
       local end_time = vim.loop.hrtime()
       local response_time = (end_time - start_time) / 1e6 -- Convert to milliseconds
 
+      local display_data = {
+        headers = {},
+        body = stderr_data,
+        response_time = response_time,
+        status = code,
+        url = filePath,
+        method = 'N/A',
+        curl_command = 'N/A',
+        hurl_command = hurl_command,
+        captures = {},
+        timings = {},
+      }
+
       if code ~= 0 then
         utils.log_info('Hurl command failed with code ' .. code)
         display.show({ body = '# Hurl Error\n\n```sh\n' .. stderr_data .. '\n```' }, 'markdown')
+        history.update_history(display_data, 'error')
         return
       end
 
@@ -202,7 +216,7 @@ function M.run_hurl_verbose(filePath, fromEntry, toEntry, isVeryVerbose, additio
         table.insert(output_lines, '---')
 
         -- Update history for each entry
-        local display_data = {
+        local entry_display_data = {
           headers = entry.response.headers,
           body = entry.response.body,
           response_time = response_time,
@@ -214,7 +228,7 @@ function M.run_hurl_verbose(filePath, fromEntry, toEntry, isVeryVerbose, additio
           captures = entry.captures,
           timings = entry.timings,
         }
-        history.update_history(display_data)
+        history.update_history(entry_display_data)
 
         -- Save captures as global variables
         save_captures_as_globals(entry.captures)
@@ -323,6 +337,19 @@ function M.execute_hurl_cmd(opts, callback)
       M.is_running = false
       spinner.hide()
 
+      local display_data = {
+        headers = {},
+        body = stderr_data,
+        response_time = (vim.loop.hrtime() - M.start_time) / 1e6, -- Convert to milliseconds
+        status = code,
+        url = 'N/A',
+        method = 'N/A',
+        curl_command = 'N/A',
+        hurl_command = table.concat(cmd, ' '),
+        captures = {},
+        timings = {},
+      }
+
       if code ~= 0 then
         utils.log_error('Hurl command failed with code ' .. code)
         utils.notify('Hurl command failed. Check the split view for details.', vim.log.levels.ERROR)
@@ -339,6 +366,7 @@ function M.execute_hurl_cmd(opts, callback)
           curl_command = 'N/A',
         }
         split.show(error_data, 'markdown')
+        history.update_history(display_data, 'error')
         return
       end
 
@@ -364,7 +392,7 @@ function M.execute_hurl_cmd(opts, callback)
 
         -- Prepare the data for display
         local last_entry = result.entries[#result.entries]
-        local display_data = {
+        local entry_display_data = {
           headers = last_entry.response.headers,
           body = last_entry.response.body,
           response_time = M.response.response_time,
@@ -375,23 +403,23 @@ function M.execute_hurl_cmd(opts, callback)
         }
 
         -- Separate headers from body
-        local body_start = display_data.body:find('\n\n')
+        local body_start = entry_display_data.body:find('\n\n')
         if body_start then
-          local headers_str = display_data.body:sub(1, body_start - 1)
-          display_data.body = display_data.body:sub(body_start + 2)
+          local headers_str = entry_display_data.body:sub(1, body_start - 1)
+          entry_display_data.body = entry_display_data.body:sub(body_start + 2)
 
           -- Parse additional headers from the body
           for header in headers_str:gmatch('([^\n]+)') do
             local key, value = header:match('([^:]+):%s*(.*)')
             if key and value then
-              display_data.headers[key] = value
+              entry_display_data.headers[key] = value
             end
           end
         end
 
         -- Determine the content type
-        local content_type = display_data.headers['Content-Type']
-          or display_data.headers['content-type']
+        local content_type = entry_display_data.headers['Content-Type']
+          or entry_display_data.headers['content-type']
           or 'text/plain'
 
         local display_type = 'text'
@@ -403,11 +431,11 @@ function M.execute_hurl_cmd(opts, callback)
           display_type = 'xml'
         end
 
-        display_data.display_type = display_type
+        entry_display_data.display_type = display_type
 
-        container.show(display_data, display_type)
+        container.show(entry_display_data, display_type)
 
-        history.update_history(display_data)
+        history.update_history(entry_display_data)
 
         -- Save captures as global variables
         if result.entries and #result.entries > 0 then

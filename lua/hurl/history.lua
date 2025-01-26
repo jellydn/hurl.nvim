@@ -30,24 +30,31 @@ function M.show_last_response()
   display.show(last_response, last_response.display_type or 'text')
 end
 
--- Function to be called after each successful request
-function M.update_history(response)
+-- Function to be called after each request
+--- Update the history with the response
+---@param response table
+---@param type? string
+function M.update_history(response, type)
   -- Ensure response_time is a number
   response.response_time = tonumber(response.response_time) or '-'
 
-  -- Determine the content type and set display_type
-  local content_type = response.headers['Content-Type']
-    or response.headers['content-type']
-    or 'text/plain'
-
-  if content_type:find('json') then
-    response.display_type = 'json'
-  elseif content_type:find('html') then
-    response.display_type = 'html'
-  elseif content_type:find('xml') then
-    response.display_type = 'xml'
+  if type == 'error' then
+    response.display_type = 'shell'
   else
-    response.display_type = 'text'
+    -- Determine the content type and set display_type
+    local content_type = response.headers['Content-Type']
+      or response.headers['content-type']
+      or 'text/plain'
+
+    if content_type:find('json') then
+      response.display_type = 'json'
+    elseif content_type:find('html') then
+      response.display_type = 'html'
+    elseif content_type:find('xml') then
+      response.display_type = 'xml'
+    else
+      response.display_type = 'text'
+    end
   end
 
   add_to_history(response)

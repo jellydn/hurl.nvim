@@ -330,7 +330,7 @@ function M.setup()
         utils.notify('Failed to load display module: ' .. display, vim.log.levels.ERROR)
         return
       end
-      display.show(last_response, 'json')
+      display.show(last_response, last_response.display_type or 'json')
     else
       utils.notify('No response history available', vim.log.levels.INFO)
     end
