@@ -247,7 +247,7 @@ function M.setup()
   utils.create_cmd('HurlManageVariable', function()
     -- Load persisted variables
     local persisted_vars = utils.load_persisted_vars()
-    
+
     -- Load variables from env files
     local env_vars = {}
     local env_files = _HURL_GLOBAL_CONFIG.find_env_files_in_folders()

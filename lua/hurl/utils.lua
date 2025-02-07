@@ -281,7 +281,9 @@ end
 M.parse_env_file = function(file_path)
   local vars = {}
   local file = io.open(file_path, 'r')
-  if not file then return vars end
+  if not file then
+    return vars
+  end
 
   for line in file:lines() do
     -- Skip comments and empty lines
@@ -314,11 +316,13 @@ end
 M.load_persisted_vars = function()
   local file_path = M.get_storage_path()
   local file = io.open(file_path, 'r')
-  if not file then return {} end
-  
+  if not file then
+    return {}
+  end
+
   local content = file:read('*all')
   file:close()
-  
+
   local ok, vars = pcall(vim.json.decode, content)
   return ok and vars or {}
 end
@@ -332,14 +336,14 @@ M.save_persisted_vars = function(vars)
     M.log_error('Failed to open storage file for writing: ' .. file_path)
     return false
   end
-  
+
   local ok, content = pcall(vim.json.encode, vars)
   if not ok then
     M.log_error('Failed to encode variables to JSON')
     file:close()
     return false
   end
-  
+
   file:write(content)
   file:close()
   return true
