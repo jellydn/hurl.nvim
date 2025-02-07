@@ -353,7 +353,16 @@ function M.setup()
   utils.create_cmd('HurlDebugInfo', function()
     -- Get the log file path
     local log_file_path = utils.get_log_file_path()
-    local lines = { 'Log file path: ' .. log_file_path }
+    local persisted_file_path = utils.get_storage_path()
+    local lines =
+      { 'Log file path: ' .. log_file_path, 'Persisted file path: ' .. persisted_file_path }
+    local persisted_vars = utils.load_persisted_vars()
+    if not vim.tbl_isempty(persisted_vars) then
+      table.insert(lines, 'Persisted variables:')
+      for name, value in pairs(persisted_vars) do
+        table.insert(lines, '  ' .. name .. ' = ' .. value)
+      end
+    end
     local popup = require('hurl.popup')
     popup.show_text('Hurl.nvim - Debug info', lines)
   end, {
