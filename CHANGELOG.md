@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/jellydn/hurl.nvim/compare/v2.0.1...v2.1.0) (2025-02-07)
+
+
+### Features
+
+* **history:** enhance error handling and display type determination ([0653010](https://github.com/jellydn/hurl.nvim/commit/0653010e821ec64a175a665e87c987204491e1be)), closes [#226](https://github.com/jellydn/hurl.nvim/issues/226)
+
 ## [2.0.1](https://github.com/jellydn/hurl.nvim/compare/v2.0.0...v2.0.1) (2024-12-09)
 
 ### Bug Fixes
