@@ -22,6 +22,8 @@ Table of Contents                                *hurl.nvim-table-of-contents*
 1. Links                                                     |hurl.nvim-links|
 Welcome to hurl.nvim 👋Hurl.nvim is a Neovim plugin designed to run HTTP requests directly from `.hurl` files. Elevate your API development workflow by executing and viewing responses without leaving your editor.|hurl.nvim-|
 
+
+
 <https://www.youtube.com/watch?v=nr_RbHvnnwk>
 
 
