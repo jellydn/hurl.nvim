@@ -9,6 +9,10 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
+<a href="https://dotfyle.com/plugins/jellydn/hurl.nvim">
+	<img src="https://dotfyle.com/plugins/jellydn/hurl.nvim/shield?style=flat-square" />
+</a>
+
 [![IT Man - Effortless APIs with Hurl.nvim: A Developer's Guide to Neovim Tooling [Vietnamese]](https://i.ytimg.com/vi/nr_RbHvnnwk/hqdefault.jpg)](https://www.youtube.com/watch?v=nr_RbHvnnwk)
 
 ## Prerequisites
