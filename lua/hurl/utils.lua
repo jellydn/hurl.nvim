@@ -275,4 +275,78 @@ M.has_file_in_opts = function(opts)
   return false
 end
 
+--- Parse env file content into variables
+---@param file_path string
+---@return table
+M.parse_env_file = function(file_path)
+  local vars = {}
+  local file = io.open(file_path, 'r')
+  if not file then
+    return vars
+  end
+
+  for line in file:lines() do
+    -- Skip comments and empty lines
+    if not line:match('^%s*#') and line:match('%S') then
+      local name, value = line:match('([^=]+)=(.+)')
+      if name and value then
+        name = name:gsub('^%s*(.-)%s*$', '%1')
+        value = value:gsub('^%s*(.-)%s*$', '%1')
+        vars[name] = value
+      end
+    end
+  end
+  file:close()
+  return vars
+end
+
+--- Get persistent storage path
+---@return string
+M.get_storage_path = function()
+  local data_path = vim.fn.stdpath('data')
+  local hurl_path = data_path .. '/hurl-nvim'
+  if vim.fn.isdirectory(hurl_path) == 0 then
+    vim.fn.mkdir(hurl_path, 'p')
+  end
+  return hurl_path .. '/variables.json'
+end
+
+--- Load persisted variables
+---@return table
+M.load_persisted_vars = function()
+  local file_path = M.get_storage_path()
+  local file = io.open(file_path, 'r')
+  if not file then
+    return {}
+  end
+
+  local content = file:read('*all')
+  file:close()
+
+  local ok, vars = pcall(vim.json.decode, content)
+  return ok and vars or {}
+end
+
+--- Save variables to persistent storage
+---@param vars table
+M.save_persisted_vars = function(vars)
+  local file_path = M.get_storage_path()
+  local file = io.open(file_path, 'w')
+  if not file then
+    M.log_error('Failed to open storage file for writing: ' .. file_path)
+    return false
+  end
+
+  local ok, content = pcall(vim.json.encode, vars)
+  if not ok then
+    M.log_error('Failed to encode variables to JSON')
+    file:close()
+    return false
+  end
+
+  file:write(content)
+  file:close()
+  return true
+end
+
 return M
