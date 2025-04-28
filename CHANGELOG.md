@@ -2,10 +2,9 @@
 
 ## [2.2.0](https://github.com/jellydn/hurl.nvim/compare/v2.1.0...v2.2.0) (2025-04-28)
 
-
 ### Features
 
-* enhance Variable Management ([#228](https://github.com/jellydn/hurl.nvim/issues/228)) ([ad28fe8](https://github.com/jellydn/hurl.nvim/commit/ad28fe8d7a91331ad4e66bfc3b7950f8d7c949d8))
+- enhance Variable Management ([#228](https://github.com/jellydn/hurl.nvim/issues/228)) ([ad28fe8](https://github.com/jellydn/hurl.nvim/commit/ad28fe8d7a91331ad4e66bfc3b7950f8d7c949d8))
 
 ## [2.1.0](https://github.com/jellydn/hurl.nvim/compare/v2.0.1...v2.1.0) (2025-02-07)
 
