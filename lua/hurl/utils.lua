@@ -349,4 +349,20 @@ M.save_persisted_vars = function(vars)
   return true
 end
 
+---Find a list of environment files
+---@see rest.Opts.Env.find
+---@return string[] files Environment variable files path
+M.find_env_files = function()
+  local pattern = '.*%.env.*'
+  return vim.fs.find(function(name, _)
+    return name:match(pattern)
+  end, {
+    path = vim.fn.expand('%:h'),
+    upward = true,
+    stop = vim.fn.getcwd(),
+    type = 'file',
+    limit = math.huge,
+  })
+end
+
 return M

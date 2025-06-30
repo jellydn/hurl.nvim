@@ -145,6 +145,8 @@ By checking these locations, the plugin ensures a comprehensive search for envir
 
 To change the environment file name, use the `HurlSetEnvFile` command followed by the new file name. You can have multiple variable files by having comma-separated values.
 
+Another way, use the `HurlSelectEnvFile` command to select and register environment file.
+
 #### Notes
 
 - Ensure that the new environment file exists in the directories where the plugin searches for it, as outlined in the [File Location](#file-location) section.

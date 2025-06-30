@@ -84,6 +84,29 @@ local function run_verbose_command(filePath, fromEntry, toEntry, isVeryVerbose, 
   hurl_runner.run_hurl_verbose(filePath, fromEntry, toEntry, isVeryVerbose, additionalArgs)
 end
 
+---register the dotenv file.
+---this file will be sourced right before each requests (it won't be sourced
+---multiple times when running all requests in current hurl file)
+---@param path string file path of dotenv file
+local function register_env_file(path)
+    _HURL_GLOBAL_CONFIG.env_file = vim.split(path, ',')
+    local updated_env = vim.inspect(_HURL_GLOBAL_CONFIG.env_file)
+    utils.log_info('hurl: env file changed to ' .. updated_env)
+    utils.notify('hurl: env file changed to ' .. updated_env, vim.log.levels.INFO)
+end
+
+-- @param bufnr number? buffer identifier, default to current buffer
+---@return string? path
+local function select_env_file(bufnr)
+  vim.ui.select(utils.find_env_files(), {
+    prompt = 'Select env file',
+  }, function(item, _idx)
+    if item then
+      register_env_file(item)
+    end
+  end)
+end
+
 function M.setup()
   -- Show virtual text for Hurl entries
   codelens.setup()
@@ -148,10 +171,13 @@ function M.setup()
       utils.notify('hurl: please provide the env file name', vim.log.levels.INFO)
       return
     end
-    _HURL_GLOBAL_CONFIG.env_file = vim.split(env_file, ',')
-    local updated_env = vim.inspect(_HURL_GLOBAL_CONFIG.env_file)
-    utils.log_info('hurl: env file changed to ' .. updated_env)
-    utils.notify('hurl: env file changed to ' .. updated_env, vim.log.levels.INFO)
+
+    register_env_file(env_file)
+  end, { nargs = '*', range = true })
+
+  -- Select the env file
+  utils.create_cmd('HurlSelectEnvFile', function(opts)
+    select_env_file()
   end, { nargs = '*', range = true })
 
   -- Run Hurl in verbose mode
@@ -277,7 +303,7 @@ function M.setup()
       for name, value in pairs(persisted_vars) do
         if not env_vars[name] then
           table.insert(lines, name .. ' = ' .. value)
-        end
+        endbefore each request (
       end
       table.sort(lines)
     end
