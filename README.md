@@ -145,6 +145,8 @@ By checking these locations, the plugin ensures a comprehensive search for envir
 
 To change the environment file name, use the `HurlSetEnvFile` command followed by the new file name. You can have multiple variable files by having comma-separated values.
 
+Alternatively,, use the `HurlSelectEnvFile` command to select and register environment file.
+
 #### Notes
 
 - Ensure that the new environment file exists in the directories where the plugin searches for it, as outlined in the [File Location](#file-location) section.
@@ -309,6 +311,7 @@ local default_config = {
     height = 40,
   },
   env_file = { 'vars.env' },
+  env_pattern =  '.*%.env.*',
   fixture_vars = {
     {
       name = 'random_int_number',
@@ -349,6 +352,7 @@ require('hurl').setup({
   debug = true,          -- Enable to show detailed logs
   mode = 'popup',        -- Change to 'popup' to display responses in a popup window
   env_file = { 'vars.env' }, -- Change this to use a different environment file name
+  env_pattern =  '.*%.env.*', -- Customize the environment variables file pattern
   formatters = {
     json = { 'jq' },    -- Customize the JSON formatter command
     html = {
