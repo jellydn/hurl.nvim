@@ -79,11 +79,29 @@ local function run_at_lines(start_line, end_line, opts, callback)
   hurl_runner.execute_hurl_cmd(opts, callback)
 end
 
--- Helper function to run verbose commands in split mode
+-- Runs a Hurl request in verbose or very verbose mode for the specified file and entry range.
+-- @param filePath The path to the Hurl file to execute.
+-- @param fromEntry The starting entry index to run.
+-- @param toEntry The ending entry index to run.
+-- @param isVeryVerbose If true, runs in very verbose mode; otherwise, runs in verbose mode.
+-- @param additionalArgs Optional additional arguments to pass to the Hurl command.
 local function run_verbose_command(filePath, fromEntry, toEntry, isVeryVerbose, additionalArgs)
   hurl_runner.run_hurl_verbose(filePath, fromEntry, toEntry, isVeryVerbose, additionalArgs)
 end
 
+--- Register the dotenv file.
+-- Registers one or more dotenv environment files for Hurl requests.
+-- @param path Comma-separated file path(s) to dotenv environment file(s).
+local function register_env_file(path)
+  _HURL_GLOBAL_CONFIG.env_file = vim.split(path, ',')
+  local updated_env = vim.inspect(_HURL_GLOBAL_CONFIG.env_file)
+  utils.log_info('hurl: env file changed to ' .. updated_env)
+  utils.notify('hurl: env file changed to ' .. updated_env, vim.log.levels.INFO)
+end
+
+-- Sets up all Hurl.nvim Neovim commands, key mappings, and UI integrations for running, managing, and debugging Hurl HTTP requests and environment variables.
+--
+-- Registers commands for executing Hurl requests (by file, selection, or entry), toggling display modes, managing environment files and variables, viewing debug information, and displaying request history. Integrates with virtual text annotations and popups for enhanced user interaction.
 function M.setup()
   -- Show virtual text for Hurl entries
   codelens.setup()
@@ -148,11 +166,43 @@ function M.setup()
       utils.notify('hurl: please provide the env file name', vim.log.levels.INFO)
       return
     end
-    _HURL_GLOBAL_CONFIG.env_file = vim.split(env_file, ',')
-    local updated_env = vim.inspect(_HURL_GLOBAL_CONFIG.env_file)
-    utils.log_info('hurl: env file changed to ' .. updated_env)
-    utils.notify('hurl: env file changed to ' .. updated_env, vim.log.levels.INFO)
+
+    register_env_file(env_file)
   end, { nargs = '*', range = true })
+
+  -- Select the env file
+  utils.create_cmd('HurlSelectEnvFile', function()
+    -- Find a list of environment files
+    local pattern = _HURL_GLOBAL_CONFIG.env_pattern
+    if not pattern or type(pattern) ~= 'string' then
+      M.log_error('Invalid env_pattern configuration')
+      return
+    end
+
+    local env_files = vim.fs.find(function(name, _)
+      local ok, result = pcall(string.match, name, pattern)
+      return ok and result
+    end, {
+      path = vim.fn.expand('%:h'),
+      upward = true,
+      stop = vim.fn.getcwd(),
+      type = 'file',
+      limit = math.huge,
+    })
+    if not env_files or #env_files == 0 then
+      utils.notify('No environment files found matching pattern', vim.log.levels.WARN)
+      return
+    end
+
+    -- Selects an environment file using a UI prompt.
+    vim.ui.select(env_files, {
+      prompt = 'Select env file',
+    }, function(item)
+      if item then
+        register_env_file(item)
+      end
+    end)
+  end, { nargs = 0 })
 
   -- Run Hurl in verbose mode
   utils.create_cmd('HurlVerbose', function(opts)
