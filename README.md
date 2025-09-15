@@ -131,7 +131,6 @@ The plugin searches for a `vars.env` (env_file config) in multiple locations to 
 1. **Current File's Directory:** The directory where the current file is located. This is particularly useful for projects where environment variables are specific to a particular module or component.
 
 2. **Specific Directories in Project:** The plugin scans predefined directories within the project, which are commonly used for organizing different aspects of a project:
-
    - `src/`: The source code directory.
    - `test/` and `tests/`: Directories typically used for test scripts.
    - `server/`: If your project includes a server component, this directory is checked.
