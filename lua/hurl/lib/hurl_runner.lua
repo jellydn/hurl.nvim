@@ -352,10 +352,14 @@ function M.execute_hurl_cmd(opts, callback)
 
       if code ~= 0 then
         utils.log_error('Hurl command failed with code ' .. code)
-        utils.notify('Hurl command failed. Check the split view for details.', vim.log.levels.ERROR)
+        utils.notify('Hurl command failed. Check the ' .. _HURL_GLOBAL_CONFIG.mode .. ' view for details.', vim.log.levels.ERROR)
 
-        -- Show error in split view
-        local split = require('hurl.split')
+        -- Show error in configured mode (popup or split)
+        local ok, error_display = pcall(require, 'hurl.' .. (_HURL_GLOBAL_CONFIG.mode or 'split'))
+        if not ok then
+          utils.notify('Failed to load display module: ' .. error_display, vim.log.levels.ERROR)
+          return
+        end
         local error_data = {
           body = '# Hurl Error\n\n```sh\n' .. stderr_data .. '\n```',
           headers = {},
@@ -365,7 +369,7 @@ function M.execute_hurl_cmd(opts, callback)
           response_time = 0,
           curl_command = 'N/A',
         }
-        split.show(error_data, 'markdown')
+        error_display.show(error_data, 'markdown')
         history.update_history(display_data, 'error')
         return
       end
