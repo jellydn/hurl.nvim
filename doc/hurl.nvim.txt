@@ -191,6 +191,7 @@ To change the environment file name, use the `HurlSetEnvFile` command followed
 by the new file name. You can have multiple variable files by having
 comma-separated values.
 
+Alternatively, use the `HurlSelectEnvFile` command to select and register environment file.
 
 NOTES
 
@@ -388,6 +389,7 @@ CONFIGURATION                                        *hurl.nvim-configuration*
         height = 40,
       },
       env_file = { 'vars.env' },
+      env_pattern =  '.*%.env.*',
       fixture_vars = {
         {
           name = 'random_int_number',
@@ -428,6 +430,7 @@ To apply these configurations, include them in your Neovim setup like this:
       debug = true,          -- Enable to show detailed logs
       mode = 'popup',        -- Change to 'popup' to display responses in a popup window
       env_file = { 'vars.env' }, -- Change this to use a different environment file name
+      env_pattern =  '.*%.env.*', -- Customize the environment variables file pattern
       formatters = {
         json = { 'jq' },    -- Customize the JSON formatter command
         html = {

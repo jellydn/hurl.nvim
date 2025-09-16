@@ -15,6 +15,7 @@ local default_config = {
     height = 40,
   },
   env_file = { 'vars.env' },
+  env_pattern = '.*%.env.*',
   fixture_vars = {
     {
       name = 'random_int_number',
