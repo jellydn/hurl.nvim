@@ -1,242 +1,413 @@
-# GitHub Copilot Instructions for hurl.nvim
+# AGENTS.md
 
-## Project Overview
+## 📦 Project Overview
 
-`hurl.nvim` is a Neovim plugin that enables developers to run HTTP requests directly from `.hurl` files within their editor. The plugin provides a seamless API development workflow by executing requests and displaying responses without leaving Neovim.
+**hurl.nvim** is a Neovim plugin that enables developers to run HTTP requests directly from `.hurl` files within their editor. The plugin provides a seamless API development workflow by executing requests and displaying responses without leaving Neovim.
 
-### Key Features
-- Execute HTTP requests from `.hurl` files
-- Multiple display modes (popup/split view)
-- Environment variable support with `vars.env` files
-- Response formatting (JSON, HTML, XML)
-- Request history and management
-- Variable management and fixtures
-- Integration with Neovim's LSP and treesitter
+- **Repository:** [jellydn/hurl.nvim](https://github.com/jellydn/hurl.nvim)
+- **Primary Language:** Lua
+- **Key Dependencies:** `nui.nvim`, `plenary.nvim`, `nvim-treesitter`
+- **Test Framework:** `vusted`
+- **Build System:** `Makefile`
+- **CI:** GitHub Actions
+- **Issue Tracking:** GitHub Issues
+- **Additional Docs:** `README.md` for user documentation
 
-## Architecture and Key Components
+______________________________________________________________________
 
-### Core Structure
+## 🗂️ Repository Structure
+
+```
+hurl.nvim/
+├── lua/hurl/               # Main plugin code
+│   ├── init.lua           # Main setup and configuration
+│   ├── main.lua           # Core functionality and command registration
+│   ├── popup.lua          # Popup window implementation
+│   ├── split.lua          # Split view implementation
+│   ├── http_utils.lua     # HTTP request utilities
+│   ├── utils.lua          # General utility functions
+│   ├── git_utils.lua      # Git-related utilities
+│   ├── history.lua        # Request history management
+│   ├── health.lua         # Health check implementation
+│   ├── codelens.lua       # CodeLens integration
+│   └── vlog.lua           # Logging utilities
+├── test/                  # Vusted-based tests
+│   ├── hurl_spec.lua
+│   ├── plugin_spec.lua
+│   └── hurl_parser_spec.lua
+├── example/               # Example .hurl files for testing
+├── doc/                   # Vim help documentation
+├── .github/               # CI, issue templates, workflows
+├── README.md              # Main user documentation
+├── CHANGELOG.md           # Version history
+├── Makefile               # Build and test commands
+└── version.txt            # Version info
+```
+
+______________________________________________________________________
+
+## 🚦 Quick Start
+
+1. **Install core dependencies:**
+
+   ```bash
+   # For testing and development
+   make install
+   ```
+
+2. **Run tests:**
+
+   ```bash
+   make test                    # Run all tests (requires vusted)
+   ```
+
+3. **Lint and format:**
+
+   ```bash
+   # Uses stylua for formatting (if available)
+   stylua lua/ test/
+   ```
+
+4. **Try the plugin:**
+
+   ```lua
+   -- Basic setup in init.lua
+   require('hurl').setup({
+     debug = false,
+     mode = 'split',
+     show_notification = false,
+     formatters = {
+       json = { 'jq' },
+       html = { 'prettier', '--parser', 'html' },
+     },
+   })
+   ```
+
+______________________________________________________________________
+
+## 🧑‍💻 Development Guidelines
+
+### 1. **Code Style & Quality**
+
+- **Lua 5.1+** (Neovim compatible)
+- **Type annotations:** Use EmmyLua format for function documentation
+- **Naming:** Use snake_case for functions and variables, PascalCase for modules
+- **Error handling:** Use `pcall` for operations that might fail
+- **Logging:** Use the built-in logging system (`utils.log_*`)
+
+### 2. **Plugin Architecture**
+
+- **Main entry:** `init.lua` handles setup and configuration
+- **Core logic:** `main.lua` registers commands and manages plugin lifecycle
+- **UI components:** Separate popup and split view implementations
+- **Utilities:** Modular utility functions for HTTP, Git, and general operations
+- **Configuration:** Global config stored in `_HURL_GLOBAL_CONFIG`
+- **Health checks:** Implement checks in `health.lua`
+
+### 3. **HTTP Request Handling**
+
+- **External dependency:** Uses external `hurl` command for actual HTTP requests
+- **Request parsing:** Parse `.hurl` files using treesitter or custom parsers
+- **Environment support:** Support for `vars.env` files and variable substitution
+- **Response formatting:** Multiple formatters (jq, prettier, tidy)
+- **Error handling:** Graceful handling of network errors and timeouts
+
+### 4. **Testing**
+
+- **Test framework:** Use `vusted` for Lua testing
+- **Test files:** Place in `test/` directory with `*_spec.lua` naming
+- **Coverage:** Test both success and failure scenarios
+- **Mocking:** Mock external dependencies (hurl command, file system)
+- **CI:** Automated testing via GitHub Actions
+
+### 5. **Documentation**
+
+- **README.md:** Comprehensive user documentation with examples
+- **Vim help:** Generate help documentation in `doc/`
+- **EmmyLua annotations:** Document function signatures and types
+- **Code comments:** Explain complex logic and algorithms
+- **Changelog:** Maintain version history in `CHANGELOG.md`
+
+### 6. **Configuration System**
+
+- **Default config:** Provide sensible defaults in `init.lua`
+- **User config:** Support deep merging with `vim.tbl_deep_extend`
+- **Validation:** Validate user input and provide helpful error messages
+- **Backwards compatibility:** Handle deprecated options gracefully
+
+### 7. **UI Implementation**
+
+- **Display modes:** Support both popup and split view modes
+- **Key mappings:** Consistent keybindings across UI components
+- **Responsive design:** Handle window resizing and repositioning
+- **Visual feedback:** Provide clear indicators for long-running operations
+- **Accessibility:** Support standard Neovim navigation patterns
+
+### 8. **Integration Points**
+
+- **Treesitter:** Use for syntax highlighting and parsing
+- **LSP:** Optional integration for enhanced development experience
+- **File type detection:** Automatic detection of `.hurl` files
+- **Autocommands:** Clean resource management and event handling
+
+## 9. The Code Base
+
+### General Structure
+
+The repository contains a Neovim plugin written in Lua that provides HTTP request capabilities:
+
 ```
 lua/hurl/
-├── init.lua           # Main setup and configuration
-├── main.lua           # Core functionality and command registration
-├── popup.lua          # Popup window implementation
-├── split.lua          # Split view implementation
-├── http_utils.lua     # HTTP request utilities
-├── utils.lua          # General utility functions
-├── git_utils.lua      # Git-related utilities
+├── init.lua           # Plugin setup and configuration
+├── main.lua           # Command registration and core functionality
+├── popup.lua          # Popup window implementation using nui.nvim
+├── split.lua          # Split window implementation
+├── http_utils.lua     # HTTP request processing
+├── utils.lua          # General utilities and helpers
+├── git_utils.lua      # Git-related functionality
 ├── history.lua        # Request history management
 ├── health.lua         # Health check implementation
 ├── codelens.lua       # CodeLens integration
 └── vlog.lua           # Logging utilities
 ```
 
-### Configuration System
-- Default configuration in `lua/hurl/init.lua`
-- Global config stored in `_HURL_GLOBAL_CONFIG`
-- User configurations merged with `vim.tbl_deep_extend`
+### Key Functionality
 
-## Code Patterns and Conventions
+- **Configuration:** `init.lua` sets up default configuration and merges user options:
 
-### Lua Style
-- Use modern Lua patterns and idioms
-- Follow Neovim plugin conventions
-- Prefer local functions and variables
-- Use meaningful variable names
-- Include type annotations with EmmyLua format
-
-### Error Handling
-- Use `pcall` for operations that might fail
-- Provide meaningful error messages
-- Log errors with appropriate severity levels
-- Handle edge cases gracefully
-
-### Example Pattern:
 ```lua
-local function safe_operation()
-  local ok, result = pcall(function()
-    -- risky operation
-    return some_function()
-  end)
-  
-  if not ok then
-    utils.log_error('Operation failed: ' .. result)
-    return nil
-  end
-  
-  return result
-end
+local default_config = {
+  debug = false,
+  mode = 'split',
+  show_notification = false,
+  auto_close = true,
+  split_position = 'right',
+  split_size = '50%',
+  popup_position = '50%',
+  popup_size = { width = 80, height = 40 },
+  env_file = { 'vars.env' },
+  formatters = {
+    json = { 'jq' },
+    html = { 'prettier', '--parser', 'html' },
+    xml = { 'tidy', '-xml', '-i', '-q' },
+  },
+}
 ```
 
-### Configuration Patterns
-- Always provide sensible defaults
-- Validate user input
-- Use deep merge for configuration extension
-- Support both string and table formats where appropriate
+- **Commands:** `main.lua` registers Neovim commands and sets up autocommands:
 
-### Example:
 ```lua
--- Handle both string and table for env_file
-if options and options.env_file ~= nil and type(options.env_file) == 'string' then
-  utils.log_warn('env_file should be a table')
-  options.env_file = { options.env_file }
-end
+vim.api.nvim_create_user_command('HurlRunner', function()
+  require('hurl').run_current_file()
+end, {})
+
+vim.api.nvim_create_user_command('HurlRunnerAt', function()
+  require('hurl').run_at_cursor()
+end, {})
 ```
 
-## Development Guidelines
+- **HTTP Processing:** The plugin uses the external `hurl` command to execute requests and process responses with configurable formatters.
 
-### File Organization
-- Keep modules focused and cohesive
-- Separate UI logic (popup, split) from core logic
-- Use utility modules for reusable functionality
-- Follow single responsibility principle
+______________________________________________________________________
 
-### Testing
-- Use `vusted` for testing (run with `make test`)
-- Test files are in `test/` directory
-- Follow existing test patterns in `*_spec.lua` files
-- Test both success and failure scenarios
+## 🛠️ Common Commands & Development Workflow
 
-### Documentation
-- Maintain comprehensive README with examples
-- Use EmmyLua annotations for function documentation
-- Include inline comments for complex logic
-- Keep examples in documentation up-to-date
+### Development Commands
 
-### Dependencies
-- Minimize external dependencies
-- Use Neovim built-in functions when possible
-- Core dependencies: `nui.nvim`, `plenary.nvim`, `nvim-treesitter`
-- Optional dependencies should degrade gracefully
+- **Setup development environment:**
+  ```bash
+  # Install vusted for testing
+  make install
+  ```
 
-## Neovim Plugin Specific Guidelines
+- **Run tests:**
+  ```bash
+  make test                    # Run all tests
+  vusted test/                 # Direct vusted execution
+  ```
 
-### Command Registration
-- Use descriptive command names with `Hurl` prefix
-- Provide completion where appropriate
-- Include command descriptions for help
-- Support range operations for visual mode
+- **Format code:**
+  ```bash
+  stylua lua/ test/           # Format Lua code (if stylua is installed)
+  ```
 
-### Autocommands
-- Use appropriate events for file type detection
-- Clean up resources on buffer deletion
-- Handle window/tab changes gracefully
+- **Generate documentation:**
+  ```bash
+  # Generate vim help docs (if using vimdoc)
+  vimdoc lua/hurl/init.lua
+  ```
 
-### UI Implementation
-- Support both popup and split modes
-- Implement consistent key mappings
-- Provide visual feedback for long operations
-- Handle window resizing and repositioning
+### Plugin Commands
 
-### Integration Points
-- Use treesitter for syntax highlighting
-- Implement health checks in `health.lua`
-- Support LSP features where appropriate
-- Integrate with Neovim's built-in features
+- **Basic usage:**
+  ```vim
+  :HurlRunner                 " Run entire .hurl file
+  :HurlRunnerAt              " Run request at cursor
+  :HurlRunnerToEntry         " Run from start to cursor
+  :HurlToggleMode            " Toggle between popup/split
+  :HurlVerbose               " Run in verbose mode
+  ```
 
-## Environment and Variable Management
+- **Variable management:**
+  ```vim
+  :HurlSetVariable API_KEY your_key    " Set environment variable
+  :HurlManageVariable                  " Open variable manager
+  :HurlSetEnvFile custom.env          " Set custom env file
+  ```
 
-### Environment Files
-- Support multiple environment file names
-- Search in standard project locations
-- Handle missing files gracefully
-- Provide clear error messages for syntax errors
+______________________________________________________________________
 
-### Variable Fixtures
-- Support dynamic variable generation
-- Implement callback-based variable system
-- Ensure reproducible behavior where possible
-- Document fixture variable usage
+## 🧩 Agent Code Integration
 
-## HTTP Request Handling
+### a. **File Navigation & Context**
 
-### Request Execution
-- Use external `hurl` command for actual HTTP requests
-- Parse command output appropriately
-- Handle timeouts and network errors
-- Support verbose and debug modes
+- **Plugin entry:** `lua/hurl/init.lua`
+- **Core logic:** `lua/hurl/main.lua`
+- **UI components:** `lua/hurl/popup.lua`, `lua/hurl/split.lua`
+- **Utilities:** `lua/hurl/utils.lua`, `lua/hurl/http_utils.lua`
+- **Tests:** `test/*.lua`
+- **Documentation:** `README.md`, `doc/`
 
-### Response Processing
-- Format responses based on content type
-- Support multiple formatters (jq, prettier, tidy)
-- Handle large responses efficiently
-- Preserve raw response data
+### b. **Best Practices for Coding Assistance Agents**
 
-## Code Quality Standards
+- **Always check plugin dependencies** before modifying core functionality (nui.nvim, plenary.nvim)
+- **When adding commands:** Update both `main.lua` and documentation
+- **When modifying UI:** Ensure both popup and split modes work consistently
+- **When changing config:** Update default config and add validation
+- **When adding features:** Add corresponding tests and update README
+- **Environment handling:** Respect user's environment file preferences and search paths
+
+### c. **Common Patterns**
+
+- **Module structure:** Follow Neovim plugin conventions with `local M = {}` pattern
+- **Configuration:** Use `vim.tbl_deep_extend` for merging user config
+- **Error handling:** Use `pcall` and provide meaningful error messages
+- **UI creation:** Use nui.nvim for consistent UI components
+- **Async operations:** Use `vim.schedule` for UI updates from async contexts
+- **Command registration:** Use `vim.api.nvim_create_user_command` with proper options
+
+______________________________________________________________________
+
+## 🧪 Testing & Quality Assurance
+
+### Test Structure
+
+- **Unit tests:** Test individual functions and modules
+- **Integration tests:** Test command execution and UI interactions
+- **Mock external dependencies:** Mock `hurl` command and file system operations
+- **Test configuration:** Test various configuration scenarios
+
+### Quality Standards
+
+- **Code coverage:** Aim for high test coverage of core functionality
+- **Error scenarios:** Test error handling and edge cases
+- **Performance:** Ensure UI responsiveness and efficient request handling
+- **Compatibility:** Test with multiple Neovim versions
+
+______________________________________________________________________
+
+## 📝 Documentation & Examples
+
+### User Documentation
+
+- **README.md:** Installation, configuration, and usage examples
+- **Help docs:** Vim help documentation for commands and functions
+- **Examples:** Sample `.hurl` files and configuration snippets
+
+### Developer Documentation
+
+- **Code comments:** Explain complex algorithms and business logic
+- **Function documentation:** EmmyLua annotations for all public functions
+- **Architecture decisions:** Document design choices and trade-offs
+
+______________________________________________________________________
+
+## 🛡️ Security & Best Practices
+
+### Security Considerations
+
+- **Environment variables:** Secure handling of sensitive data in env files
+- **Command execution:** Safe execution of external `hurl` command
+- **File access:** Proper validation of file paths and permissions
+- **Error messages:** Avoid exposing sensitive information in error output
 
 ### Performance
-- Avoid blocking the UI thread
-- Use async operations where appropriate
-- Cache expensive computations
-- Minimize memory usage
 
-### Maintainability
-- Keep functions small and focused
-- Use consistent naming conventions
-- Avoid deep nesting
-- Refactor common patterns into utilities
+- **Async operations:** Non-blocking HTTP requests and UI updates
+- **Memory management:** Efficient handling of large responses
+- **Caching:** Cache environment variables and parsed configurations
+- **Resource cleanup:** Proper cleanup of buffers and windows
 
-### Security
-- Validate user input
-- Handle sensitive data appropriately
-- Avoid code injection vulnerabilities
-- Use secure default configurations
+______________________________________________________________________
 
-## Contributing Guidelines
+## 🏷️ Branching & Workflow
 
-### Pull Requests
-- Follow existing code style
-- Include tests for new functionality
-- Update documentation as needed
-- Provide clear commit messages
-- Test with multiple Neovim versions
+### Development Workflow
 
-### Issue Handling
-- Reproduce issues before fixing
-- Provide minimal reproduction cases
-- Consider backward compatibility
-- Document breaking changes clearly
+- **Branch naming:** `feature/description`, `bugfix/description`, `docs/description`
+- **Commit messages:** Follow conventional commit format
+- **Pull requests:** Include tests, documentation updates, and changelog entries
+- **Code review:** Focus on functionality, performance, and user experience
 
-## Common Patterns to Follow
+### Release Process
 
-### Module Structure
-```lua
-local M = {}
+- **Version management:** Update `version.txt` and `CHANGELOG.md`
+- **Testing:** Comprehensive testing before release
+- **Documentation:** Update README and help docs
+- **Tagging:** Proper git tagging for releases
 
--- Private functions
-local function private_helper()
-  -- implementation
-end
+______________________________________________________________________
 
--- Public API
-function M.public_function()
-  -- implementation
-end
+## 🧭 Quick Reference
 
--- Setup function (if applicable)
-function M.setup(opts)
-  -- configuration setup
-end
+| Task                          | Command/Location                    |
+| ----------------------------- | ----------------------------------- |
+| Run tests                     | `make test`                         |
+| Install test dependencies     | `make install`                      |
+| Format code                   | `stylua lua/ test/`                 |
+| Main plugin file              | `lua/hurl/init.lua`                |
+| Core functionality            | `lua/hurl/main.lua`                |
+| UI components                 | `lua/hurl/popup.lua`, `split.lua`   |
+| Utilities                     | `lua/hurl/utils.lua`                |
+| Tests                         | `test/*.lua`                        |
+| Documentation                 | `README.md`                         |
+| Configuration                 | `_HURL_GLOBAL_CONFIG` global        |
+| Commands                      | `:Hurl*` commands                   |
+| Environment files             | `vars.env` (configurable)           |
 
-return M
-```
+______________________________________________________________________
 
-### Configuration Validation
-```lua
-local function validate_config(config)
-  assert(type(config) == 'table', 'Config must be a table')
-  -- Additional validation
-end
-```
+## 🧠 Additional Instructions
 
-### Error Logging
-```lua
-local utils = require('hurl.utils')
+### For AI Coding Assistants
 
--- Use appropriate log levels
-utils.log_info('Information message')
-utils.log_warn('Warning message') 
-utils.log_error('Error message')
-```
+- **This file provides comprehensive context** for understanding hurl.nvim's architecture and development practices
+- **Always respect the plugin's architecture** when making changes (separate UI logic, modular utilities)
+- **Test thoroughly** - HTTP clients need robust error handling and edge case coverage
+- **Consider user experience** - Plugin should work seamlessly within Neovim workflows
+- **Environment handling is critical** - Respect user's environment file setup and variable substitution
+- **UI consistency** - Ensure both popup and split modes provide equivalent functionality
+- **External dependencies** - Handle missing `hurl` command gracefully with helpful error messages
+- **Performance matters** - Don't block Neovim's UI thread with long-running HTTP requests
+- **Security first** - Be careful with environment variable handling and command execution
 
-This document should guide GitHub Copilot in understanding the project structure, conventions, and best practices for contributing to hurl.nvim.
+### Development Notes
+
+- **External hurl dependency:** Plugin requires the `hurl` CLI tool to be installed
+- **File discovery:** Environment files searched in multiple locations (current dir, src/, test/, etc.)
+- **Variable substitution:** Support for dynamic variables through fixture callbacks
+- **Response formatting:** Configurable formatters for different content types
+- **History management:** Track and replay previous requests
+- **Git integration:** Discover project root and environment files using git context
+
+______________________________________________________________________
+
+## 🏁 Final Notes
+
+- **This file is the definitive guide** for AI agents working on hurl.nvim
+- **Keep it updated** when architecture or conventions change
+- **Focus on user experience** - This is a developer tool that should enhance workflow
+- **Maintain backwards compatibility** when possible
+- **Document breaking changes** clearly in changelog and migration guides
+- **Test with real .hurl files** to ensure practical functionality
+- **Consider integration** with other Neovim plugins and LSP servers
