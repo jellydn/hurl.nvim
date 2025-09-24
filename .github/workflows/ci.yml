@@ -52,7 +52,7 @@ jobs:
           version: nightly
 
       - name: luajit
-        uses: leafo/gh-actions-lua@v11
+        uses: leafo/gh-actions-lua@v12
         with:
           luaVersion: "luajit-openresty"
 
