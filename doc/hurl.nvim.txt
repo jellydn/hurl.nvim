@@ -192,7 +192,9 @@ To change the environment file name, use the `HurlSetEnvFile` command followed
 by the new file name. You can have multiple variable files by having
 comma-separated values.
 
-Alternatively, use the `HurlSelectEnvFile` command to select and register an environment file.
+Alternatively, use the `HurlSelectEnvFile` command to select and register an
+environment file.
+
 
 NOTES
 
