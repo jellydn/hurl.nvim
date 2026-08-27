@@ -352,7 +352,10 @@ function M.execute_hurl_cmd(opts, callback)
 
       if code ~= 0 then
         utils.log_error('Hurl command failed with code ' .. code)
-        utils.notify('Hurl command failed. Check the ' .. _HURL_GLOBAL_CONFIG.mode .. ' view for details.', vim.log.levels.ERROR)
+        utils.notify(
+          'Hurl command failed. Check the ' .. _HURL_GLOBAL_CONFIG.mode .. ' view for details.',
+          vim.log.levels.ERROR
+        )
 
         -- Show error in configured mode (popup or split)
         local ok, error_display = pcall(require, 'hurl.' .. (_HURL_GLOBAL_CONFIG.mode or 'split'))
