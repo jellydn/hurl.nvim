@@ -180,9 +180,8 @@ function M.setup()
     local env_files = vim.fs.find(function(name, _)
       return name:match(pattern) ~= nil
     end, {
-      path = vim.fn.expand('%:h'),
-      upward = true,
-      stop = vim.fn.getcwd(),
+      path = vim.fn.getcwd(),
+      upward = false,
       type = 'file',
       limit = math.huge,
     })

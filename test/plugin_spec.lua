@@ -30,6 +30,25 @@ describe('Hurl.nvim plugin', function()
     _HURL_GLOBAL_CONFIG.env_pattern = original_pattern
     assert.is_true(ok, err)
   end)
+
+  it('should search for environment files from the working directory', function()
+    local original_find = vim.fs.find
+    local original_select = vim.ui.select
+    local search_options
+    vim.fs.find = function(_, options)
+      search_options = options
+      return { 'vars.env' }
+    end
+    vim.ui.select = function() end
+
+    local ok, err = pcall(vim.cmd, 'HurlSelectEnvFile')
+
+    vim.fs.find = original_find
+    vim.ui.select = original_select
+    assert.is_true(ok, err)
+    assert.are.equal(vim.fn.getcwd(), search_options.path)
+    assert.is_false(search_options.upward)
+  end)
 end)
 
 describe('Variable Management', function()
