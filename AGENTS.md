@@ -13,7 +13,7 @@
 - **Issue Tracking:** GitHub Issues
 - **Additional Docs:** `README.md` for user documentation
 
-______________________________________________________________________
+---
 
 ## 🗂️ Repository Structure
 
@@ -44,7 +44,7 @@ hurl.nvim/
 └── version.txt            # Version info
 ```
 
-______________________________________________________________________
+---
 
 ## 🚦 Quick Start
 
@@ -83,7 +83,7 @@ ______________________________________________________________________
    })
    ```
 
-______________________________________________________________________
+---
 
 ## 🧑‍💻 Development Guidelines
 
@@ -208,25 +208,28 @@ end, {})
 
 - **HTTP Processing:** The plugin uses the external `hurl` command to execute requests and process responses with configurable formatters.
 
-______________________________________________________________________
+---
 
 ## 🛠️ Common Commands & Development Workflow
 
 ### Development Commands
 
 - **Setup development environment:**
+
   ```bash
   # Install vusted for testing
   make install
   ```
 
 - **Run tests:**
+
   ```bash
   make test                    # Run all tests
   vusted test/                 # Direct vusted execution
   ```
 
 - **Format code:**
+
   ```bash
   stylua lua/ test/           # Format Lua code (if stylua is installed)
   ```
@@ -240,6 +243,7 @@ ______________________________________________________________________
 ### Plugin Commands
 
 - **Basic usage:**
+
   ```vim
   :HurlRunner                 " Run entire .hurl file
   :HurlRunnerAt              " Run request at cursor
@@ -255,7 +259,7 @@ ______________________________________________________________________
   :HurlSetEnvFile custom.env          " Set custom env file
   ```
 
-______________________________________________________________________
+---
 
 ## 🧩 Agent Code Integration
 
@@ -286,7 +290,7 @@ ______________________________________________________________________
 - **Async operations:** Use `vim.schedule` for UI updates from async contexts
 - **Command registration:** Use `vim.api.nvim_create_user_command` with proper options
 
-______________________________________________________________________
+---
 
 ## 🧪 Testing & Quality Assurance
 
@@ -304,7 +308,7 @@ ______________________________________________________________________
 - **Performance:** Ensure UI responsiveness and efficient request handling
 - **Compatibility:** Test with multiple Neovim versions
 
-______________________________________________________________________
+---
 
 ## 📝 Documentation & Examples
 
@@ -320,7 +324,7 @@ ______________________________________________________________________
 - **Function documentation:** EmmyLua annotations for all public functions
 - **Architecture decisions:** Document design choices and trade-offs
 
-______________________________________________________________________
+---
 
 ## 🛡️ Security & Best Practices
 
@@ -338,7 +342,7 @@ ______________________________________________________________________
 - **Caching:** Cache environment variables and parsed configurations
 - **Resource cleanup:** Proper cleanup of buffers and windows
 
-______________________________________________________________________
+---
 
 ## 🏷️ Branching & Workflow
 
@@ -356,26 +360,26 @@ ______________________________________________________________________
 - **Documentation:** Update README and help docs
 - **Tagging:** Proper git tagging for releases
 
-______________________________________________________________________
+---
 
 ## 🧭 Quick Reference
 
-| Task                          | Command/Location                    |
-| ----------------------------- | ----------------------------------- |
-| Run tests                     | `make test`                         |
-| Install test dependencies     | `make install`                      |
-| Format code                   | `stylua lua/ test/`                 |
-| Main plugin file              | `lua/hurl/init.lua`                |
-| Core functionality            | `lua/hurl/main.lua`                |
-| UI components                 | `lua/hurl/popup.lua`, `split.lua`   |
-| Utilities                     | `lua/hurl/utils.lua`                |
-| Tests                         | `test/*.lua`                        |
-| Documentation                 | `README.md`                         |
-| Configuration                 | `_HURL_GLOBAL_CONFIG` global        |
-| Commands                      | `:Hurl*` commands                   |
-| Environment files             | `vars.env` (configurable)           |
+| Task                      | Command/Location                  |
+| ------------------------- | --------------------------------- |
+| Run tests                 | `make test`                       |
+| Install test dependencies | `make install`                    |
+| Format code               | `stylua lua/ test/`               |
+| Main plugin file          | `lua/hurl/init.lua`               |
+| Core functionality        | `lua/hurl/main.lua`               |
+| UI components             | `lua/hurl/popup.lua`, `split.lua` |
+| Utilities                 | `lua/hurl/utils.lua`              |
+| Tests                     | `test/*.lua`                      |
+| Documentation             | `README.md`                       |
+| Configuration             | `_HURL_GLOBAL_CONFIG` global      |
+| Commands                  | `:Hurl*` commands                 |
+| Environment files         | `vars.env` (configurable)         |
 
-______________________________________________________________________
+---
 
 ## 🧠 Additional Instructions
 
@@ -400,7 +404,7 @@ ______________________________________________________________________
 - **History management:** Track and replay previous requests
 - **Git integration:** Discover project root and environment files using git context
 
-______________________________________________________________________
+---
 
 ## 🏁 Final Notes
 
