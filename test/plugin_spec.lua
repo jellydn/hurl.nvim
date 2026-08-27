@@ -16,16 +16,36 @@ describe('Hurl.nvim plugin', function()
     assert.are.same('popup', _HURL_GLOBAL_CONFIG.mode)
     assert.are.same(true, _HURL_GLOBAL_CONFIG.debug)
   end)
+
+  it('should define the environment file selection command', function()
+    assert.are.equal(2, vim.fn.exists(':HurlSelectEnvFile'))
+  end)
+
+  it('should reject an invalid environment file pattern without throwing', function()
+    local original_pattern = _HURL_GLOBAL_CONFIG.env_pattern
+    _HURL_GLOBAL_CONFIG.env_pattern = '['
+
+    local ok, err = pcall(vim.cmd, 'HurlSelectEnvFile')
+
+    _HURL_GLOBAL_CONFIG.env_pattern = original_pattern
+    assert.is_true(ok, err)
+  end)
 end)
 
 describe('Variable Management', function()
   local utils = require('hurl.utils')
+  local original_env_file
 
   before_each(function()
+    original_env_file = _HURL_GLOBAL_CONFIG.env_file
     -- Clear persisted variables
     utils.save_persisted_vars({})
     -- Reset global vars
     _HURL_GLOBAL_CONFIG.global_vars = {}
+  end)
+
+  after_each(function()
+    _HURL_GLOBAL_CONFIG.env_file = original_env_file
   end)
 
   it('should load variables from env file', function()
@@ -68,5 +88,15 @@ describe('Variable Management', function()
     }, merged)
 
     os.remove(test_env)
+  end)
+
+  it('should preserve selected absolute env file paths', function()
+    local test_env = vim.fn.tempname()
+    _HURL_GLOBAL_CONFIG.env_file = { test_env }
+
+    local env_files = utils.find_env_files_in_folders()
+
+    assert.are.equal(1, #env_files)
+    assert.are.equal(vim.fs.normalize(test_env), env_files[1].path)
   end)
 end)

@@ -93,6 +93,12 @@ local function register_env_file(path)
   utils.notify('hurl: env file changed to ' .. updated_env, vim.log.levels.INFO)
 end
 
+---@param pattern unknown
+---@return boolean
+local function is_valid_env_pattern(pattern)
+  return type(pattern) == 'string' and pcall(string.match, '', pattern)
+end
+
 function M.setup()
   -- Show virtual text for Hurl entries
   codelens.setup()
@@ -165,14 +171,14 @@ function M.setup()
   utils.create_cmd('HurlSelectEnvFile', function()
     -- Find a list of environment files
     local pattern = _HURL_GLOBAL_CONFIG.env_pattern
-    if not pattern or type(pattern) ~= 'string' then
-      M.log_error('Invalid env_pattern configuration')
+    if not is_valid_env_pattern(pattern) then
+      utils.log_error('hurl: invalid env_pattern configuration')
+      utils.notify('hurl: env_pattern must be a valid Lua pattern', vim.log.levels.ERROR)
       return
     end
 
     local env_files = vim.fs.find(function(name, _)
-      local ok, result = pcall(string.match, name, pattern)
-      return ok and result
+      return name:match(pattern) ~= nil
     end, {
       path = vim.fn.expand('%:h'),
       upward = true,

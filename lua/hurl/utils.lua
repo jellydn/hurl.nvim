@@ -161,9 +161,25 @@ end
 
 M.is_hurl_parser_available = treesitter_parser_available('hurl')
 
+---@param path string
+---@return boolean
+local function is_absolute_path(path)
+  return path:sub(1, 1) == '/' or path:match('^%a:[/\\]') ~= nil
+end
+
 -- Looking for vars.env file base on the current file buffer
 ---@return table
 local function find_env_files(file, root_dir, cache_dir, current_file_dir, scan_dir)
+  local normalized_file = vim.fs.normalize(file)
+  if is_absolute_path(normalized_file) then
+    return {
+      {
+        path = normalized_file,
+        dest = cache_dir .. '/' .. vim.fs.basename(normalized_file),
+      },
+    }
+  end
+
   local files = {
     {
       path = root_dir .. '/' .. file,
