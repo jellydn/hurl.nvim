@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/jellydn/hurl.nvim/compare/v2.2.0...v2.3.0) (2026-08-27)
+
+
+### Features
+
+* add environment file selector ([3e38c82](https://github.com/jellydn/hurl.nvim/commit/3e38c82d0b86e6d5b1f2a6d370f977365625801a))
+
 ## [2.2.0](https://github.com/jellydn/hurl.nvim/compare/v2.1.0...v2.2.0) (2025-04-28)
 
 ### Features
