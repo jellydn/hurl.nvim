@@ -310,8 +310,11 @@ function M.execute_hurl_cmd(opts, callback)
   save_last_hurl_command(cmd)
 
   -- Clear the display and show processing message with Hurl command
-  local ok, display = pcall(require, 'hurl.' .. (_HURL_GLOBAL_CONFIG.mode or 'split'))
+  local display_mode = _HURL_GLOBAL_CONFIG.mode or 'split'
+  local ok, display = pcall(require, 'hurl.' .. display_mode)
   if not ok then
+    M.is_running = false
+    spinner.hide()
     utils.notify('Failed to load display module: ' .. display, vim.log.levels.ERROR)
     return
   end
@@ -352,10 +355,11 @@ function M.execute_hurl_cmd(opts, callback)
 
       if code ~= 0 then
         utils.log_error('Hurl command failed with code ' .. code)
-        utils.notify('Hurl command failed. Check the split view for details.', vim.log.levels.ERROR)
+        utils.notify(
+          'Hurl command failed. Check the ' .. display_mode .. ' view for details.',
+          vim.log.levels.ERROR
+        )
 
-        -- Show error in split view
-        local split = require('hurl.split')
         local error_data = {
           body = '# Hurl Error\n\n```sh\n' .. stderr_data .. '\n```',
           headers = {},
@@ -365,7 +369,7 @@ function M.execute_hurl_cmd(opts, callback)
           response_time = 0,
           curl_command = 'N/A',
         }
-        split.show(error_data, 'markdown')
+        display.show(error_data, 'markdown')
         history.update_history(display_data, 'error')
         return
       end
