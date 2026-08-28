@@ -446,7 +446,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/akemkers"><img src="https://avatars.githubusercontent.com/u/17641357?v=4?s=100" width="100px;" alt="Andreas Kemkers"/><br /><sub><b>Andreas Kemkers</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=akemkers" title="Documentation">📖</a></td>
     </tr>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/htquangg"><img src="https://avatars.githubusercontent.com/u/41544778?v=4?s=100" width="100px;" alt="Alex"/><br /><sub><b>Alex</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=htquangg" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/htquangg"><img src="https://avatars.githubusercontent.com/u/41544778?v=4?s=100" width="100px;" alt="Alex"/><br /><sub><b>Alex</b></sub></a><br /><a href="https://github.com/jellydn/hurl.nvim/commits?author=htquangg" title="Code">💻</a> <a href="https://github.com/jellydn/hurl.nvim/commits?author=htquangg" title="Documentation">📖</a></td>
     </tr>
   </tbody>
   <tfoot>
