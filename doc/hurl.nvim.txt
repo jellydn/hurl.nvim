@@ -1,5 +1,5 @@
 *hurl.nvim.txt*
-                                For NVIM v0.8.0    Last change: 2026 August 28
+                               For NVIM v0.8.0    Last change: 2026 October 08
 
 ==============================================================================
 Table of Contents                                *hurl.nvim-table-of-contents*
@@ -21,7 +21,7 @@ Table of Contents                                *hurl.nvim-table-of-contents*
   - Show your support                            |hurl.nvim-show-your-support|
   - Contributors ✨                              |hurl.nvim-contributors-✨|
 1. Links                                                     |hurl.nvim-links|
-Welcome to hurl.nvim 👋Hurl.nvim is a Neovim plugin designed to run HTTP requests directly from `.hurl` files. Elevate your API development workflow by executing and viewing responses without leaving your editor.|hurl.nvim-|
+Welcome to hurl.nvim 👋Hurl.nvim is a Neovim plugin designed to run HTTP requests directly from `.hurl` files. Elevate your API development workflow by executing and viewing responses without leaving your editor.
 
 
 
@@ -198,7 +198,7 @@ environment file.
 
 NOTES
 
-- Ensure that the new environment file exists in the directories where the plugin searches for it, as outlined in the |hurl.nvim-file-location| section.
+- Ensure that the new environment file exists in the directories where the plugin searches for it, as outlined in the File Location section.
 - This change will apply globally for the current session of Neovim. If you restart Neovim, it will revert to the default `vars.env` unless you change it again.
 
 
@@ -238,7 +238,7 @@ Then you can use `{{random_int_number}}` and `{{random_float_number}}` in your
 >hurl
     POST https://api.example.com
     Content-Type: application/json
-    
+
     {
       "name": "Product ID {{random_int_number}}",
       "price": {{random_float_number}}
