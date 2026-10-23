@@ -30,7 +30,7 @@ Welcome to hurl.nvim 👋Hurl.nvim is a Neovim plugin designed to run HTTP reque
 
 PREREQUISITES                                        *hurl.nvim-prerequisites*
 
-- Neovim stable (0.10.2) or nightly. It might not work with older versions of Neovim.
+- Neovim 0.10.2 or newer (including nightly).
 
 
 FEATURES                                                  *hurl.nvim-features*
@@ -54,7 +54,6 @@ Add the following configuration to your Neovim setup with lazy.nvim
       "jellydn/hurl.nvim",
       dependencies = {
         "MunifTanjim/nui.nvim",
-        "nvim-lua/plenary.nvim",
         "nvim-treesitter/nvim-treesitter",
         -- Optional, for markdown rendering with render-markdown.nvim
         {
