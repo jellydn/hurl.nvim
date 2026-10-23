@@ -6,7 +6,7 @@
 
 - **Repository:** [jellydn/hurl.nvim](https://github.com/jellydn/hurl.nvim)
 - **Primary Language:** Lua
-- **Key Dependencies:** `nui.nvim`, `plenary.nvim`, `nvim-treesitter`
+- **Key Dependencies:** Neovim 0.10.2+, `nui.nvim`, `nvim-treesitter`
 - **Test Framework:** `vusted`
 - **Build System:** `Makefile`
 - **CI:** GitHub Actions
@@ -274,7 +274,7 @@ end, {})
 
 ### b. **Best Practices for Coding Assistance Agents**
 
-- **Always check plugin dependencies** before modifying core functionality (nui.nvim, plenary.nvim)
+- **Always check plugin dependencies** before modifying core functionality (nui.nvim, nvim-treesitter)
 - **When adding commands:** Update both `main.lua` and documentation
 - **When modifying UI:** Ensure both popup and split modes work consistently
 - **When changing config:** Update default config and add validation

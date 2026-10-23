@@ -16,7 +16,7 @@
 
 ## Prerequisites
 
-- Neovim stable (0.10.2) or nightly. It might not work with older versions of Neovim.
+- Neovim 0.10.2 or newer (including nightly).
 
 ## Features
 
@@ -37,7 +37,6 @@ Add the following configuration to your Neovim setup with [lazy.nvim](https://gi
   "jellydn/hurl.nvim",
   dependencies = {
     "MunifTanjim/nui.nvim",
-    "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",
     -- Optional, for markdown rendering with render-markdown.nvim
     {
