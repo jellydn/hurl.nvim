@@ -1,11 +1,13 @@
 # Changelog
 
-## Unreleased
+## [2.4.0](https://github.com/jellydn/hurl.nvim/compare/v2.3.0...v2.4.0) (2026-10-24)
 
 ### Bug Fixes
 
 - Replace Plenary's Git-root lookup with `vim.system()`. Hurl.nvim no longer requires
   `plenary.nvim`; the minimum supported Neovim version remains 0.10.2.
+- Respect the configured display mode when showing popup request errors, and stop
+  the request when the configured display cannot load.
 
 ## [2.3.0](https://github.com/jellydn/hurl.nvim/compare/v2.2.0...v2.3.0) (2026-08-27)
 
