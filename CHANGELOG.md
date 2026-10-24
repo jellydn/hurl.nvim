@@ -7,6 +7,13 @@
 - Replace Plenary's Git-root lookup with `vim.system()`. Hurl.nvim no longer requires
   `plenary.nvim`; the minimum supported Neovim version remains 0.10.2.
 
+## [2.3.1](https://github.com/jellydn/hurl.nvim/compare/v2.3.0...v2.3.1) (2026-10-24)
+
+
+### Bug Fixes
+
+* replace Plenary Git lookup with vim.system ([#272](https://github.com/jellydn/hurl.nvim/issues/272)) ([05cd5dd](https://github.com/jellydn/hurl.nvim/commit/05cd5ddbe0eabc2418cd7cf1e0e2bf0909fa2a09)), closes [#271](https://github.com/jellydn/hurl.nvim/issues/271)
+
 ## [2.3.0](https://github.com/jellydn/hurl.nvim/compare/v2.2.0...v2.3.0) (2026-08-27)
 
 ### Features
